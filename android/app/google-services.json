@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "900388906458",
+    "project_id": "jatimtour",
+    "storage_bucket": "jatimtour.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900388906458:android:c5f47b425b6766832b4ce3",
+        "android_client_info": {
+          "package_name": "com.example.jatimtour"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_WDrdvSXmMUeiM61pSAtixOFqcsHd-H8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
