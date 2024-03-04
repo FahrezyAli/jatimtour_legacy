@@ -1,5 +1,5 @@
 name: jatimtour
-description: "A new Flutter project."
+description: "Touring in East Java has never been more fun!"
 publish_to: 'none'
 version: 0.1.0
 
@@ -10,6 +10,7 @@ dependencies:
   carousel_slider: ^4.2.1
   curved_navigation_bar: ^1.0.3
   dots_indicator: ^3.0.0
+  firebase_auth: ^4.17.6
   firebase_core: ^2.25.5
   flutter:
     sdk: flutter
@@ -21,3 +22,19 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+  - assets/images/
+
+  fonts:
+  - family: KronaOne
+    fonts: 
+    - asset: assets/fonts/KronaOne/KronaOne-Regular.ttf
+
+  - family: Inter
+    fonts:
+    - asset: assets/fonts/Inter/Inter-Regular.ttf
+    - asset: assets/fonts/Inter/Inter-Medium.ttf
+      weight: 500
+    - asset: assets/fonts/Inter/Inter-Bold.ttf
+      weight: 700

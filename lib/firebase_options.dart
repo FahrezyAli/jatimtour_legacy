@@ -69,6 +69,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '900388906458',
     projectId: 'jatimtour',
     storageBucket: 'jatimtour.appspot.com',
+    iosClientId: '900388906458-l6j6d7vtcmudq4fages40uso36pemgc2.apps.googleusercontent.com',
     iosBundleId: 'com.example.jatimtour',
   );
 }

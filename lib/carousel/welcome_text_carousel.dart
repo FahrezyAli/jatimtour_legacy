@@ -50,11 +50,11 @@ class _WelcomeTextCarousel extends State<WelcomeTextCarousel> {
             height: 60.0,
             viewportFraction: 1,
             autoPlay: true,
-            onPageChanged: ((index, reason) {
-              setState(() {
+            onPageChanged: (index, reason) => setState(
+              () {
                 _currentIndex = index;
-              });
-            }),
+              },
+            ),
           ),
         ),
         Container(

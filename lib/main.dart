@@ -1,12 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-import 'buttons/login_button.dart';
-import 'carousel/welcome_text_carousel.dart';
-import 'portrait/page/login_page.dart';
-import 'portrait/page/signup_page.dart';
-import 'portrait/page/welcome_page.dart';
+import 'firebase_options.dart';
+import 'pages/start_page.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+
   runApp(const MainApp());
 }
 
@@ -17,70 +23,6 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: StartPage(),
-    );
-  }
-}
-
-class StartPage extends StatefulWidget {
-  const StartPage({super.key});
-
-  @override
-  State<StartPage> createState() => _StartPageState();
-}
-
-class _StartPageState extends State<StartPage> {
-  int _state = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 0.0,
-      ),
-      body: Column(
-        children: [
-          const WelcomePage(),
-          Builder(
-            builder: (context) {
-              if (_state == 0) {
-                return Container(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  child: const WelcomeTextCarousel(),
-                );
-              } else {
-                return Container();
-              }
-            },
-          ),
-          AnimatedPositioned(
-            duration: Durations.short4,
-            child: Container(
-              padding: const EdgeInsets.only(top: 35.0),
-              child: LoginButton(
-                onStateChange: (int state) {
-                  setState(() {
-                    _state = state;
-                  });
-                },
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 30),
-            child: Builder(
-              builder: (context) {
-                if (_state == 1) {
-                  return const LoginPage();
-                } else if (_state == 2) {
-                  return const SignUpPage();
-                } else {
-                  return Container();
-                }
-              },
-            ),
-          )
-        ],
-      ),
     );
   }
 }

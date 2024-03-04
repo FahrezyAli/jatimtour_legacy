@@ -1,14 +1,20 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+import '../utils/authentication.dart';
+import 'main_page.dart';
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<SignUpPage> {
+class _LoginPageState extends State<LoginPage> {
+  late String _email;
+  late String _password;
+
   bool _isVisible = false;
 
   @override
@@ -22,8 +28,8 @@ class _LoginPageState extends State<SignUpPage> {
             borderRadius: BorderRadius.circular(20.0),
             color: Colors.white,
           ),
-          child: const TextField(
-            decoration: InputDecoration(
+          child: TextField(
+            decoration: const InputDecoration(
               contentPadding: EdgeInsets.only(top: 8.0, left: 17.0),
               border: InputBorder.none,
               hintText: "email",
@@ -32,11 +38,16 @@ class _LoginPageState extends State<SignUpPage> {
                 fontSize: 20.0,
               ),
             ),
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: "Inter",
               fontSize: 20.0,
             ),
             textInputAction: TextInputAction.next,
+            onSubmitted: (email) => setState(
+              () {
+                _email = email;
+              },
+            ),
           ),
         ),
         Padding(
@@ -65,60 +76,21 @@ class _LoginPageState extends State<SignUpPage> {
                     _isVisible ? Icons.visibility : Icons.visibility_off,
                     color: const Color(0xFFF15BF5),
                   ),
-                  onPressed: () {
-                    setState(
-                      () {
-                        _isVisible = !_isVisible;
-                      },
-                    );
-                  },
-                ),
-              ),
-              style: const TextStyle(
-                fontFamily: "Inter",
-                fontSize: 20.0,
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 15.0),
-          child: Container(
-            height: 40.0,
-            width: 250.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              color: Colors.white,
-            ),
-            child: TextField(
-              obscureText: !_isVisible,
-              enableSuggestions: false,
-              autocorrect: false,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.only(top: 8.0, left: 17.0),
-                hintText: "retype password",
-                hintStyle: const TextStyle(
-                  fontFamily: "Inter",
-                  fontSize: 20.0,
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _isVisible ? Icons.visibility : Icons.visibility_off,
-                    color: const Color(0xFFF15BF5),
+                  onPressed: () => setState(
+                    () {
+                      _isVisible = !_isVisible;
+                    },
                   ),
-                  onPressed: () {
-                    setState(
-                      () {
-                        _isVisible = !_isVisible;
-                      },
-                    );
-                  },
                 ),
               ),
               style: const TextStyle(
                 fontFamily: "Inter",
                 fontSize: 20.0,
+              ),
+              onSubmitted: (password) => setState(
+                () {
+                  _password = password;
+                },
               ),
             ),
           ),
@@ -138,7 +110,7 @@ class _LoginPageState extends State<SignUpPage> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Image(
-                      image: AssetImage('assets/images/google_icon.png'),
+                      image: AssetImage('assets/images/google_logo.png'),
                     ),
                   ),
                   Align(
@@ -157,16 +129,25 @@ class _LoginPageState extends State<SignUpPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 5.5),
+          padding: const EdgeInsets.only(top: 60.0),
           child: RichText(
             text: TextSpan(
-              text: "Sign Up ->",
+              text: "Log in ->",
               style: const TextStyle(
                 fontFamily: "Inter",
                 fontSize: 20.0,
                 decoration: TextDecoration.underline,
               ),
-              recognizer: TapGestureRecognizer()..onTap = () {},
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => login(
+                    _email,
+                    _password,
+                    () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const MainPage(),
+                          ),
+                        ),
+                    (e) {}),
             ),
           ),
         )
