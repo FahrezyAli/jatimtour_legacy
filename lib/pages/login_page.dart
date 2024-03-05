@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
               fontSize: 20.0,
             ),
             textInputAction: TextInputAction.next,
-            onSubmitted: (email) => setState(
+            onChanged: (email) => setState(
               () {
                 _email = email;
               },
@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                 fontFamily: "Inter",
                 fontSize: 20.0,
               ),
-              onSubmitted: (password) => setState(
+              onChanged: (password) => setState(
                 () {
                   _password = password;
                 },
@@ -142,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                 ..onTap = () => login(
                     _email,
                     _password,
-                    () => Navigator.of(context).push(
+                    () => Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
                             builder: (context) => const MainPage(),
                           ),

@@ -1,5 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:jatimtour/utils/authentication.dart';
+
+import 'main_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -9,6 +12,9 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<SignUpPage> {
+  late String _email;
+  late String _password;
+
   bool _isVisible = false;
 
   @override
@@ -22,8 +28,8 @@ class _LoginPageState extends State<SignUpPage> {
             borderRadius: BorderRadius.circular(20.0),
             color: Colors.white,
           ),
-          child: const TextField(
-            decoration: InputDecoration(
+          child: TextField(
+            decoration: const InputDecoration(
               contentPadding: EdgeInsets.only(top: 8.0, left: 17.0),
               border: InputBorder.none,
               hintText: "email",
@@ -32,11 +38,16 @@ class _LoginPageState extends State<SignUpPage> {
                 fontSize: 20.0,
               ),
             ),
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: "Inter",
               fontSize: 20.0,
             ),
             textInputAction: TextInputAction.next,
+            onChanged: (email) => setState(
+              () {
+                _email = email;
+              },
+            ),
           ),
         ),
         Padding(
@@ -75,6 +86,11 @@ class _LoginPageState extends State<SignUpPage> {
               style: const TextStyle(
                 fontFamily: "Inter",
                 fontSize: 20.0,
+              ),
+              onChanged: (password) => setState(
+                () {
+                  _password = password;
+                },
               ),
             ),
           ),
@@ -162,7 +178,17 @@ class _LoginPageState extends State<SignUpPage> {
                 fontSize: 20.0,
                 decoration: TextDecoration.underline,
               ),
-              recognizer: TapGestureRecognizer()..onTap = () {},
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => signup(
+                      _email,
+                      _password,
+                      () => Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const MainPage(),
+                        ),
+                      ),
+                      (e) {},
+                    ),
             ),
           ),
         )

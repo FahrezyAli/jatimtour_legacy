@@ -22,7 +22,7 @@ class _StartPageState extends State<StartPage> {
       appBar: AppBar(
         toolbarHeight: 0.0,
       ),
-      body: Column(
+      body: ListView(
         children: [
           const WelcomePage(),
           Builder(
@@ -37,16 +37,13 @@ class _StartPageState extends State<StartPage> {
               }
             },
           ),
-          AnimatedPositioned(
-            duration: Durations.short4,
-            child: Container(
-              padding: const EdgeInsets.only(top: 35.0),
-              child: LoginButton(
-                onStateChange: (int state) => setState(
-                  () {
-                    _state = state;
-                  },
-                ),
+          Container(
+            padding: const EdgeInsets.only(top: 35.0),
+            child: LoginButton(
+              onStateChange: (int state) => setState(
+                () {
+                  _state = state;
+                },
               ),
             ),
           ),
