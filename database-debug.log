@@ -1,9 +1,4 @@
-15:10:28.881 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
-15:10:30.666 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
-15:10:48.762 [NamespaceSystem-akka.actor.default-dispatcher-7] INFO com.firebase.core.namespace.NamespaceActor - jatimtour-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 657ms, init: 0ms
-15:10:48.899 [NamespaceSystem-blocking-namespace-operation-dispatcher-8] INFO com.firebase.core.namespace.StateManager - Namespace jatimtour-default-rtdb status Active to Active
-15:11:58.555 [FirebaseWorkerPool-1-4] WARN com.firebase.core.persistence.backend.dummy.EmulatorMetadataPersistence - Multiple projectIds are not recommended in single project mode. Requested 
-namespace jatimtour, but the emulator is configured for jatimtour-default-rtdb. To 
-opt-out of single project mode add/set the singleProjectMode: false property in 
-the firebase.json emulators config. 
-15:11:58.636 [NamespaceSystem-akka.actor.default-dispatcher-6] INFO com.firebase.core.namespace.NamespaceActor - jatimtour successfully activated FBKV (SurveyIdle(0)) wait: 53ms, init: 0ms
+21:25:41.293 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+21:25:41.543 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
+21:25:54.684 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO com.firebase.core.namespace.NamespaceActor - jatimtour-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 187ms, init: 0ms
+21:25:54.792 [NamespaceSystem-blocking-namespace-operation-dispatcher-6] INFO com.firebase.core.namespace.StateManager - Namespace jatimtour-default-rtdb status Active to Active
