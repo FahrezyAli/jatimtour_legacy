@@ -1,4 +1,4 @@
-21:25:41.293 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
-21:25:41.543 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
-21:25:54.684 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO com.firebase.core.namespace.NamespaceActor - jatimtour-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 187ms, init: 0ms
-21:25:54.792 [NamespaceSystem-blocking-namespace-operation-dispatcher-6] INFO com.firebase.core.namespace.StateManager - Namespace jatimtour-default-rtdb status Active to Active
+13:33:35.278 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+13:33:41.119 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
+13:33:55.052 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO com.firebase.core.namespace.NamespaceActor - jatimtour-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 787ms, init: 0ms
+13:33:55.449 [NamespaceSystem-blocking-namespace-operation-dispatcher-7] INFO com.firebase.core.namespace.StateManager - Namespace jatimtour-default-rtdb status Active to Active

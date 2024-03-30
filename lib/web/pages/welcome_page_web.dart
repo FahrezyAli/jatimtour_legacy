@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/mobile/start_page_mobile.dart';
+import 'package:jatimtour/mobile/pages/start_page_mobile.dart';
 
 class WelcomePageWeb extends StatefulWidget {
   final int state;

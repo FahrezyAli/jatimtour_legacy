@@ -20,7 +20,6 @@ class _StartPageWebState extends State<StartPageWeb> {
       ),
       extendBodyBehindAppBar: true,
       body: ListView(
-        padding: const EdgeInsets.only(top: 0),
         children: [
           const NewsCarousel(),
           SizedBox(

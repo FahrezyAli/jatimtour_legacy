@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class WelcomePage extends StatelessWidget {
-  const WelcomePage({super.key});
+class WelcomePageMobile extends StatelessWidget {
+  const WelcomePageMobile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +18,9 @@ class WelcomePage extends StatelessWidget {
           ),
         ),
         Container(
-          padding: const EdgeInsets.only(top: 100.0),
-          height: 300.0,
-          width: 300.0,
+          padding: const EdgeInsets.only(top: 30.0),
+          height: 150.0,
+          width: 150.0,
           child: const Center(
             child: Image(image: AssetImage('assets/images/logo.png')),
           ),

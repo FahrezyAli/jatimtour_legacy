@@ -9,7 +9,6 @@ class RecommendationCarousel extends StatefulWidget {
 }
 
 class _RecommendationCarouselState extends State<RecommendationCarousel> {
-  int _currentIndex = 0;
   final CarouselController _controller = CarouselController();
 
   @override
@@ -29,7 +28,7 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
             viewportFraction: 0.5,
             enlargeCenterPage: true,
             enlargeFactor: 0.15,
-            height: 400,
+            height: 100,
           ),
         ),
       ],
@@ -57,24 +56,6 @@ class RecommendationCard extends StatelessWidget {
           children: [
             Ink.image(
               image: AssetImage("assets/images/${image[index]}.png"),
-            ),
-            AnimatedOpacity(
-              opacity: 1,
-              duration: Durations.short4,
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Colors.white],
-                        stops: [50],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ),
           ],
         ),

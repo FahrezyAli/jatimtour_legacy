@@ -7,18 +7,22 @@ environment:
   sdk: '>=3.2.6 <4.0.0'
 
 dependencies:
+  animate_do: ^3.3.4
   carousel_slider: ^4.2.1
   curved_navigation_bar: ^1.0.3
   dots_indicator: ^3.0.0
+  email_validator: ^2.1.17
   firebase_auth: ^4.17.6
   firebase_core: ^2.25.5
   flutter:
     sdk: flutter
+  image_picker: ^1.0.7
+  shadow_overlay: ^1.0.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.2
 
 flutter:
   uses-material-design: true

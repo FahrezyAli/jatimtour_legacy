@@ -1,6 +1,7 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:jatimtour/mobile/buttons/sign_button_mob.dart';
-import 'package:jatimtour/mobile/welcome_page_mobile.dart';
+import 'package:jatimtour/mobile/pages/welcome_page_mobile.dart';
 import 'package:jatimtour/multi/carousel/welcome_text_carousel.dart';
 import 'package:jatimtour/multi/pages/login_page.dart';
 import 'package:jatimtour/multi/pages/signup_page.dart';
@@ -14,6 +15,7 @@ class StartPageMobile extends StatefulWidget {
 
 class _StartPageMobileState extends State<StartPageMobile> {
   int _state = 0;
+  bool isUp = true;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class _StartPageMobileState extends State<StartPageMobile> {
       ),
       body: ListView(
         children: [
-          const WelcomePage(),
+          const WelcomePageMobile(),
           Builder(
             builder: (context) {
               if (_state == 0) {
@@ -50,12 +52,23 @@ class _StartPageMobileState extends State<StartPageMobile> {
             padding: const EdgeInsets.only(top: 30),
             child: Builder(
               builder: (context) {
-                if (_state == 1) {
-                  return const LoginPage();
-                } else if (_state == 2) {
-                  return const SignUpPage();
+                if (_state != 0) {
+                  while (isUp) {
+                    isUp = !isUp;
+                    return FadeInUp(
+                      child:
+                          _state == 1 ? const LoginPage() : const SignUpPage(),
+                    );
+                  }
+                  if (!isUp) {
+                    return _state == 1
+                        ? FadeInLeft(child: const LoginPage())
+                        : FadeInRight(child: const SignUpPage());
+                  } else {
+                    return const SizedBox.shrink();
+                  }
                 } else {
-                  return Container();
+                  return const SizedBox.shrink();
                 }
               },
             ),

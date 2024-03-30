@@ -1,7 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jatimtour/firebase_options.dart';
+import 'package:jatimtour/mobile/pages/start_page_mobile.dart';
 import 'package:jatimtour/web/pages/start_page_web.dart';
 
 Future<void> main() async {
@@ -9,9 +10,6 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-
   runApp(const MainApp());
 }
 
@@ -41,8 +39,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: StartPageWeb(),
+    return MaterialApp(
+      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFE9DFE0)),
+      home: kIsWeb ? const StartPageWeb() : const StartPageMobile(),
     );
   }
 }
