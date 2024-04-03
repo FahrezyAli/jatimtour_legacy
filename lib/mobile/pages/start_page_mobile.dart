@@ -20,6 +20,7 @@ class _StartPageMobileState extends State<StartPageMobile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFFFBE2),
       appBar: AppBar(
         toolbarHeight: 0.0,
       ),

@@ -15,19 +15,11 @@ class _NewsCarouselState extends State<NewsCarousel> {
     return Stack(
       children: [
         CarouselSlider(
-          items: const [
-            Image(
-              image: AssetImage('assets/images/banyuwangi.png'),
-            ),
-            Image(
-              image: AssetImage('assets/images/music_fest.png'),
-            ),
-            Image(
-              image: AssetImage('assets/images/kawah_ijen.png'),
-            ),
-            Image(
-              image: AssetImage('assets/images/sunrise.png'),
-            ),
+          items: [
+            Image.asset('assets/images/banyuwangi.png'),
+            Image.asset('assets/images/music_fest.png'),
+            Image.asset('assets/images/kawah_ijen.png'),
+            Image.asset('assets/images/sunrise.png'),
           ],
           options: CarouselOptions(
             aspectRatio: 1.98 / 1,
@@ -35,19 +27,21 @@ class _NewsCarouselState extends State<NewsCarousel> {
             autoPlay: true,
           ),
         ),
-        const Positioned(
+        Positioned(
           left: 0.0,
           right: 0.0,
           top: 125.0,
           child: Center(
             child: MPButton(
-              child: Text(
+              color: Colors.white,
+              text: const Text(
                 "Read More→",
                 style: TextStyle(
                     fontFamily: "Inter",
                     fontSize: 11.0,
                     fontWeight: FontWeight.bold),
               ),
+              onTap: () {},
             ),
           ),
         ),

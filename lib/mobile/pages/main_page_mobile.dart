@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:jatimtour/mobile/pages/calender_page.dart';
 import 'package:jatimtour/mobile/pages/home_page_mobile.dart';
 
 class MainPageMobile extends StatefulWidget {
@@ -11,10 +12,12 @@ class MainPageMobile extends StatefulWidget {
 
 class _MainPageMobileState extends State<MainPageMobile> {
   int _state = 0;
+  Color backgroundColor = const Color(0xFFFFFFFF);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: const Row(
           children: [
@@ -34,6 +37,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
       ),
       body: switch (_state) {
         0 => const HomePageMobile(),
+        1 => CalenderPage(),
         _ => null,
       },
       bottomNavigationBar: CurvedNavigationBar(
@@ -49,9 +53,32 @@ class _MainPageMobileState extends State<MainPageMobile> {
         onTap: (state) => setState(
           () {
             _state = state;
+            _getColorFromState(state);
           },
         ),
       ),
     );
+  }
+
+  void _getColorFromState(int state) {
+    switch (state) {
+      case 0:
+        backgroundColor = const Color(0xFFE8E0E0);
+        break;
+      case 1:
+        backgroundColor = const Color(0xFFF3F3F3);
+        break;
+      case 2:
+        backgroundColor = const Color(0xFFE8E0E0);
+        break;
+      case 3:
+        backgroundColor = const Color(0xFFE8E0E0);
+        break;
+      case 4:
+        backgroundColor = const Color(0xFFFFFFFF);
+        break;
+      default:
+        backgroundColor = const Color(0xFFFFFFFF);
+    }
   }
 }

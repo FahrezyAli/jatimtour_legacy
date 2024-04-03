@@ -22,102 +22,43 @@ class _SignButtonMobState extends State<SignButtonMob> {
             color: const Color(0xFFF15BB5),
           ),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            InkWell(
-              customBorder: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
+        child: Material(
+          borderRadius: BorderRadius.circular(20.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              InkWell(
+                customBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                onTap: () {
+                  setState(() {
+                    _state = 1;
+                  });
+                  widget.onStateChange!(_state);
+                },
+                child: Switch(
+                  text: "Log in",
+                  state: _state,
+                ),
               ),
-              onTap: () {
-                setState(() {
-                  _state = 1;
-                });
-                widget.onStateChange!(_state);
-              },
-              child: Switch(
-                text: "Log in",
-                state: _state,
+              InkWell(
+                customBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                onTap: () {
+                  setState(() {
+                    _state = 2;
+                  });
+                  widget.onStateChange!(_state);
+                },
+                child: Switch(
+                  text: "Sign Up",
+                  state: _state - 1,
+                ),
               ),
-            ),
-            InkWell(
-              customBorder: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              onTap: () {
-                setState(() {
-                  _state = 2;
-                });
-                widget.onStateChange!(_state);
-              },
-              child: Switch(
-                text: "Sign Up",
-                state: _state - 1,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class SignButtonWeb extends StatefulWidget {
-  final Function(int state)? onStateChange;
-
-  const SignButtonWeb({super.key, required this.onStateChange});
-
-  @override
-  State<SignButtonWeb> createState() => _SignButtonWebState();
-}
-
-class _SignButtonWebState extends State<SignButtonWeb> {
-  int _state = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: const Color(0xFFF15BB5),
+            ],
           ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            InkWell(
-              customBorder: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              onTap: () {
-                setState(() {
-                  _state = 1;
-                });
-                widget.onStateChange!(_state);
-              },
-              child: Switch(
-                text: "Log in",
-                state: _state,
-              ),
-            ),
-            InkWell(
-              customBorder: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              onTap: () {
-                setState(() {
-                  _state = 2;
-                });
-                widget.onStateChange!(_state);
-              },
-              child: Switch(
-                text: "Sign Up",
-                state: _state - 1,
-              ),
-            ),
-          ],
         ),
       ),
     );

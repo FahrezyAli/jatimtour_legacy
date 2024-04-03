@@ -11,7 +11,7 @@ class WelcomePageWeb extends StatefulWidget {
 }
 
 class _WelcomePageWebState extends State<WelcomePageWeb> {
-  late int _state;
+  int? _state;
 
   @override
   void initState() {

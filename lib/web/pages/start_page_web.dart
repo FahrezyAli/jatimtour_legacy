@@ -25,9 +25,9 @@ class _StartPageWebState extends State<StartPageWeb> {
           SizedBox(
             height: 60.0,
             width: MediaQuery.sizeOf(context).width,
-            child: const Positioned.fill(
-              child: Image(
-                image: AssetImage('assets/images/border1.png'),
+            child: Positioned.fill(
+              child: Image.asset(
+                'assets/images/border1.png',
                 repeat: ImageRepeat.repeatX,
               ),
             ),

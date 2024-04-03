@@ -1,23 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
-class Users {
-  late int id;
-  late String name;
-  late String username;
-  String email;
-  late String password;
-  late DateTime birthDate;
+class UserModel extends ChangeNotifier {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  String? username;
+  DateTime? birthDate;
+  String? city;
   bool adminStatus = false;
-  late UserCredential credential;
 
-  Users({
-    required this.email,
-    required this.password,
-  });
-
-  signIn() async {
+  void signIn(String email, String password) async {
     try {
-      credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -32,9 +25,9 @@ class Users {
     }
   }
 
-  logIn() async {
+  void logIn(String email, String password) async {
     try {
-      credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -45,5 +38,9 @@ class Users {
         throw 'Wrong password provided for that user.';
       }
     }
+  }
+
+  void logOut() async {
+    await auth.signOut();
   }
 }

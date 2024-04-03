@@ -10,9 +10,9 @@ class WelcomePageMobile extends StatelessWidget {
         SizedBox(
           height: 30.0,
           width: MediaQuery.sizeOf(context).width,
-          child: const Positioned.fill(
-            child: Image(
-              image: AssetImage('assets/images/header.png'),
+          child: Positioned.fill(
+            child: Image.asset(
+              'assets/images/header.png',
               repeat: ImageRepeat.repeatX,
             ),
           ),
@@ -21,8 +21,8 @@ class WelcomePageMobile extends StatelessWidget {
           padding: const EdgeInsets.only(top: 30.0),
           height: 150.0,
           width: 150.0,
-          child: const Center(
-            child: Image(image: AssetImage('assets/images/logo.png')),
+          child: Center(
+            child: Image.asset('assets/images/logo.png'),
           ),
         ),
         Container(

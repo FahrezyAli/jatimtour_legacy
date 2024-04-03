@@ -5,7 +5,7 @@ class CalenderHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Stack(
@@ -13,36 +13,30 @@ class CalenderHomePage extends StatelessWidget {
             SizedBox(
               height: 100.0,
               width: 100.0,
-              child: Image(
-                image: AssetImage('assets/images/january.png'),
-              ),
+              child: Image.asset('assets/images/january.png'),
             ),
           ],
         ),
         Padding(
-          padding: EdgeInsets.only(left: 10.0),
+          padding: const EdgeInsets.only(left: 10.0),
           child: Stack(
             children: [
               SizedBox(
                 height: 100.0,
                 width: 100.0,
-                child: Image(
-                  image: AssetImage('assets/images/february.png'),
-                ),
+                child: Image.asset('assets/images/february.png'),
               ),
             ],
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 10.0),
+          padding: const EdgeInsets.only(left: 10.0),
           child: Stack(
             children: [
               SizedBox(
                 height: 100.0,
                 width: 100.0,
-                child: Image(
-                  image: AssetImage('assets/images/maret.png'),
-                ),
+                child: Image.asset('assets/images/maret.png'),
               ),
             ],
           ),

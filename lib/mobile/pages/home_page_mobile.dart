@@ -12,12 +12,13 @@ class HomePageMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
+        Image.asset('assets/images/leading.png'),
         const NewsCarousel(),
         SizedBox(
           width: MediaQuery.sizeOf(context).width,
-          child: const Positioned.fill(
-            child: Image(
-              image: AssetImage('assets/images/border1.png'),
+          child: Positioned.fill(
+            child: Image.asset(
+              'assets/images/border1.png',
               repeat: ImageRepeat.repeatX,
             ),
           ),
@@ -41,9 +42,9 @@ class HomePageMobile extends StatelessWidget {
         ),
         SizedBox(
           width: MediaQuery.sizeOf(context).width,
-          child: const Positioned.fill(
-            child: Image(
-              image: AssetImage('assets/images/border2.png'),
+          child: Positioned.fill(
+            child: Image.asset(
+              'assets/images/border2.png',
               repeat: ImageRepeat.repeatX,
             ),
           ),
@@ -77,24 +78,27 @@ class HomePageMobile extends StatelessWidget {
           padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
           child: CalenderHomePage(),
         ),
-        const Center(
+        Center(
           child: MPButton(
-            child: Text(
+            color: Colors.white,
+            text: const Text(
               "Cek Kalender→",
               style: TextStyle(
-                  fontFamily: "Inter",
-                  fontSize: 11.0,
-                  fontWeight: FontWeight.bold),
+                fontFamily: "Inter",
+                fontSize: 11.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            onTap: () {},
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 15),
           child: SizedBox(
             width: MediaQuery.sizeOf(context).width,
-            child: const Positioned.fill(
-              child: Image(
-                image: AssetImage('assets/images/border3.png'),
+            child: Positioned.fill(
+              child: Image.asset(
+                'assets/images/border3.png',
                 repeat: ImageRepeat.repeatX,
               ),
             ),
@@ -128,15 +132,17 @@ class HomePageMobile extends StatelessWidget {
           padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
           child: ArticleHomePage(),
         ),
-        const Center(
+        Center(
           child: MPButton(
-            child: Text(
+            color: Colors.white,
+            text: const Text(
               "Baca Lainnya→",
               style: TextStyle(
                   fontFamily: "Inter",
                   fontSize: 11.0,
                   fontWeight: FontWeight.bold),
             ),
+            onTap: () {},
           ),
         ),
         const Padding(

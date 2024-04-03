@@ -1,8 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:jatimtour/multi/entities/users.dart';
+import 'package:jatimtour/multi/models/user_model.dart';
 import 'package:jatimtour/multi/pages/regis_page.dart';
+import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -12,8 +13,8 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<SignUpPage> {
-  late String _email;
-  late String _password;
+  String? _email;
+  String? _password;
   String? _retypedPassword;
 
   bool _isVisible = false;
@@ -48,10 +49,10 @@ class _LoginPageState extends State<SignUpPage> {
                   fontSize: 14.0,
                 ),
                 textInputAction: TextInputAction.next,
-                onSaved: (email) => _email = email!,
-                validator: (email) => !EmailValidator.validate(email!, true)
+                validator: (value) => !EmailValidator.validate(value!, true)
                     ? "Not a valid email"
                     : null,
+                onSaved: (value) => _email = value,
               ),
             ),
           ),
@@ -93,12 +94,12 @@ class _LoginPageState extends State<SignUpPage> {
                     fontFamily: "Inter",
                     fontSize: 14.0,
                   ),
-                  onSaved: (password) => _password = password!,
-                  validator: (password) => password!.length < 6
+                  validator: (value) => value!.length < 6
                       ? "Password must be at least 6 characters"
-                      : password != _retypedPassword
+                      : value != _retypedPassword
                           ? "Passwords do not match"
                           : null,
+                  onSaved: (value) => _password = value,
                 ),
               ),
             ),
@@ -141,41 +142,41 @@ class _LoginPageState extends State<SignUpPage> {
                     fontFamily: "Inter",
                     fontSize: 14.0,
                   ),
-                  onChanged: (retypedPassword) =>
-                      _retypedPassword = retypedPassword,
+                  onChanged: (value) => _retypedPassword = value,
                 ),
               ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 15.0),
-            child: InkWell(
-              child: Ink(
-                height: 40.0,
-                width: 250.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: Colors.white,
-                ),
-                child: const Row(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Image(
-                        image: AssetImage('assets/images/google_logo.png'),
+            child: Material(
+              borderRadius: BorderRadius.circular(20.0),
+              child: InkWell(
+                child: Ink(
+                  height: 40.0,
+                  width: 250.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Image.asset('assets/images/google_logo.png'),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Log in with Google",
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontSize: 14.0,
+                      const Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Log in with Google",
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            fontSize: 14.0,
+                          ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -194,7 +195,8 @@ class _LoginPageState extends State<SignUpPage> {
                   ..onTap = () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      Users(email: _email, password: _password).signIn();
+                      final user = context.read<UserModel>();
+                      user.signIn(_email!, _password!);
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => const RegistrationPage(),

@@ -1,9 +1,14 @@
+// ignore_for_file: unused_import
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jatimtour/firebase_options.dart';
 import 'package:jatimtour/mobile/pages/start_page_mobile.dart';
+import 'package:jatimtour/multi/models/user_model.dart';
 import 'package:jatimtour/web/pages/start_page_web.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,9 +44,15 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFE9DFE0)),
-      home: kIsWeb ? const StartPageWeb() : const StartPageMobile(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<UserModel>(
+          create: (context) => UserModel(),
+        ),
+      ],
+      child: const MaterialApp(
+        home: kIsWeb ? StartPageWeb() : StartPageMobile(),
+      ),
     );
   }
 }

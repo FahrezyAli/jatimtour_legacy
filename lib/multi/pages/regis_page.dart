@@ -1,8 +1,16 @@
+// ignore_for_file: unnecessary_const
+
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jatimtour/mobile/pages/main_page_mobile.dart';
+import 'package:jatimtour/multi/buttons/mp_button.dart';
+import 'package:jatimtour/multi/buttons/picture_select_button.dart';
+import 'package:jatimtour/multi/models/user_model.dart';
+import 'package:provider/provider.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -12,335 +20,408 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  String? _selectedPrefix;
-  File? _image;
-  bool? _isPressed;
+  File? _profilePicture;
+  String? _username;
+  String? _fullName;
+  String? _phoneNumber;
+  String? _city;
+  bool _isAcceptTerms = false;
 
-  Future<void> _changeImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
+  Future _pickImage(ImageSource source) async {
+    final pickedImage = await ImagePicker().pickImage(source: source);
+    if (pickedImage != null) {
+      final croppedImage = await _cropImage(File(pickedImage.path));
+      setState(
+        () {
+          _profilePicture = croppedImage!;
+          Navigator.of(context).pop();
+        },
+      );
     }
+  }
+
+  Future<File?> _cropImage(File imageFile) async {
+    CroppedFile? croppedImage = await ImageCropper().cropImage(
+      sourcePath: imageFile.path,
+      aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
+      cropStyle: CropStyle.circle,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Crop',
+          toolbarColor: const Color(0xFFF15BB5),
+        ),
+      ],
+    );
+    if (croppedImage != null) {
+      return File(croppedImage.path);
+    }
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 251, 226),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 80,
+      backgroundColor: const Color(0xFFFFFBE2),
+      appBar: AppBar(
+        toolbarHeight: 0.0,
+      ),
+      body: Form(
+        child: ListView(
+          children: [
+            SizedBox(
+              height: 30.0,
+              width: MediaQuery.sizeOf(context).width,
+              child: Positioned.fill(
+                child: Image.asset(
+                  'assets/images/header.png',
+                  repeat: ImageRepeat.repeatX,
                 ),
-                const Text(
-                  'Buat Akun',
+              ),
+            ),
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.only(top: 30.0),
+                child: Text(
+                  "Buat Akun",
                   style: TextStyle(
-                    fontFamily: 'Inter-Bold',
-                    fontSize: 30,
+                    fontFamily: 'Inter',
+                    fontSize: 30.0,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(
-                  height: 1,
+              ),
+            ),
+            const Center(
+              child: Text(
+                "Dan bergabunglah dalam kemeriahan bulanan di kota Anda!",
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 11.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w300,
                 ),
-                const Text(
-                  'Dan bergabunglah dalam kemeriahan bulanan di kota Anda!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 9),
-                ),
-                const SizedBox(height: 20),
-                Stack(
-                  alignment: Alignment.center,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: Center(
+                child: Stack(
                   children: [
-                    GestureDetector(
-                      onTap: _changeImage,
-                      child: Container(
-                          width: 100,
-                          height: 100,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.amber,
-                          ),
-                          child: _image != null
-                              ? ClipOval(
-                                  child: Image.file(
-                                    _image!,
-                                    fit: BoxFit.contain,
-                                  ),
-                                )
-                              : Container()),
+                    SizedBox(
+                      height: 150,
+                      width: 150,
+                      child: CircleAvatar(
+                        backgroundImage:
+                            const AssetImage('assets/images/placeholder.png'),
+                        foregroundImage: _profilePicture != null
+                            ? FileImage(_profilePicture!)
+                            : const AssetImage('assets/images/placeholder.png')
+                                as ImageProvider<Object>?,
+                      ),
                     ),
-                    Positioned(
-                      top: 60,
-                      right: 0,
-                      child: SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: FloatingActionButton(
-                            backgroundColor: Colors.white,
-                            onPressed: _changeImage,
-                            child: Container()),
+                    Positioned.fill(
+                      bottom: 5.0,
+                      right: 5.0,
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: Material(
+                          shape: const CircleBorder(
+                            side: BorderSide(
+                              color: Colors.black,
+                              width: 0.5,
+                            ),
+                          ),
+                          color: Colors.white,
+                          child: InkWell(
+                            onTap: () => {
+                              showModalBottomSheet(
+                                backgroundColor: const Color(0xFFFFFBE2),
+                                context: context,
+                                isScrollControlled: true,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(25.0),
+                                  ),
+                                ),
+                                builder: (context) => DraggableScrollableSheet(
+                                  initialChildSize: 0.28,
+                                  maxChildSize: 0.4,
+                                  minChildSize: 0.28,
+                                  expand: false,
+                                  builder: (context, scrollController) {
+                                    return SingleChildScrollView(
+                                      controller: scrollController,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          top: 50.0,
+                                          left: 60.0,
+                                          right: 60.0,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            PictureSelectButton(
+                                              icon: Icons.camera_alt,
+                                              text: "Camera",
+                                              onTap: () => _pickImage(
+                                                  ImageSource.camera),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 90.0),
+                                              child: PictureSelectButton(
+                                                icon: Icons.image,
+                                                text: "Gallery",
+                                                onTap: () => _pickImage(
+                                                  ImageSource.gallery,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            },
+                            child: const Icon(
+                              Icons.edit_outlined,
+                              size: 35.0,
+                              color: Color(0xFFF15BB5),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Form(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        alignment: Alignment.center,
-                        width: 500,
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        height: 40,
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            hintText: 'Username',
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(
-                              fontFamily: 'Inter-Reg',
-                              fontWeight: FontWeight.w200,
-                            ),
-                          ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: UnconstrainedBox(
+                child: Container(
+                  height: 40.0,
+                  width: 250.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 17.0),
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "username",
+                        hintStyle: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 14.0,
                         ),
                       ),
-                      const SizedBox(
-                        height: 8,
+                      style: const TextStyle(
+                        fontFamily: "Inter",
+                        fontSize: 14.0,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 100,
-                            height: 40,
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            alignment: Alignment.center,
-                            child: const Text(
-                              '+62',
-                              style: TextStyle(
-                                fontFamily: 'Inter-Medium',
-                                fontSize: 15,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            width: 392,
-                            height: 40,
-                            alignment: Alignment.topCenter,
-                            padding: const EdgeInsets.all(10),
-                            child: Expanded(
-                              child: TextFormField(
-                                decoration: const InputDecoration(
-                                  hintText: 'No.Telepon',
-                                  border: InputBorder.none,
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Inter-Reg',
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15)),
-                            width: 292,
-                            height: 40,
-                            child: DropdownButton<String>(
-                              hint: Text(
-                                _selectedPrefix ?? 'Kota',
-                                style: const TextStyle(
-                                  fontFamily: 'Inter-Reg',
-                                  fontWeight: FontWeight.w200,
-                                ),
-                              ),
-                              value: _selectedPrefix,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  _selectedPrefix = value;
-                                });
-                              },
-                              items: <String>[
-                                'BANGKALAN',
-                                'BANYUWANGI',
-                                'BATU',
-                                'BLITAR',
-                                'BOJONEGORO',
-                                'BONDOWOSO',
-                                'GRESIK',
-                                'JEMBER',
-                                'JOMBANG',
-                                'KEDIRI',
-                                'PAMENANG',
-                                'LAMONGAN',
-                                'LUMAJANG',
-                                'MADIUN',
-                                'MAGETAN',
-                                'MALANG',
-                                'MOJOKERTO',
-                                'NGANJUK',
-                                'NGAWI',
-                                'PACITAN',
-                                'PAMEKASAN',
-                                'PASURUAN',
-                                'PONOROGO',
-                                'PROBOLINGGO',
-                                'SAMPANG',
-                                'SIDOARJO',
-                                'SITUBONDO',
-                                'SUMENEP',
-                                'TRENGGALEK',
-                                'TUBAN',
-                                'TULUNGAGUNG',
-                                'SURABAYA'
-                              ].map<DropdownMenuItem<String>>(
-                                (String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value,
-                                      style: const TextStyle(
-                                        fontFamily: 'Inter-Reg',
-                                        fontWeight: FontWeight.w200,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ).toList(),
-                              underline: Container(),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15)),
-                            width: 200,
-                            height: 40,
-                            child: Expanded(
-                              child: TextFormField(
-                                decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'Kode Pos',
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Inter-Reg',
-                                    fontWeight: FontWeight.w200,
-                                  ),
-                                ),
-                                keyboardType: TextInputType.number,
-                              ),
-                            ),
-                          )
-                        ],
-                      )
-                    ],
+                      textInputAction: TextInputAction.next,
+                      onSaved: (value) => _username = value,
+                    ),
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: UnconstrainedBox(
+                child: Container(
+                  height: 40.0,
+                  width: 250.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 17.0),
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "nama lengkap",
+                        hintStyle: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      style: const TextStyle(
+                        fontFamily: "Inter",
+                        fontSize: 14.0,
+                      ),
+                      textInputAction: TextInputAction.next,
+                      onSaved: (value) => _fullName = value,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: UnconstrainedBox(
+                child: Container(
+                  height: 40.0,
+                  width: 250.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 17.0),
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "no. hp",
+                        hintStyle: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      style: const TextStyle(
+                        fontFamily: "Inter",
+                        fontSize: 14.0,
+                      ),
+                      textInputAction: TextInputAction.next,
+                      onSaved: (value) => _phoneNumber = value,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: UnconstrainedBox(
+                child: Container(
+                  height: 40.0,
+                  width: 250.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 17.0),
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "kota",
+                        hintStyle: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      style: const TextStyle(
+                        fontFamily: "Inter",
+                        fontSize: 14.0,
+                      ),
+                      textInputAction: TextInputAction.next,
+                      onSaved: (value) => _city = value,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 30.0,
+                right: 30.0,
+              ),
+              child: Row(
+                children: [
+                  Checkbox(
+                    side: const BorderSide(
+                      color: Color(0xFFF15BB5),
+                      width: 2.0,
+                    ),
+                    fillColor: MaterialStateProperty.resolveWith(
+                      ((states) {
+                        const Set<MaterialState> interactiveStates =
+                            <MaterialState>{
+                          MaterialState.pressed,
+                          MaterialState.hovered,
+                          MaterialState.focused,
+                        };
+                        if (states.any(interactiveStates.contains) ||
+                            _isAcceptTerms) {
+                          return const Color(0xFFF15BB5);
+                        }
+                        return Colors.transparent;
+                      }),
+                    ),
+                    value: _isAcceptTerms,
+                    onChanged: (value) => setState(
+                      () => _isAcceptTerms = value!,
+                    ),
+                  ),
+                  RichText(
+                    text: const TextSpan(
+                      text: "Saya setuju dengan ",
+                      style: TextStyle(
+                        fontFamily: "Inter",
+                        fontSize: 12.0,
+                        color: Colors.black,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: "Syarat",
+                          style: TextStyle(
+                            color: Color(0xFFF15BB5),
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                        TextSpan(text: " dan "),
+                        TextSpan(
+                          text: "Ketentuan",
+                          style: TextStyle(
+                            color: Color(0xFFF15BB5),
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            UnconstrainedBox(
+              child: MPButton(
+                text: const Text(
+                  "Buat Akun",
+                  style: TextStyle(
+                    fontFamily: "Inter",
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                color: const Color(0xFFF15BB5),
+                onTap: () async {
+                  final user = context.read<UserModel>().auth.currentUser!;
+                  final profilePictureRef = FirebaseStorage.instance
+                      .ref()
+                      .child('users')
+                      .child(user.uid)
+                      .child('profile_picture.jpg');
+                  await profilePictureRef.putFile(_profilePicture!);
+                  await user
+                      .updatePhotoURL(await profilePictureRef.getDownloadURL());
                   setState(() {
-                    _isPressed = _isPressed != null ? !_isPressed! : true;
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const MainPageMobile(),
+                      ),
+                    );
                   });
                 },
-                child: Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 241, 91, 181),
-                      width: 2,
-                    ),
-                    color: _isPressed != null && _isPressed!
-                        ? const Color.fromARGB(255, 241, 91, 181)
-                        : Colors.transparent,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              const Text(
-                'By signing up, you agree to our Terms & Condition and Policy & Privacy',
-                style: TextStyle(
-                  fontFamily: 'Inter-Reg',
-                  fontSize: 8,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const MainPageMobile()),
-              );
-            },
-            child: Container(
-              width: 150,
-              height: 40,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: const Color.fromARGB(255, 241, 91, 181),
-              ),
-              child: const Text(
-                'Buat Akun',
-                style: TextStyle(
-                  fontFamily: 'Inter-Bold',
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

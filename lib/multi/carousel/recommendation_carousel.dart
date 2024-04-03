@@ -51,13 +51,15 @@ class RecommendationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
-      child: InkWell(
-        child: Stack(
-          children: [
-            Ink.image(
-              image: AssetImage("assets/images/${image[index]}.png"),
-            ),
-          ],
+      child: Material(
+        child: InkWell(
+          child: Stack(
+            children: [
+              Ink.image(
+                image: AssetImage("assets/images/${image[index]}.png"),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -16,9 +16,7 @@ class ArticleHomePage extends StatelessWidget {
           ),
           child: Row(
             children: [
-              const Image(
-                image: AssetImage('assets/images/article1.png'),
-              ),
+              Image.asset('assets/images/article1.png'),
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.only(left: 5.0),
