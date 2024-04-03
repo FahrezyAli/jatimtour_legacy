@@ -14,9 +14,12 @@ dependencies:
   email_validator: ^2.1.17
   firebase_auth: ^4.17.6
   firebase_core: ^2.25.5
+  firebase_storage: ^11.7.0
   flutter:
     sdk: flutter
+  image_cropper: ^5.0.1
   image_picker: ^1.0.7
+  provider: ^6.1.2
   shadow_overlay: ^1.0.5
 
 dev_dependencies:
@@ -29,6 +32,7 @@ flutter:
 
   assets:
   - assets/images/
+  - assets/img/
 
   fonts:
   - family: KronaOne
@@ -42,3 +46,22 @@ flutter:
       weight: 500
     - asset: assets/fonts/Inter/Inter-Bold.ttf
       weight: 700
+
+  - family: MaisonNeue
+    fonts:
+      - asset: assets/fonts/MaisonNeue/MaisonNeueBold.otf
+        weight: 700
+
+  - family: CherieDEMO
+    fonts:
+      - asset: assets/fonts/CherieDEMO/Cherie_DEMO.ttf
+
+  - family: CreatoDisplay
+    fonts:
+      - asset: assets/fonts/CreatoDisplay/CreatoDisplay-Regular.otf
+      - asset: assets/fonts/CreatoDisplay/CreatoDisplay-Medium.otf
+        weight: 500
+      - asset: assets/fonts/CreatoDisplay/CreatoDisplay-Bold.otf
+        weight: 700
+      - asset: assets/fonts/CreatoDisplay/CreatoDisplay-Black.otf
+        weight: 900
