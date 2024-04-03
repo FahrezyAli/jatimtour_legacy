@@ -32,7 +32,6 @@ flutter:
 
   assets:
   - assets/images/
-  - assets/img/
 
   fonts:
   - family: KronaOne

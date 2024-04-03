@@ -12,7 +12,7 @@ class HomePageMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        Image.asset('assets/images/leading.png'),
+        Image.asset('assets/images/leading.png', repeat: ImageRepeat.repeatX,),
         const NewsCarousel(),
         SizedBox(
           width: MediaQuery.sizeOf(context).width,

@@ -43,4 +43,8 @@ class UserModel extends ChangeNotifier {
   void logOut() async {
     await auth.signOut();
   }
+
+  Future<ImageProvider<Object>> getProfilePicture() async {
+    return Image.network(auth.currentUser!.photoURL!).image;
+  }
 }

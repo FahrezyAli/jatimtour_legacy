@@ -256,7 +256,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         fontSize: 14.0,
                       ),
                       textInputAction: TextInputAction.next,
-                      onSaved: (value) => _fullName = value,
+                      onChanged: (value) => _fullName = value,
                     ),
                   ),
                 ),
@@ -410,13 +410,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   await profilePictureRef.putFile(_profilePicture!);
                   await user
                       .updatePhotoURL(await profilePictureRef.getDownloadURL());
-                  setState(() {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const MainPageMobile(),
-                      ),
-                    );
-                  });
+                  setState(
+                    () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const MainPageMobile(),
+                        ),
+                      );
+                    },
+                  );
                 },
               ),
             ),

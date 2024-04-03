@@ -21,7 +21,10 @@ class CalenderPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        Image.asset('assets/images/leading.png'),
+        Image.asset(
+          'assets/images/leading.png',
+          repeat: ImageRepeat.repeatX,
+        ),
         Padding(
           padding: const EdgeInsets.only(left: 20.0),
           child: Stack(
