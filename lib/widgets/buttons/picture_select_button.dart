@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jatimtour/constants.dart';
 
 class PictureSelectButton extends StatelessWidget {
   final String text;
@@ -17,7 +18,7 @@ class PictureSelectButton extends StatelessWidget {
             height: 75.0,
             width: 75.0,
             child: Material(
-              color: const Color(0xFFF15BB5),
+              color: kPinkColor,
               child: InkWell(
                 onTap: onTap,
                 child: Icon(

@@ -1,7 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CalenderHomePage extends StatelessWidget {
   const CalenderHomePage({super.key});
+
+  final double padding = kIsWeb ? 50.0 : 10.0;
+  final double size = kIsWeb ? 350.0 : 100.0;
 
   @override
   Widget build(BuildContext context) {
@@ -11,32 +15,41 @@ class CalenderHomePage extends StatelessWidget {
         Stack(
           children: [
             SizedBox(
-              height: 100.0,
-              width: 100.0,
-              child: Image.asset('assets/images/january.png'),
+              height: size,
+              width: size,
+              child: Image.asset(
+                'assets/images/january.png',
+                fit: BoxFit.cover,
+              ),
             ),
           ],
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 10.0),
+          padding: EdgeInsets.only(left: padding),
           child: Stack(
             children: [
               SizedBox(
-                height: 100.0,
-                width: 100.0,
-                child: Image.asset('assets/images/february.png'),
+                height: size,
+                width: size,
+                child: Image.asset(
+                  'assets/images/february.png',
+                  fit: BoxFit.cover,
+                ),
               ),
             ],
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 10.0),
+          padding: EdgeInsets.only(left: padding),
           child: Stack(
             children: [
               SizedBox(
-                height: 100.0,
-                width: 100.0,
-                child: Image.asset('assets/images/maret.png'),
+                height: size,
+                width: size,
+                child: Image.asset(
+                  'assets/images/maret.png',
+                  fit: BoxFit.cover,
+                ),
               ),
             ],
           ),

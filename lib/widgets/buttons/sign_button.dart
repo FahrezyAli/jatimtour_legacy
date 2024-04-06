@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:jatimtour/constants.dart';
 
-class SignButtonMob extends StatefulWidget {
+class SignButton extends StatefulWidget {
   final Function(int state)? onStateChange;
 
-  const SignButtonMob({super.key, required this.onStateChange});
+  const SignButton({super.key, required this.onStateChange});
 
   @override
-  State<SignButtonMob> createState() => _SignButtonMobState();
+  State<SignButton> createState() => _SignButtonState();
 }
 
-class _SignButtonMobState extends State<SignButtonMob> {
+class _SignButtonState extends State<SignButton> {
   int _state = 0;
 
   @override
@@ -19,7 +20,7 @@ class _SignButtonMobState extends State<SignButtonMob> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: const Color(0xFFF15BB5),
+            color: kPinkColor,
           ),
         ),
         child: Material(

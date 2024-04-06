@@ -1,54 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/widgets/carousel/news_carousel.dart';
-import 'package:jatimtour/widgets/carousel/recommendation_carousel.dart';
+import 'package:jatimtour/widgets/mobile/pages/start_page_mobile.dart';
 
-class StartPageWeb extends StatefulWidget {
-  const StartPageWeb({super.key});
+class WelcomePageWeb extends StatefulWidget {
+  final int state;
+
+  const WelcomePageWeb(this.state, {super.key});
 
   @override
-  State<StartPageWeb> createState() => _StartPageWebState();
+  State<WelcomePageWeb> createState() => _WelcomePageWebState();
 }
 
-class _StartPageWebState extends State<StartPageWeb> {
+class _WelcomePageWebState extends State<WelcomePageWeb> {
+  int? _state;
+
+  @override
+  void initState() {
+    super.initState();
+    _state = widget.state;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        forceMaterialTransparency: true,
-      ),
-      extendBodyBehindAppBar: true,
-      body: ListView(
-        children: [
-          const NewsCarousel(),
-          SizedBox(
-            height: 60.0,
-            width: MediaQuery.sizeOf(context).width,
-            child: Positioned.fill(
-              child: Image.asset(
-                'assets/images/border1.png',
-                repeat: ImageRepeat.repeatX,
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(top: 40, left: 60),
-            child: Text(
-              "Populer di Sekitar\nAnda",
-              style: TextStyle(
-                fontFamily: "Inter",
-                fontSize: 60,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(top: 8),
-            child: RecommendationCarousel(),
-          )
-        ],
-      ),
-    );
+    return const StartPageMobile();
   }
 }

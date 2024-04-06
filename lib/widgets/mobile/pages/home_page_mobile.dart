@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/widgets/buttons/mp_button.dart';
+import 'package:jatimtour/widgets/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/carousel/news_carousel.dart';
 import 'package:jatimtour/widgets/carousel/recommendation_carousel.dart';
-import 'package:jatimtour/widgets/pages/article_home_page.dart';
+import 'package:jatimtour/widgets/mobile/pages/article_home_page_mobile.dart';
 import 'package:jatimtour/widgets/pages/calender_home_page.dart';
 
 class HomePageMobile extends StatelessWidget {
@@ -82,7 +82,7 @@ class HomePageMobile extends StatelessWidget {
           child: CalenderHomePage(),
         ),
         Center(
-          child: MPButton(
+          child: CircleButton(
             color: Colors.white,
             text: const Text(
               "Cek Kalender→",
@@ -133,10 +133,10 @@ class HomePageMobile extends StatelessWidget {
         ),
         const Padding(
           padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
-          child: ArticleHomePage(),
+          child: ArticleHomePageMobile(),
         ),
         Center(
-          child: MPButton(
+          child: CircleButton(
             color: Colors.white,
             text: const Text(
               "Baca Lainnya→",

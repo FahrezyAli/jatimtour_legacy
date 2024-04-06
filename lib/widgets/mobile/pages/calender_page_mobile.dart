@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/widgets/buttons/mp_button.dart';
+import 'package:jatimtour/constants.dart';
+import 'package:jatimtour/widgets/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/cards/calender_card.dart';
 
-class CalenderPage extends StatelessWidget {
+class CalenderPageMobile extends StatelessWidget {
   final List<String> months = [
     "April",
     "Mei",
@@ -15,7 +16,7 @@ class CalenderPage extends StatelessWidget {
     "Desember",
   ];
 
-  CalenderPage({super.key});
+  CalenderPageMobile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,7 @@ class CalenderPage extends StatelessWidget {
               Positioned(
                 bottom: 10.0,
                 left: 190.0,
-                child: MPButton(
+                child: CircleButton(
                   color: const Color(0xFF9B5DE5),
                   text: const Text(
                     "CeK Tanggal",
@@ -118,8 +119,8 @@ class CalenderPage extends StatelessWidget {
   Color placeholderColor(index) {
     final List<Color> colors = [
       const Color(0xFF9B5DE5),
-      const Color(0xFFF15BB5),
-      const Color(0xFFFEE440),
+      kPinkColor,
+      kYellowColor,
       const Color(0xFF00BBF9),
       const Color(0xFF00F5D4),
     ];

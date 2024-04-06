@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class RecommendationCarousel extends StatefulWidget {
@@ -24,11 +25,10 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
             isCenter: index == realIndex,
           ),
           options: CarouselOptions(
-            aspectRatio: 1.9 / 1,
             viewportFraction: 0.5,
             enlargeCenterPage: true,
             enlargeFactor: 0.15,
-            height: 100,
+            height: kIsWeb ? 350.0 : 100.0,
           ),
         ),
       ],
@@ -49,17 +49,17 @@ class RecommendationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(30),
-      child: Material(
-        child: InkWell(
-          child: Stack(
-            children: [
-              Ink.image(
-                image: AssetImage("assets/images/${image[index]}.png"),
-              ),
-            ],
-          ),
+    return Material(
+      borderRadius: BorderRadius.circular(30.0),
+      child: InkWell(
+        onTap: () {},
+        child: Stack(
+          children: [
+            Ink.image(
+              fit: BoxFit.cover,
+              image: AssetImage("assets/images/${image[index]}.png"),
+            ),
+          ],
         ),
       ),
     );

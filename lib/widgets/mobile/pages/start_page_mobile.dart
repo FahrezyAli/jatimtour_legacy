@@ -1,6 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:jatimtour/widgets/mobile/buttons/sign_button_mob.dart';
+import 'package:jatimtour/widgets/buttons/sign_button.dart';
 import 'package:jatimtour/widgets/mobile/pages/welcome_page_mobile.dart';
 import 'package:jatimtour/widgets/carousel/welcome_text_carousel.dart';
 import 'package:jatimtour/widgets/pages/login_page.dart';
@@ -41,7 +41,7 @@ class _StartPageMobileState extends State<StartPageMobile> {
           ),
           Container(
             padding: const EdgeInsets.only(top: 35.0),
-            child: SignButtonMob(
+            child: SignButton(
               onStateChange: (int state) => setState(
                 () {
                   _state = state;

@@ -4,8 +4,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/widgets/mobile/pages/main_page_mobile.dart';
-import 'package:jatimtour/widgets/buttons/mp_button.dart';
+import 'package:jatimtour/widgets/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/buttons/picture_select_button.dart';
 import 'package:jatimtour/models/user_model.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +47,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       uiSettings: [
         AndroidUiSettings(
           toolbarTitle: 'Crop',
-          toolbarColor: const Color(0xFFF15BB5),
+          toolbarColor: kPinkColor,
         ),
       ],
     );
@@ -186,7 +187,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             child: const Icon(
                               Icons.edit_outlined,
                               size: 35.0,
-                              color: Color(0xFFF15BB5),
+                              color: kPinkColor,
                             ),
                           ),
                         ),
@@ -333,7 +334,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 children: [
                   Checkbox(
                     side: const BorderSide(
-                      color: Color(0xFFF15BB5),
+                      color: kPinkColor,
                       width: 2.0,
                     ),
                     fillColor: MaterialStateProperty.resolveWith(
@@ -346,7 +347,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         };
                         if (states.any(interactiveStates.contains) ||
                             _isAcceptTerms) {
-                          return const Color(0xFFF15BB5);
+                          return kPinkColor;
                         }
                         return Colors.transparent;
                       }),
@@ -368,7 +369,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         TextSpan(
                           text: "Syarat",
                           style: TextStyle(
-                            color: Color(0xFFF15BB5),
+                            color: kPinkColor,
                             decoration: TextDecoration.underline,
                           ),
                         ),
@@ -376,7 +377,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         TextSpan(
                           text: "Ketentuan",
                           style: TextStyle(
-                            color: Color(0xFFF15BB5),
+                            color: kPinkColor,
                             decoration: TextDecoration.underline,
                           ),
                         ),
@@ -387,7 +388,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               ),
             ),
             UnconstrainedBox(
-              child: MPButton(
+              child: CircleButton(
                 text: const Text(
                   "Buat Akun",
                   style: TextStyle(
@@ -397,7 +398,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     color: Colors.white,
                   ),
                 ),
-                color: const Color(0xFFF15BB5),
+                color: kPinkColor,
                 onTap: () async {
                   final user = context.read<UserModel>().auth.currentUser!;
                   final profilePictureRef = FirebaseStorage.instance

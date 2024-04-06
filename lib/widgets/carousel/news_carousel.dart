@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:jatimtour/widgets/buttons/mp_button.dart';
+import 'package:jatimtour/widgets/buttons/circle_button.dart';
 
 class NewsCarousel extends StatefulWidget {
   const NewsCarousel({super.key});
@@ -30,15 +31,15 @@ class _NewsCarouselState extends State<NewsCarousel> {
         Positioned(
           left: 0.0,
           right: 0.0,
-          top: 125.0,
+          top: kIsWeb ? 500.0 : 125.0,
           child: Center(
-            child: MPButton(
+            child: CircleButton(
               color: Colors.white,
               text: const Text(
                 "Read More→",
                 style: TextStyle(
                     fontFamily: "Inter",
-                    fontSize: 11.0,
+                    fontSize: kIsWeb ? 15.0 : 11.0,
                     fontWeight: FontWeight.bold),
               ),
               onTap: () {},

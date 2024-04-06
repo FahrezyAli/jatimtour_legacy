@@ -1,6 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:jatimtour/widgets/mobile/pages/calender_page.dart';
+import 'package:jatimtour/widgets/mobile/pages/calender_page_mobile.dart';
 import 'package:jatimtour/widgets/mobile/pages/home_page_mobile.dart';
 import 'package:jatimtour/widgets/pages/profile_page.dart';
 
@@ -38,7 +38,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
       ),
       body: switch (_state) {
         0 => const HomePageMobile(),
-        1 => CalenderPage(),
+        1 => CalenderPageMobile(),
         4 => const ProfilePage(),
         _ => null,
       },
