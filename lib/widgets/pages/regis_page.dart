@@ -1,15 +1,13 @@
-// ignore_for_file: unnecessary_const
-
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:jatimtour/mobile/pages/main_page_mobile.dart';
-import 'package:jatimtour/multi/buttons/mp_button.dart';
-import 'package:jatimtour/multi/buttons/picture_select_button.dart';
-import 'package:jatimtour/multi/models/user_model.dart';
+import 'package:jatimtour/widgets/mobile/pages/main_page_mobile.dart';
+import 'package:jatimtour/widgets/buttons/mp_button.dart';
+import 'package:jatimtour/widgets/buttons/picture_select_button.dart';
+import 'package:jatimtour/models/user_model.dart';
 import 'package:provider/provider.dart';
 
 class RegistrationPage extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:jatimtour/multi/buttons/mp_button.dart';
+import 'package:jatimtour/widgets/buttons/mp_button.dart';
 
 class NewsCarousel extends StatefulWidget {
   const NewsCarousel({super.key});

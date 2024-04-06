@@ -1,13 +1,10 @@
-// ignore_for_file: unused_import
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jatimtour/firebase_options.dart';
-import 'package:jatimtour/mobile/pages/start_page_mobile.dart';
-import 'package:jatimtour/multi/models/user_model.dart';
-import 'package:jatimtour/web/pages/start_page_web.dart';
+import 'package:jatimtour/widgets/mobile/pages/start_page_mobile.dart';
+import 'package:jatimtour/models/user_model.dart';
+import 'package:jatimtour/widgets/web/pages/start_page_web.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {

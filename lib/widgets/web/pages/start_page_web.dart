@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/multi/carousel/news_carousel.dart';
-import 'package:jatimtour/multi/carousel/recommendation_carousel.dart';
+import 'package:jatimtour/widgets/carousel/news_carousel.dart';
+import 'package:jatimtour/widgets/carousel/recommendation_carousel.dart';
 
 class StartPageWeb extends StatefulWidget {
   const StartPageWeb({super.key});

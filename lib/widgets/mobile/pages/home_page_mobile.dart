@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/multi/buttons/mp_button.dart';
-import 'package:jatimtour/multi/carousel/news_carousel.dart';
-import 'package:jatimtour/multi/carousel/recommendation_carousel.dart';
-import 'package:jatimtour/multi/pages/article_home_page.dart';
-import 'package:jatimtour/multi/pages/calender_home_page.dart';
+import 'package:jatimtour/widgets/buttons/mp_button.dart';
+import 'package:jatimtour/widgets/carousel/news_carousel.dart';
+import 'package:jatimtour/widgets/carousel/recommendation_carousel.dart';
+import 'package:jatimtour/widgets/pages/article_home_page.dart';
+import 'package:jatimtour/widgets/pages/calender_home_page.dart';
 
 class HomePageMobile extends StatelessWidget {
   const HomePageMobile({super.key});
@@ -12,7 +12,14 @@ class HomePageMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
+<<<<<<< HEAD:lib/mobile/pages/home_page_mobile.dart
         Image.asset('assets/images/leading.png', repeat: ImageRepeat.repeatX,),
+=======
+        Image.asset(
+          'assets/images/leading.png',
+          repeat: ImageRepeat.repeatX,
+        ),
+>>>>>>> 70a2ab6 (some articles prototype):lib/widgets/mobile/pages/home_page_mobile.dart
         const NewsCarousel(),
         SizedBox(
           width: MediaQuery.sizeOf(context).width,

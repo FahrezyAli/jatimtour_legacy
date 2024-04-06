@@ -1,10 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:jatimtour/mobile/buttons/sign_button_mob.dart';
-import 'package:jatimtour/mobile/pages/welcome_page_mobile.dart';
-import 'package:jatimtour/multi/carousel/welcome_text_carousel.dart';
-import 'package:jatimtour/multi/pages/login_page.dart';
-import 'package:jatimtour/multi/pages/signup_page.dart';
+import 'package:jatimtour/widgets/mobile/buttons/sign_button_mob.dart';
+import 'package:jatimtour/widgets/mobile/pages/welcome_page_mobile.dart';
+import 'package:jatimtour/widgets/carousel/welcome_text_carousel.dart';
+import 'package:jatimtour/widgets/pages/login_page.dart';
+import 'package:jatimtour/widgets/pages/signup_page.dart';
 
 class StartPageMobile extends StatefulWidget {
   const StartPageMobile({super.key});

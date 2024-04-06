@@ -1,8 +1,14 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD:lib/mobile/pages/main_page_mobile.dart
 import 'package:jatimtour/mobile/pages/calender_page.dart';
 import 'package:jatimtour/mobile/pages/home_page_mobile.dart';
 import 'package:jatimtour/multi/pages/profile_page.dart';
+=======
+import 'package:jatimtour/widgets/mobile/pages/calender_page.dart';
+import 'package:jatimtour/widgets/mobile/pages/home_page_mobile.dart';
+import 'package:jatimtour/widgets/pages/profile_page.dart';
+>>>>>>> 70a2ab6 (some articles prototype):lib/widgets/mobile/pages/main_page_mobile.dart
 
 class MainPageMobile extends StatefulWidget {
   const MainPageMobile({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/multi/buttons/mp_button.dart';
-import 'package:jatimtour/multi/cards/calender_card.dart';
+import 'package:jatimtour/widgets/buttons/mp_button.dart';
+import 'package:jatimtour/widgets/cards/calender_card.dart';
 
 class CalenderPage extends StatelessWidget {
   final List<String> months = [
