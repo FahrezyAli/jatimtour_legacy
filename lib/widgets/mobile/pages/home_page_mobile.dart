@@ -12,14 +12,10 @@ class HomePageMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-<<<<<<< HEAD:lib/mobile/pages/home_page_mobile.dart
-        Image.asset('assets/images/leading.png', repeat: ImageRepeat.repeatX,),
-=======
         Image.asset(
           'assets/images/leading.png',
           repeat: ImageRepeat.repeatX,
         ),
->>>>>>> 70a2ab6 (some articles prototype):lib/widgets/mobile/pages/home_page_mobile.dart
         const NewsCarousel(),
         SizedBox(
           width: MediaQuery.sizeOf(context).width,

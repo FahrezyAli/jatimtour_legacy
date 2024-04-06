@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD:lib/multi/pages/profile_page.dart
-import 'package:jatimtour/multi/models/user_model.dart';
-=======
 import 'package:jatimtour/models/user_model.dart';
->>>>>>> 70a2ab6 (some articles prototype):lib/widgets/pages/profile_page.dart
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
