@@ -17,14 +17,9 @@ class HomePageMobile extends StatelessWidget {
           repeat: ImageRepeat.repeatX,
         ),
         const NewsCarousel(),
-        SizedBox(
-          width: MediaQuery.sizeOf(context).width,
-          child: Positioned.fill(
-            child: Image.asset(
-              'assets/images/border1.png',
-              repeat: ImageRepeat.repeatX,
-            ),
-          ),
+        Image.asset(
+          'assets/images/border1.png',
+          repeat: ImageRepeat.repeatX,
         ),
         const Padding(
           padding: EdgeInsets.only(top: 15),
@@ -43,14 +38,9 @@ class HomePageMobile extends StatelessWidget {
           padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
           child: RecommendationCarousel(),
         ),
-        SizedBox(
-          width: MediaQuery.sizeOf(context).width,
-          child: Positioned.fill(
-            child: Image.asset(
-              'assets/images/border2.png',
-              repeat: ImageRepeat.repeatX,
-            ),
-          ),
+        Image.asset(
+          'assets/images/border2.png',
+          repeat: ImageRepeat.repeatX,
         ),
         Padding(
           padding: const EdgeInsets.only(top: 15),
@@ -97,14 +87,9 @@ class HomePageMobile extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(top: 15),
-          child: SizedBox(
-            width: MediaQuery.sizeOf(context).width,
-            child: Positioned.fill(
-              child: Image.asset(
-                'assets/images/border3.png',
-                repeat: ImageRepeat.repeatX,
-              ),
-            ),
+          child: Image.asset(
+            'assets/images/border3.png',
+            repeat: ImageRepeat.repeatX,
           ),
         ),
         Padding(

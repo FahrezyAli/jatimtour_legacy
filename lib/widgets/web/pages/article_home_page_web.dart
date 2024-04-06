@@ -39,7 +39,9 @@ class ArticleHomePageWeb extends StatelessWidget {
                         TextSpan(
                           text: "Oleh Eric Td, 21 Januari",
                           style: TextStyle(
-                              fontSize: 14.0, fontWeight: FontWeight.normal),
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.normal,
+                          ),
                         ),
                       ],
                     ),

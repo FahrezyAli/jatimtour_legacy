@@ -1,4 +1,5 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:jatimtour/models/user_model.dart';
@@ -197,11 +198,13 @@ class _LoginPageState extends State<SignUpPage> {
                       _formKey.currentState!.save();
                       final user = context.read<UserModel>();
                       user.signIn(_email!, _password!);
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const RegistrationPage(),
-                        ),
-                      );
+                      kIsWeb
+                          ? Navigator.pushNamed(context, '/')
+                          : Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => const RegistrationPage(),
+                              ),
+                            );
                     }
                   },
               ),

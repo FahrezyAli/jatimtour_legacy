@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:jatimtour/constants.dart';
+import 'package:universal_html/html.dart';
 
 class SignButton extends StatefulWidget {
+  final int state;
   final Function(int state)? onStateChange;
 
-  const SignButton({super.key, required this.onStateChange});
+  const SignButton({this.state = 0, required this.onStateChange, super.key});
 
   @override
   State<SignButton> createState() => _SignButtonState();
 }
 
 class _SignButtonState extends State<SignButton> {
-  int _state = 0;
+  late int _state;
+
+  @override
+  void initState() {
+    super.initState();
+    _state = widget.state;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +45,9 @@ class _SignButtonState extends State<SignButton> {
                     _state = 1;
                   });
                   widget.onStateChange!(_state);
+                  window.history.pushState({}, '', '/login');
                 },
-                child: Switch(
+                child: _Switch(
                   text: "Log in",
                   state: _state,
                 ),
@@ -52,10 +61,11 @@ class _SignButtonState extends State<SignButton> {
                     _state = 2;
                   });
                   widget.onStateChange!(_state);
+                  window.history.pushState({}, '', '/signup');
                 },
-                child: Switch(
+                child: _Switch(
                   text: "Sign Up",
-                  state: _state - 1,
+                  state: widget.state - 1,
                 ),
               ),
             ],
@@ -66,11 +76,11 @@ class _SignButtonState extends State<SignButton> {
   }
 }
 
-class Switch extends StatelessWidget {
+class _Switch extends StatelessWidget {
   final String text;
   final int state;
 
-  const Switch({super.key, required this.text, required this.state});
+  const _Switch({required this.text, required this.state});
 
   @override
   Widget build(BuildContext context) {

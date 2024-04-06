@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:jatimtour/constants.dart';
+import 'package:jatimtour/models/user_model.dart';
 import 'package:jatimtour/widgets/carousel/news_carousel.dart';
 import 'package:jatimtour/widgets/carousel/recommendation_carousel.dart';
 import 'package:jatimtour/widgets/pages/calender_home_page.dart';
-import 'package:jatimtour/widgets/web/buttons/box_button.dart';
+import 'package:jatimtour/widgets/web/buttons/box_button_web.dart';
+import 'package:jatimtour/widgets/web/buttons/sign_button_web.dart';
 import 'package:jatimtour/widgets/web/pages/article_home_page_web.dart';
+import 'package:provider/provider.dart';
 
 class HomePageWeb extends StatefulWidget {
   const HomePageWeb({super.key});
@@ -24,28 +27,85 @@ class _HomePageWebState extends State<HomePageWeb> {
           "JATIMTOUR",
           style: TextStyle(
             fontFamily: "KronaOne",
-            fontSize: 20.0,
+            fontSize: 30.0,
           ),
+        ),
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: kPinkColor,
+              ),
+              child: Consumer<UserModel>(
+                builder: (context, user, widget) => Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 50.0,
+                      backgroundImage: user.auth.currentUser != null
+                          ? user.auth.currentUser!.photoURL != null
+                              ? Image.network(user.auth.currentUser!.photoURL!)
+                                  .image
+                              : const AssetImage(
+                                  'assets/images/placeholder.png')
+                          : const AssetImage('assets/images/placeholder.png'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            ListTile(
+              title: const Text(
+                "Home",
+                style: TextStyle(fontFamily: "Inter"),
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              title: const Text(
+                "Artikel",
+                style: TextStyle(fontFamily: "Inter"),
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              title: const Text(
+                "Kalender",
+                style: TextStyle(fontFamily: "Inter"),
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              title: const Text(
+                "Profil",
+                style: TextStyle(fontFamily: "Inter"),
+              ),
+              onTap: () {},
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 30.0),
+              child: Align(
+                alignment: Alignment.center,
+                child: SignButtonWeb(),
+              ),
+            ),
+          ],
         ),
       ),
       body: ListView(
         padding: EdgeInsets.zero,
         children: [
           Image.asset(
-            height: 10.0,
             'assets/images/leading.png',
+            height: 10.0,
             repeat: ImageRepeat.repeatX,
           ),
           const NewsCarousel(),
-          SizedBox(
-            height: 60.0,
-            width: MediaQuery.sizeOf(context).width,
-            child: Positioned.fill(
-              child: Image.asset(
-                'assets/images/border1.png',
-                repeat: ImageRepeat.repeatX,
-              ),
-            ),
+          Image.asset(
+            'assets/images/border1.png',
+            height: 40.0,
+            repeat: ImageRepeat.repeatX,
           ),
           const Padding(
             padding: EdgeInsets.only(top: 40, left: 60),
@@ -62,15 +122,10 @@ class _HomePageWebState extends State<HomePageWeb> {
             padding: EdgeInsets.only(top: 20, bottom: 100.0),
             child: RecommendationCarousel(),
           ),
-          SizedBox(
-            height: 60.0,
-            width: MediaQuery.sizeOf(context).width,
-            child: Positioned.fill(
-              child: Image.asset(
-                'assets/images/border2.png',
-                repeat: ImageRepeat.repeatX,
-              ),
-            ),
+          Image.asset(
+            'assets/images/border2.png',
+            height: 40.0,
+            repeat: ImageRepeat.repeatX,
           ),
           Container(
             color: kYellowColor,
@@ -124,15 +179,10 @@ class _HomePageWebState extends State<HomePageWeb> {
               ],
             ),
           ),
-          SizedBox(
-            height: 60.0,
-            width: MediaQuery.sizeOf(context).width,
-            child: Positioned.fill(
-              child: Image.asset(
-                'assets/images/border3.png',
-                repeat: ImageRepeat.repeatX,
-              ),
-            ),
+          Image.asset(
+            'assets/images/border3.png',
+            height: 40.0,
+            repeat: ImageRepeat.repeatX,
           ),
           Padding(
             padding: const EdgeInsets.only(top: 40, left: 60),
@@ -177,15 +227,10 @@ class _HomePageWebState extends State<HomePageWeb> {
               ),
             ),
           ),
-          SizedBox(
-            height: 60.0,
-            width: MediaQuery.sizeOf(context).width,
-            child: Positioned.fill(
-              child: Image.asset(
-                'assets/images/border4.png',
-                repeat: ImageRepeat.repeatX,
-              ),
-            ),
+          Image.asset(
+            'assets/images/border4.png',
+            height: 40.0,
+            repeat: ImageRepeat.repeatX,
           ),
           Container(
             color: kPinkColor,

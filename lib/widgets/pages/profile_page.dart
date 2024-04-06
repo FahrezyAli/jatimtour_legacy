@@ -18,35 +18,30 @@ class _ProfilePageState extends State<ProfilePage> {
           'assets/images/leading.png',
           repeat: ImageRepeat.repeatX,
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 30.0),
-          child: Consumer<UserModel>(
-            builder: (context, user, widget) => Column(
-              children: [
-                SizedBox(
-                  height: 150,
-                  width: 150,
-                  child: CircleAvatar(
-                    backgroundImage:
-                        const AssetImage('assets/images/placeholder.png'),
-                    foregroundImage: user.auth.currentUser!.photoURL != null
-                        ? Image.network(user.auth.currentUser!.photoURL!).image
-                        : const AssetImage('assets/images/placeholder.png')
-                            as ImageProvider<Object>?,
+        Consumer<UserModel>(
+          builder: (context, user, widget) => Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.only(top: 30.0),
+                height: 150,
+                width: 150,
+                child: CircleAvatar(
+                  backgroundImage: user.auth.currentUser!.photoURL != null
+                      ? Image.network(user.auth.currentUser!.photoURL!).image
+                      : const AssetImage('assets/images/placeholder.png'),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 10.0),
+                child: Text(
+                  "Ali Ahmad Fahrezy",
+                  style: TextStyle(
+                    fontFamily: "Inter",
+                    fontSize: 20.0,
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 10.0),
-                  child: Text(
-                    "Ali Ahmad Fahrezy",
-                    style: TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 20.0,
-                    ),
-                  ),
-                )
-              ],
-            ),
+              )
+            ],
           ),
         ),
       ],

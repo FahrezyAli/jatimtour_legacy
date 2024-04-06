@@ -6,7 +6,6 @@
 **/node_modules/*
 **/.firebaserc
 lib/firebase_options.dart
-.state
 
 ### Firebase Patch ###
 .runtimeconfig.json
@@ -95,3 +94,7 @@ coverage/
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/firebase,flutter,visualstudiocode
+
+# User Added
+.state
+*.log

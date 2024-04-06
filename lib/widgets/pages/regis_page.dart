@@ -111,9 +111,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       height: 150,
                       width: 150,
                       child: CircleAvatar(
-                        backgroundImage:
-                            const AssetImage('assets/images/placeholder.png'),
-                        foregroundImage: _profilePicture != null
+                        backgroundImage: _profilePicture != null
                             ? FileImage(_profilePicture!)
                             : const AssetImage('assets/images/placeholder.png')
                                 as ImageProvider<Object>?,

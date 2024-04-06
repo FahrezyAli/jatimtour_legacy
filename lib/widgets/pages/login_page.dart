@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:jatimtour/widgets/mobile/pages/main_page_mobile.dart';
@@ -141,11 +142,13 @@ class _LoginPageState extends State<LoginPage> {
                   ..onTap = () {
                     final user = context.read<UserModel>();
                     user.logIn(_email!, _password!);
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const MainPageMobile(),
-                      ),
-                    );
+                    kIsWeb
+                        ? Navigator.pushNamed(context, '/')
+                        : Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const MainPageMobile(),
+                            ),
+                          );
                   },
               ),
             ),

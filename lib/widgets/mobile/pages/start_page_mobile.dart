@@ -1,7 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:jatimtour/widgets/buttons/sign_button.dart';
-import 'package:jatimtour/widgets/mobile/pages/welcome_page_mobile.dart';
+import 'package:jatimtour/widgets/pages/welcome_page.dart';
 import 'package:jatimtour/widgets/carousel/welcome_text_carousel.dart';
 import 'package:jatimtour/widgets/pages/login_page.dart';
 import 'package:jatimtour/widgets/pages/signup_page.dart';
@@ -26,7 +26,15 @@ class _StartPageMobileState extends State<StartPageMobile> {
       ),
       body: ListView(
         children: [
-          const WelcomePageMobile(),
+          Image.asset(
+            'assets/images/header.png',
+            height: 30.0,
+            repeat: ImageRepeat.repeatX,
+          ),
+          const Padding(
+            padding: EdgeInsets.only(top: 30.0),
+            child: WelcomePage(),
+          ),
           Builder(
             builder: (context) {
               if (_state == 0) {
@@ -35,7 +43,7 @@ class _StartPageMobileState extends State<StartPageMobile> {
                   child: const WelcomeTextCarousel(),
                 );
               } else {
-                return Container();
+                return const SizedBox.shrink();
               }
             },
           ),
