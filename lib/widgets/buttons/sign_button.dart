@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jatimtour/constants.dart';
-import 'package:universal_html/html.dart';
+import 'package:universal_html/html.dart' as html;
 
 class SignButton extends StatefulWidget {
   final int state;
@@ -45,7 +45,7 @@ class _SignButtonState extends State<SignButton> {
                     _state = 1;
                   });
                   widget.onStateChange!(_state);
-                  window.history.pushState({}, '', '/login');
+                  html.window.history.pushState({}, '', '/login');
                 },
                 child: _Switch(
                   text: "Log in",
@@ -61,11 +61,11 @@ class _SignButtonState extends State<SignButton> {
                     _state = 2;
                   });
                   widget.onStateChange!(_state);
-                  window.history.pushState({}, '', '/signup');
+                  html.window.history.pushState({}, '', '/signup');
                 },
                 child: _Switch(
                   text: "Sign Up",
-                  state: widget.state - 1,
+                  state: _state - 1,
                 ),
               ),
             ],

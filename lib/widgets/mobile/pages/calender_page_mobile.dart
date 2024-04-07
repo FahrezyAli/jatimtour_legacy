@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/widgets/buttons/circle_button.dart';
-import 'package:jatimtour/widgets/cards/calender_card.dart';
+import 'package:jatimtour/widgets/tiles/calender_tile.dart';
 
 class CalenderPageMobile extends StatelessWidget {
   final List<String> months = [
@@ -81,7 +81,7 @@ class CalenderPageMobile extends StatelessWidget {
           physics: const ScrollPhysics(),
           itemCount: months.length,
           itemBuilder: (context, index) {
-            return CalenderCard(
+            return CalenderTile(
               month: months[index],
               image: Image.asset(
                 'assets/images/${months[index].toLowerCase()}.png',

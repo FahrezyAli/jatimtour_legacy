@@ -23,21 +23,21 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               Container(
                 padding: const EdgeInsets.only(top: 30.0),
-                height: 150,
-                width: 150,
                 child: CircleAvatar(
-                  backgroundImage: user.auth.currentUser!.photoURL != null
-                      ? Image.network(user.auth.currentUser!.photoURL!).image
-                      : const AssetImage('assets/images/placeholder.png'),
+                  radius: 75.0,
+                  backgroundImage: user.getProfilePicture(),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(top: 10.0),
-                child: Text(
-                  "Ali Ahmad Fahrezy",
-                  style: TextStyle(
-                    fontFamily: "Inter",
-                    fontSize: 20.0,
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: StreamBuilder(
+                  stream: user.getDataStream(),
+                  builder: (context, snapshot) => Text(
+                    snapshot.hasData ? snapshot.data!.data()!['fullName'] : "",
+                    style: const TextStyle(
+                      fontFamily: "Inter",
+                      fontSize: 20.0,
+                    ),
                   ),
                 ),
               )

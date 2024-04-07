@@ -1,0 +1,119 @@
+import 'package:flutter/material.dart';
+import 'package:jatimtour/constants.dart';
+import 'package:jatimtour/models/user_model.dart';
+import 'package:jatimtour/widgets/buttons/circle_button.dart';
+import 'package:jatimtour/widgets/web/buttons/sign_button_web.dart';
+import 'package:provider/provider.dart';
+
+class HomePageDrawerWeb extends StatelessWidget {
+  const HomePageDrawerWeb({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        children: [
+          DrawerHeader(
+            decoration: const BoxDecoration(
+              color: kPinkColor,
+            ),
+            child: Consumer<UserModel>(
+              builder: (context, user, widget) => Column(
+                children: [
+                  CircleAvatar(
+                    radius: 50.0,
+                    backgroundImage: user.getProfilePicture(),
+                  ),
+                  user.auth.currentUser != null
+                      ? StreamBuilder(
+                          stream: user.getDataStream(),
+                          builder: (context, snapshot) => Text(
+                            snapshot.hasData
+                                ? snapshot.data!.data()!['fullName']
+                                : "",
+                            style: const TextStyle(
+                              fontFamily: "Inter",
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ],
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              "Home",
+              style: TextStyle(fontFamily: "Inter"),
+            ),
+            onTap: () {},
+          ),
+          ListTile(
+            title: const Text(
+              "Artikel",
+              style: TextStyle(fontFamily: "Inter"),
+            ),
+            onTap: () {},
+          ),
+          ListTile(
+            title: const Text(
+              "Kalender",
+              style: TextStyle(fontFamily: "Inter"),
+            ),
+            onTap: () {},
+          ),
+          ListTile(
+            title: const Text(
+              "Profil",
+              style: TextStyle(fontFamily: "Inter"),
+            ),
+            onTap: () {},
+          ),
+          context.read<UserModel>().auth.currentUser != null
+              ? StreamBuilder(
+                  stream: context.read<UserModel>().getDataStream(),
+                  builder: (context, snapshot) {
+                    final adminStatus = snapshot.hasData
+                        ? snapshot.data!.data()!['adminStatus']
+                        : false;
+                    return adminStatus
+                        ? ListTile(
+                            title: const Text(
+                              "Admin",
+                              style: TextStyle(fontFamily: "Inter"),
+                            ),
+                            onTap: () {},
+                          )
+                        : const SizedBox.shrink();
+                  },
+                )
+              : const SizedBox.shrink(),
+          Padding(
+            padding: const EdgeInsets.only(top: 30.0),
+            child: Align(
+              alignment: Alignment.center,
+              child: Builder(builder: (context) {
+                final user = context.read<UserModel>().auth;
+                return user.currentUser == null
+                    ? const SignButtonWeb()
+                    : CircleButton(
+                        text: const Text(
+                          "Log Out",
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            color: Colors.white,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                        color: kPinkColor,
+                        onTap: user.signOut,
+                      );
+              }),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

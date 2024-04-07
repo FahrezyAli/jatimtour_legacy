@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/user_model.dart';
 import 'package:jatimtour/widgets/carousel/news_carousel.dart';
 import 'package:jatimtour/widgets/carousel/recommendation_carousel.dart';
 import 'package:jatimtour/widgets/pages/calender_home_page.dart';
 import 'package:jatimtour/widgets/web/buttons/box_button_web.dart';
-import 'package:jatimtour/widgets/web/buttons/sign_button_web.dart';
+import 'package:jatimtour/widgets/web/drawer/home_page_drawer_web.dart';
 import 'package:jatimtour/widgets/web/pages/article_home_page_web.dart';
-import 'package:provider/provider.dart';
 
 class HomePageWeb extends StatefulWidget {
   const HomePageWeb({super.key});
@@ -31,68 +29,7 @@ class _HomePageWebState extends State<HomePageWeb> {
           ),
         ),
       ),
-      endDrawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(
-                color: kPinkColor,
-              ),
-              child: Consumer<UserModel>(
-                builder: (context, user, widget) => Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 50.0,
-                      backgroundImage: user.auth.currentUser != null
-                          ? user.auth.currentUser!.photoURL != null
-                              ? Image.network(user.auth.currentUser!.photoURL!)
-                                  .image
-                              : const AssetImage(
-                                  'assets/images/placeholder.png')
-                          : const AssetImage('assets/images/placeholder.png'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            ListTile(
-              title: const Text(
-                "Home",
-                style: TextStyle(fontFamily: "Inter"),
-              ),
-              onTap: () {},
-            ),
-            ListTile(
-              title: const Text(
-                "Artikel",
-                style: TextStyle(fontFamily: "Inter"),
-              ),
-              onTap: () {},
-            ),
-            ListTile(
-              title: const Text(
-                "Kalender",
-                style: TextStyle(fontFamily: "Inter"),
-              ),
-              onTap: () {},
-            ),
-            ListTile(
-              title: const Text(
-                "Profil",
-                style: TextStyle(fontFamily: "Inter"),
-              ),
-              onTap: () {},
-            ),
-            const Padding(
-              padding: EdgeInsets.only(top: 30.0),
-              child: Align(
-                alignment: Alignment.center,
-                child: SignButtonWeb(),
-              ),
-            ),
-          ],
-        ),
-      ),
+      endDrawer: const HomePageDrawerWeb(),
       body: ListView(
         padding: EdgeInsets.zero,
         children: [

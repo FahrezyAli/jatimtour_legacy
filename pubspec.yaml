@@ -9,6 +9,7 @@ environment:
 dependencies:
   animate_do: ^3.3.4
   carousel_slider: ^4.2.1
+  cloud_firestore: ^4.16.0
   curved_navigation_bar: ^1.0.3
   dots_indicator: ^3.0.0
   email_validator: ^2.1.17

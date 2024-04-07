@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CalenderCard extends StatelessWidget {
+class CalenderTile extends StatelessWidget {
   final String month;
   final Widget image;
 
-  const CalenderCard({required this.month, required this.image, super.key});
+  const CalenderTile({required this.month, required this.image, super.key});
 
   @override
   Widget build(BuildContext context) {
