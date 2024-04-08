@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/widgets/carousel/news_carousel.dart';
 import 'package:jatimtour/widgets/carousel/recommendation_carousel.dart';
@@ -99,7 +100,7 @@ class _HomePageWebState extends State<HomePageWeb> {
                       ),
                     ),
                     color: Colors.white,
-                    onTap: () {},
+                    onTap: () => Modular.to.navigate(calenderRoute),
                   ),
                 ),
               ],
@@ -149,7 +150,7 @@ class _HomePageWebState extends State<HomePageWeb> {
                   ),
                 ),
                 color: Colors.white,
-                onTap: () {},
+                onTap: () => Modular.to.navigate(articleRoute),
               ),
             ),
           ),

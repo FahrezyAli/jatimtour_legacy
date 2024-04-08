@@ -55,7 +55,7 @@ class HomePageDrawerWeb extends StatelessWidget {
               "Artikel",
               style: TextStyle(fontFamily: "Inter"),
             ),
-            onTap: () {},
+            onTap: () => Modular.to.navigate(articleRoute),
           ),
           ListTile(
             title: const Text(
@@ -89,7 +89,7 @@ class HomePageDrawerWeb extends StatelessWidget {
                               "Admin",
                               style: TextStyle(fontFamily: "Inter"),
                             ),
-                            onTap: () {},
+                            onTap: () => Modular.to.navigate(adminRoute),
                           )
                         : const SizedBox.shrink();
                   },

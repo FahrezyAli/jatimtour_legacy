@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/widgets/buttons/circle_button.dart';
 
 class NewsCarousel extends StatefulWidget {
@@ -42,7 +44,7 @@ class _NewsCarouselState extends State<NewsCarousel> {
                     fontSize: kIsWeb ? 15.0 : 11.0,
                     fontWeight: FontWeight.bold),
               ),
-              onTap: () {},
+              onTap: () => Modular.to.navigate(articleRoute),
             ),
           ),
         ),
