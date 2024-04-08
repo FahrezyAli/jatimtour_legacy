@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jatimtour/constants.dart';
@@ -9,7 +10,6 @@ import 'package:jatimtour/widgets/buttons/picture_select_button.dart';
 import 'package:jatimtour/widgets/mobile/pages/main_page_mobile.dart';
 import 'package:jatimtour/widgets/buttons/circle_button.dart';
 import 'package:jatimtour/models/user_model.dart';
-import 'package:provider/provider.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -412,7 +412,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     _phoneNumber!,
                   );
                   kIsWeb
-                      ? Navigator.pushReplacementNamed(context, "/")
+                      ? Modular.to.navigate(homeRoute)
                       : Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
                             builder: (context) => const MainPageMobile(),

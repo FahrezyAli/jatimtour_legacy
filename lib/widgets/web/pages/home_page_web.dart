@@ -4,8 +4,8 @@ import 'package:jatimtour/widgets/carousel/news_carousel.dart';
 import 'package:jatimtour/widgets/carousel/recommendation_carousel.dart';
 import 'package:jatimtour/widgets/pages/calender_home_page.dart';
 import 'package:jatimtour/widgets/web/buttons/box_button_web.dart';
-import 'package:jatimtour/widgets/web/drawer/home_page_drawer_web.dart';
 import 'package:jatimtour/widgets/web/pages/article_home_page_web.dart';
+import 'package:jatimtour/widgets/web/web_scaffold.dart';
 
 class HomePageWeb extends StatefulWidget {
   const HomePageWeb({super.key});
@@ -17,19 +17,8 @@ class HomePageWeb extends StatefulWidget {
 class _HomePageWebState extends State<HomePageWeb> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WebScaffold(
       backgroundColor: const Color(0xFFE1E1E1),
-      appBar: AppBar(
-        backgroundColor: kPinkColor,
-        title: const Text(
-          "JATIMTOUR",
-          style: TextStyle(
-            fontFamily: "KronaOne",
-            fontSize: 30.0,
-          ),
-        ),
-      ),
-      endDrawer: const HomePageDrawerWeb(),
       body: ListView(
         padding: EdgeInsets.zero,
         children: [

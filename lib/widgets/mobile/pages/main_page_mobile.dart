@@ -2,7 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:jatimtour/widgets/mobile/pages/calender_page_mobile.dart';
 import 'package:jatimtour/widgets/mobile/pages/home_page_mobile.dart';
-import 'package:jatimtour/widgets/pages/profile_page.dart';
+import 'package:jatimtour/widgets/mobile/pages/profile_page_mobile.dart';
 
 class MainPageMobile extends StatefulWidget {
   const MainPageMobile({super.key});
@@ -39,7 +39,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
       body: switch (_state) {
         0 => const HomePageMobile(),
         1 => CalenderPageMobile(),
-        4 => const ProfilePage(),
+        4 => const ProfilePageMobile(),
         _ => null,
       },
       bottomNavigationBar: CurvedNavigationBar(

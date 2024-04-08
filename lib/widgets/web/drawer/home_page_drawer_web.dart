@@ -1,9 +1,10 @@
+import 'package:builders/builders.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/user_model.dart';
 import 'package:jatimtour/widgets/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/web/buttons/sign_button_web.dart';
-import 'package:provider/provider.dart';
 
 class HomePageDrawerWeb extends StatelessWidget {
   const HomePageDrawerWeb({super.key});
@@ -18,11 +19,11 @@ class HomePageDrawerWeb extends StatelessWidget {
               color: kPinkColor,
             ),
             child: Consumer<UserModel>(
-              builder: (context, user, widget) => Column(
+              builder: (context, user) => Column(
                 children: [
                   CircleAvatar(
                     radius: 50.0,
-                    backgroundImage: user.getProfilePicture(),
+                    backgroundImage: user!.getProfilePicture(),
                   ),
                   user.auth.currentUser != null
                       ? StreamBuilder(
@@ -47,7 +48,7 @@ class HomePageDrawerWeb extends StatelessWidget {
               "Home",
               style: TextStyle(fontFamily: "Inter"),
             ),
-            onTap: () {},
+            onTap: () => Modular.to.navigate(homeRoute),
           ),
           ListTile(
             title: const Text(
@@ -61,14 +62,19 @@ class HomePageDrawerWeb extends StatelessWidget {
               "Kalender",
               style: TextStyle(fontFamily: "Inter"),
             ),
-            onTap: () {},
+            onTap: () => Modular.to.navigate(calenderRoute),
           ),
           ListTile(
             title: const Text(
               "Profil",
               style: TextStyle(fontFamily: "Inter"),
             ),
-            onTap: () {},
+            onTap: () {
+              final user = context.read<UserModel>().auth;
+              user.currentUser == null
+                  ? Modular.to.navigate(loginRoute)
+                  : Modular.to.navigate(profileRoute);
+            },
           ),
           context.read<UserModel>().auth.currentUser != null
               ? StreamBuilder(

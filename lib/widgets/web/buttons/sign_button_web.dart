@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
 
 class SignButtonWeb extends StatelessWidget {
@@ -40,14 +41,14 @@ class SignButtonWeb extends StatelessWidget {
                 customBorder: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0),
                 ),
-                onTap: () => Navigator.pushNamed(context, "/login"),
+                onTap: () => Modular.to.navigate(loginRoute),
                 child: _button("Log in"),
               ),
               InkWell(
                 customBorder: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0),
                 ),
-                onTap: () => Navigator.pushNamed(context, "/signup"),
+                onTap: () => Modular.to.navigate(signupRoute),
                 child: _button("Sign Up"),
               ),
             ],

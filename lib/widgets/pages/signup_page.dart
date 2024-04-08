@@ -2,10 +2,10 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/models/user_model.dart';
 import 'package:jatimtour/widgets/mobile/pages/regis_page_mobile.dart';
 import 'package:jatimtour/widgets/web/pages/regis_page_web.dart';
-import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});

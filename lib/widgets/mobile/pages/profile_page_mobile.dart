@@ -1,15 +1,15 @@
+import 'package:builders/builders.dart';
 import 'package:flutter/material.dart';
 import 'package:jatimtour/models/user_model.dart';
-import 'package:provider/provider.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class ProfilePageMobile extends StatefulWidget {
+  const ProfilePageMobile({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<ProfilePageMobile> createState() => _ProfilePageMobileState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageMobileState extends State<ProfilePageMobile> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -19,13 +19,13 @@ class _ProfilePageState extends State<ProfilePage> {
           repeat: ImageRepeat.repeatX,
         ),
         Consumer<UserModel>(
-          builder: (context, user, widget) => Column(
+          builder: (context, user) => Column(
             children: [
               Container(
                 padding: const EdgeInsets.only(top: 30.0),
                 child: CircleAvatar(
                   radius: 75.0,
-                  backgroundImage: user.getProfilePicture(),
+                  backgroundImage: user!.getProfilePicture(),
                 ),
               ),
               Padding(
