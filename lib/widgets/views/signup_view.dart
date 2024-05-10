@@ -1,26 +1,33 @@
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/user_model.dart';
-import 'package:jatimtour/widgets/mobile/pages/regis_page_mobile.dart';
-import 'package:jatimtour/widgets/web/pages/regis_page_web.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class SignUpView extends StatefulWidget {
+  const SignUpView({super.key});
 
   @override
-  State<StatefulWidget> createState() => _LoginPageState();
+  State<SignUpView> createState() => _SignUpViewState();
 }
 
-class _LoginPageState extends State<SignUpPage> {
-  String? _email;
-  String? _password;
-  String? _retypedPassword;
+class _SignUpViewState extends State<SignUpView> {
+  late String _email;
+  late String _password;
+  late String _retypedPassword;
 
   bool _isVisible = false;
   final _formKey = GlobalKey<FormState>();
+
+  Future<void> _signUp() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      final user = context.read<UserModel>();
+      await user.signIn(_email, _password);
+      Modular.to.navigate(regisRoute);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +61,7 @@ class _LoginPageState extends State<SignUpPage> {
                 validator: (value) => !EmailValidator.validate(value!, true)
                     ? "Not a valid email"
                     : null,
-                onSaved: (value) => _email = value,
+                onSaved: (value) => _email = value!,
               ),
             ),
           ),
@@ -96,12 +103,13 @@ class _LoginPageState extends State<SignUpPage> {
                     fontFamily: "Inter",
                     fontSize: 14.0,
                   ),
+                  textInputAction: TextInputAction.next,
                   validator: (value) => value!.length < 6
                       ? "Password must be at least 6 characters"
                       : value != _retypedPassword
                           ? "Passwords do not match"
                           : null,
-                  onSaved: (value) => _password = value,
+                  onSaved: (value) => _password = value!,
                 ),
               ),
             ),
@@ -144,7 +152,11 @@ class _LoginPageState extends State<SignUpPage> {
                     fontFamily: "Inter",
                     fontSize: 14.0,
                   ),
+                  textInputAction: TextInputAction.done,
                   onChanged: (value) => _retypedPassword = value,
+                  onFieldSubmitted: (value) async {
+                    await _signUp();
+                  },
                 ),
               ),
             ),
@@ -194,19 +206,8 @@ class _LoginPageState extends State<SignUpPage> {
                     decoration: TextDecoration.underline,
                     color: Color(0xFFF15BF5)),
                 recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      final user = context.read<UserModel>();
-                      user.signIn(_email!, _password!);
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => kIsWeb
-                              ? const RegistrationPageWeb()
-                              : const RegistrationPageMobile(),
-                        ),
-                      );
-                    }
+                  ..onTap = () async {
+                    await _signUp();
                   },
               ),
             ),

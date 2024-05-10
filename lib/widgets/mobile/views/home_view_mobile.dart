@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:jatimtour/widgets/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/carousel/news_carousel.dart';
 import 'package:jatimtour/widgets/carousel/recommendation_carousel.dart';
-import 'package:jatimtour/widgets/mobile/pages/article_home_page_mobile.dart';
-import 'package:jatimtour/widgets/pages/calender_home_page.dart';
+import 'package:jatimtour/widgets/mobile/views/article_home_view_mobile.dart';
+import 'package:jatimtour/widgets/views/calendar_home_view.dart';
 
-class HomePageMobile extends StatelessWidget {
-  const HomePageMobile({super.key});
+class HomeViewMobile extends StatelessWidget {
+  const HomeViewMobile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ class HomePageMobile extends StatelessWidget {
         ),
         const Padding(
           padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
-          child: CalenderHomePage(),
+          child: CalendarHomeView(),
         ),
         Center(
           child: CircleButton(
@@ -118,7 +118,7 @@ class HomePageMobile extends StatelessWidget {
         ),
         const Padding(
           padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
-          child: ArticleHomePageMobile(),
+          child: ArticleHomeViewMobile(),
         ),
         Center(
           child: CircleButton(

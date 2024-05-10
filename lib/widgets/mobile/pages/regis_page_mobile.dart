@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/widgets/pages/regis_page.dart';
+import 'package:jatimtour/constants.dart';
+import 'package:jatimtour/widgets/views/regis_view.dart';
 
-class RegistrationPageMobile extends StatefulWidget {
+class RegistrationPageMobile extends StatelessWidget {
   const RegistrationPageMobile({super.key});
 
   @override
-  State<RegistrationPageMobile> createState() => _RegistrationPageState();
-}
-
-class _RegistrationPageState extends State<RegistrationPageMobile> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFBE2),
+      backgroundColor: kBackgroundColor,
       appBar: AppBar(
         toolbarHeight: 0.0,
       ),
@@ -28,7 +24,7 @@ class _RegistrationPageState extends State<RegistrationPageMobile> {
               ),
             ),
           ),
-          const RegistrationPage(),
+          const RegistrationView(),
         ],
       ),
     );

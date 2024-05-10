@@ -1,10 +1,11 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/widgets/buttons/sign_button.dart';
 import 'package:jatimtour/widgets/carousel/welcome_text_carousel.dart';
-import 'package:jatimtour/widgets/pages/login_page.dart';
-import 'package:jatimtour/widgets/pages/signup_page.dart';
-import 'package:jatimtour/widgets/pages/welcome_page.dart';
+import 'package:jatimtour/widgets/views/login_view.dart';
+import 'package:jatimtour/widgets/views/signup_view.dart';
+import 'package:jatimtour/widgets/views/welcome_view.dart';
 
 class StartPageWeb extends StatefulWidget {
   final int state;
@@ -27,7 +28,7 @@ class _StartPageWebState extends State<StartPageWeb> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFBE2),
+      backgroundColor: kBackgroundColor,
       body: Column(
         children: [
           Image.asset(
@@ -43,7 +44,7 @@ class _StartPageWebState extends State<StartPageWeb> {
                 width: MediaQuery.sizeOf(context).width * 0.5,
                 child: Column(
                   children: [
-                    const WelcomePage(),
+                    const WelcomeView(),
                     Container(
                       padding: const EdgeInsets.only(top: 30.0),
                       child: const WelcomeTextCarousel(),
@@ -69,8 +70,8 @@ class _StartPageWebState extends State<StartPageWeb> {
                       child: Builder(
                         builder: (context) {
                           return _state == 1
-                              ? FadeInLeft(child: const LoginPage())
-                              : FadeInRight(child: const SignUpPage());
+                              ? FadeInLeft(child: const LoginView())
+                              : FadeInRight(child: const SignUpView());
                         },
                       ),
                     ),

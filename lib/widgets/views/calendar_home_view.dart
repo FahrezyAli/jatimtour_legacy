@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class CalenderHomePage extends StatelessWidget {
-  const CalenderHomePage({super.key});
+class CalendarHomeView extends StatelessWidget {
+  const CalendarHomeView({super.key});
 
   final double padding = kIsWeb ? 50.0 : 10.0;
   final double size = kIsWeb ? 350.0 : 100.0;

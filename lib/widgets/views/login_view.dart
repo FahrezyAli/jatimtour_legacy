@@ -3,21 +3,26 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/widgets/mobile/pages/main_page_mobile.dart';
 import 'package:jatimtour/models/user_model.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
 
   @override
-  State<StatefulWidget> createState() => _LoginPageState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  String? _email;
-  String? _password;
+class _LoginViewState extends State<LoginView> {
+  late String _email;
+  late String _password;
 
   bool _isVisible = false;
+
+  Future<void> _logIn() async {
+    final user = context.read<UserModel>();
+    await user.logIn(_email, _password);
+    kIsWeb ? Modular.to.navigate(rootRoute) : Modular.to.navigate(mHomeRoute);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +94,11 @@ class _LoginPageState extends State<LoginPage> {
                     fontFamily: "Inter",
                     fontSize: 14.0,
                   ),
+                  textInputAction: TextInputAction.done,
                   onChanged: (value) => _password = value,
+                  onFieldSubmitted: (value) async {
+                    await _logIn();
+                  },
                 ),
               ),
             ),
@@ -142,14 +151,10 @@ class _LoginPageState extends State<LoginPage> {
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
                     final user = context.read<UserModel>();
-                    user.logIn(_email!, _password!);
+                    user.logIn(_email, _password);
                     kIsWeb
-                        ? Modular.to.navigate(homeRoute)
-                        : Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => const MainPageMobile(),
-                            ),
-                          );
+                        ? Modular.to.navigate(rootRoute)
+                        : Modular.to.navigate(mHomeRoute);
                   },
               ),
             ),

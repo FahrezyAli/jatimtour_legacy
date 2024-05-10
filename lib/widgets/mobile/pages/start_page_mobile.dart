@@ -1,10 +1,11 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/widgets/buttons/sign_button.dart';
-import 'package:jatimtour/widgets/pages/welcome_page.dart';
+import 'package:jatimtour/widgets/views/welcome_view.dart';
 import 'package:jatimtour/widgets/carousel/welcome_text_carousel.dart';
-import 'package:jatimtour/widgets/pages/login_page.dart';
-import 'package:jatimtour/widgets/pages/signup_page.dart';
+import 'package:jatimtour/widgets/views/login_view.dart';
+import 'package:jatimtour/widgets/views/signup_view.dart';
 
 class StartPageMobile extends StatefulWidget {
   const StartPageMobile({super.key});
@@ -20,7 +21,7 @@ class _StartPageMobileState extends State<StartPageMobile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFBE2),
+      backgroundColor: kBackgroundColor,
       appBar: AppBar(
         toolbarHeight: 0.0,
       ),
@@ -33,7 +34,7 @@ class _StartPageMobileState extends State<StartPageMobile> {
           ),
           const Padding(
             padding: EdgeInsets.only(top: 30.0),
-            child: WelcomePage(),
+            child: WelcomeView(),
           ),
           Builder(
             builder: (context) {
@@ -66,13 +67,13 @@ class _StartPageMobileState extends State<StartPageMobile> {
                     isUp = !isUp;
                     return FadeInUp(
                       child:
-                          _state == 1 ? const LoginPage() : const SignUpPage(),
+                          _state == 1 ? const LoginView() : const SignUpView(),
                     );
                   }
                   if (!isUp) {
                     return _state == 1
-                        ? FadeInLeft(child: const LoginPage())
-                        : FadeInRight(child: const SignUpPage());
+                        ? FadeInLeft(child: const LoginView())
+                        : FadeInRight(child: const SignUpView());
                   } else {
                     return const SizedBox.shrink();
                   }

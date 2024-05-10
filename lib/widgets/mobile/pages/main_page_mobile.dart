@@ -1,8 +1,9 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:jatimtour/widgets/mobile/pages/calender_page_mobile.dart';
-import 'package:jatimtour/widgets/mobile/pages/home_page_mobile.dart';
-import 'package:jatimtour/widgets/mobile/pages/profile_page_mobile.dart';
+import 'package:jatimtour/constants.dart';
+import 'package:jatimtour/widgets/mobile/views/calendar_view_mobile.dart';
+import 'package:jatimtour/widgets/mobile/views/home_view_mobile.dart';
+import 'package:jatimtour/widgets/mobile/views/profile_view_mobile.dart';
 
 class MainPageMobile extends StatefulWidget {
   const MainPageMobile({super.key});
@@ -13,12 +14,11 @@ class MainPageMobile extends StatefulWidget {
 
 class _MainPageMobileState extends State<MainPageMobile> {
   int _state = 0;
-  Color backgroundColor = const Color(0xFFFFFFFF);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: _getColorFromState(_state),
       appBar: AppBar(
         title: const Row(
           children: [
@@ -37,9 +37,9 @@ class _MainPageMobileState extends State<MainPageMobile> {
         backgroundColor: const Color(0x809747FF),
       ),
       body: switch (_state) {
-        0 => const HomePageMobile(),
-        1 => CalenderPageMobile(),
-        4 => const ProfilePageMobile(),
+        0 => const HomeViewMobile(),
+        1 => CalendarViewMobile(),
+        4 => const ProfileViewMobile(),
         _ => null,
       },
       bottomNavigationBar: CurvedNavigationBar(
@@ -62,25 +62,12 @@ class _MainPageMobileState extends State<MainPageMobile> {
     );
   }
 
-  void _getColorFromState(int state) {
+  Color _getColorFromState(int state) {
     switch (state) {
-      case 0:
-        backgroundColor = const Color(0xFFE8E0E0);
-        break;
-      case 1:
-        backgroundColor = const Color(0xFFF3F3F3);
-        break;
-      case 2:
-        backgroundColor = const Color(0xFFE8E0E0);
-        break;
-      case 3:
-        backgroundColor = const Color(0xFFE8E0E0);
-        break;
       case 4:
-        backgroundColor = const Color(0xFFFFFFFF);
-        break;
+        return kPinkColor;
       default:
-        backgroundColor = const Color(0xFFFFFFFF);
+        return kBackgroundColor;
     }
   }
 }

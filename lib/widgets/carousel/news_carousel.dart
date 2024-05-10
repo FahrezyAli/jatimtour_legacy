@@ -3,14 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jatimtour/widgets/buttons/circle_button.dart';
 
-class NewsCarousel extends StatefulWidget {
+class NewsCarousel extends StatelessWidget {
   const NewsCarousel({super.key});
 
-  @override
-  State<NewsCarousel> createState() => _NewsCarouselState();
-}
-
-class _NewsCarouselState extends State<NewsCarousel> {
   @override
   Widget build(BuildContext context) {
     return Stack(

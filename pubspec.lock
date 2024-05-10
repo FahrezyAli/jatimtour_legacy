@@ -33,14 +33,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.4"
-  bloc:
-    dependency: transitive
-    description:
-      name: bloc
-      sha256: "6f1b87b6eca9041d5672b6e29273cd1594db48ebb66fd2471066e9f3c3a516bd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.2.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -49,14 +41,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
-  builders:
-    dependency: "direct main"
-    description:
-      name: builders
-      sha256: e55952c5a6c063c2d1fd3b804ef5a0e7249e6aba4b07d0928880318dc6df3e0e
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   carousel_slider:
     dependency: "direct main"
     description:
@@ -520,14 +504,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.2"
-  nested:
-    dependency: transitive
-    description:
-      name: nested
-      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   path:
     dependency: transitive
     description:

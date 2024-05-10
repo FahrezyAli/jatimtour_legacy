@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/widgets/buttons/circle_button.dart';
-import 'package:jatimtour/widgets/tiles/calender_tile.dart';
-import 'package:jatimtour/widgets/web/web_scaffold.dart';
+import 'package:jatimtour/widgets/cards/calendar_card.dart';
+import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
 
-class CalenderPageWeb extends StatelessWidget {
+class CalendarPageWeb extends StatelessWidget {
   final List<String> months = [
     "April",
     "Mei",
@@ -17,7 +17,7 @@ class CalenderPageWeb extends StatelessWidget {
     "Desember",
   ];
 
-  CalenderPageWeb({super.key});
+  CalendarPageWeb({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class CalenderPageWeb extends StatelessWidget {
                   bottom: 20.0,
                   left: 500.0,
                   child: CircleButton(
-                    color: const Color(0xFF9B5DE5),
+                    color: kPurpleColor,
                     text: const Text(
                       "CeK Tanggal",
                       style: TextStyle(
@@ -84,7 +84,7 @@ class CalenderPageWeb extends StatelessWidget {
             physics: const ScrollPhysics(),
             itemCount: months.length,
             itemBuilder: (context, index) {
-              return CalenderTile(
+              return CalendarCard(
                 month: months[index],
                 image: Image.asset(
                   'assets/images/${months[index].toLowerCase()}.png',
@@ -124,7 +124,7 @@ class CalenderPageWeb extends StatelessWidget {
 
 Color placeholderColor(index) {
   final List<Color> colors = [
-    const Color(0xFF9B5DE5),
+    kPurpleColor,
     kPinkColor,
     kYellowColor,
     const Color(0xFF00BBF9),

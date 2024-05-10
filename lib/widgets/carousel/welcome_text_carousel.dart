@@ -6,7 +6,7 @@ class WelcomeTextCarousel extends StatefulWidget {
   const WelcomeTextCarousel({super.key});
 
   @override
-  State<StatefulWidget> createState() => _WelcomeTextCarousel();
+  State<WelcomeTextCarousel> createState() => _WelcomeTextCarousel();
 }
 
 class _WelcomeTextCarousel extends State<WelcomeTextCarousel> {

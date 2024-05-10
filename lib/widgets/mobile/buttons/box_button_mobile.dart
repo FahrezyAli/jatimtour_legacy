@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class BoxButtonWeb extends StatelessWidget {
+class BoxButtonMobile extends StatelessWidget {
   final Text text;
   final Color color;
   final void Function()? onTap;
 
-  const BoxButtonWeb(
+  const BoxButtonMobile(
       {required this.text,
       required this.color,
       required this.onTap,
@@ -15,12 +15,15 @@ class BoxButtonWeb extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: color,
-      elevation: 10.0,
+      borderRadius: BorderRadius.circular(5.0),
       child: InkWell(
         onTap: onTap,
         child: Ink(
-          height: 50.0,
-          width: 500.0,
+          height: 25.0,
+          width: 75.0,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5.0),
+          ),
           child: Center(child: text),
         ),
       ),

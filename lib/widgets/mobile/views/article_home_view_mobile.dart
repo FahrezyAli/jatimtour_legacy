@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ArticleHomePageMobile extends StatelessWidget {
-  const ArticleHomePageMobile({super.key});
+class ArticleHomeViewMobile extends StatelessWidget {
+  const ArticleHomeViewMobile({super.key});
 
   @override
   Widget build(BuildContext context) {

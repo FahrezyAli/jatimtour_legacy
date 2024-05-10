@@ -7,23 +7,22 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/widgets/buttons/picture_select_button.dart';
-import 'package:jatimtour/widgets/mobile/pages/main_page_mobile.dart';
 import 'package:jatimtour/widgets/buttons/circle_button.dart';
 import 'package:jatimtour/models/user_model.dart';
 
-class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({super.key});
+class RegistrationView extends StatefulWidget {
+  const RegistrationView({super.key});
 
   @override
-  State<RegistrationPage> createState() => _RegistrationPageState();
+  State<RegistrationView> createState() => _RegistrationViewState();
 }
 
-class _RegistrationPageState extends State<RegistrationPage> {
+class _RegistrationViewState extends State<RegistrationView> {
   CroppedFile? _profilePicture;
-  String? _username;
-  String? _fullName;
-  String? _phoneNumber;
-  String? _city;
+  late String _username;
+  late String _fullName;
+  late String _phoneNumber;
+  late String _city;
   bool _isAcceptTerms = false;
 
   Future _pickImage(ImageSource source) async {
@@ -33,7 +32,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       setState(
         () {
           _profilePicture = croppedImage!;
-          kIsWeb ? null : Navigator.of(context).pop();
+          kIsWeb ? null : Modular.to.pop();
         },
       );
     }
@@ -65,6 +64,36 @@ class _RegistrationPageState extends State<RegistrationPage> {
       return croppedImage;
     }
     return null;
+  }
+
+  Future<void> _register() async {
+    if (!_isAcceptTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Anda harus menyetujui syarat dan ketentuan",
+            style: TextStyle(
+              fontFamily: "Inter",
+              fontSize: 12.0,
+              color: Colors.white,
+            ),
+          ),
+          backgroundColor: kPinkColor,
+        ),
+      );
+    } else {
+      final user = context.read<UserModel>();
+      if (_profilePicture != null) {
+        await user.setProfilePicture(_profilePicture!.readAsBytes());
+      }
+      await user.setData(
+        _username,
+        _fullName,
+        _city,
+        _phoneNumber,
+      );
+      kIsWeb ? Modular.to.navigate(rootRoute) : Modular.to.navigate(mHomeRoute);
+    }
   }
 
   @override
@@ -128,7 +157,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           onTap: () => kIsWeb
                               ? _pickImage(ImageSource.gallery)
                               : showModalBottomSheet(
-                                  backgroundColor: const Color(0xFFFFFBE2),
+                                  backgroundColor: kBackgroundColor,
                                   context: context,
                                   isScrollControlled: true,
                                   shape: const RoundedRectangleBorder(
@@ -402,22 +431,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 color: kPinkColor,
                 height: 25.0,
                 width: 115.0,
-                onTap: () {
-                  final user = context.read<UserModel>();
-                  user.setProfilePicture(_profilePicture!.readAsBytes());
-                  user.setMetadata(
-                    _username!,
-                    _fullName!,
-                    _city!,
-                    _phoneNumber!,
-                  );
-                  kIsWeb
-                      ? Modular.to.navigate(homeRoute)
-                      : Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => const MainPageMobile(),
-                          ),
-                        );
+                onTap: () async {
+                  await _register();
                 },
               ),
             ),

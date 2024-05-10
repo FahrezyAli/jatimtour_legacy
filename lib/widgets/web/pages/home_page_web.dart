@@ -2,19 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/widgets/carousel/news_carousel.dart';
 import 'package:jatimtour/widgets/carousel/recommendation_carousel.dart';
-import 'package:jatimtour/widgets/pages/calender_home_page.dart';
+import 'package:jatimtour/widgets/views/calendar_home_view.dart';
 import 'package:jatimtour/widgets/web/buttons/box_button_web.dart';
-import 'package:jatimtour/widgets/web/pages/article_home_page_web.dart';
-import 'package:jatimtour/widgets/web/web_scaffold.dart';
+import 'package:jatimtour/widgets/web/views/article_home_view_web.dart';
+import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
 
-class HomePageWeb extends StatefulWidget {
+class HomePageWeb extends StatelessWidget {
   const HomePageWeb({super.key});
 
-  @override
-  State<HomePageWeb> createState() => _HomePageWebState();
-}
-
-class _HomePageWebState extends State<HomePageWeb> {
   @override
   Widget build(BuildContext context) {
     return WebScaffold(
@@ -85,11 +80,11 @@ class _HomePageWebState extends State<HomePageWeb> {
                 ),
                 const Padding(
                   padding: EdgeInsets.only(top: 50.0, bottom: 50.0),
-                  child: CalenderHomePage(),
+                  child: CalendarHomeView(),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 50.0),
-                  child: BoxButton(
+                  child: BoxButtonWeb(
                     text: const Text(
                       "Lihat Kalender",
                       style: TextStyle(
@@ -134,12 +129,12 @@ class _HomePageWebState extends State<HomePageWeb> {
           ),
           const Padding(
             padding: EdgeInsets.only(top: 20.0, bottom: 50.0),
-            child: ArticleHomePageWeb(),
+            child: ArticleHomeViewWeb(),
           ),
           UnconstrainedBox(
             child: Padding(
               padding: const EdgeInsets.only(bottom: 50.0),
-              child: BoxButton(
+              child: BoxButtonWeb(
                 text: const Text(
                   "Artikel Lain",
                   style: TextStyle(

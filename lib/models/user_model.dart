@@ -4,7 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class UserModel extends ChangeNotifier {
+class UserModel {
   final FirebaseAuth auth = FirebaseAuth.instance;
   String? username;
   String? fullName;
@@ -12,7 +12,7 @@ class UserModel extends ChangeNotifier {
   String? city;
   bool adminStatus = false;
 
-  void signIn(String email, String password) async {
+  Future<void> signIn(String email, String password) async {
     try {
       await auth.createUserWithEmailAndPassword(
         email: email,
@@ -29,7 +29,7 @@ class UserModel extends ChangeNotifier {
     }
   }
 
-  void logIn(String email, String password) async {
+  Future<void> logIn(String email, String password) async {
     try {
       await auth.signInWithEmailAndPassword(
         email: email,
@@ -44,12 +44,11 @@ class UserModel extends ChangeNotifier {
     }
   }
 
-  void logOut() async {
+  Future<void> signOut() async {
     await auth.signOut();
-    notifyListeners();
   }
 
-  void setMetadata(
+  Future<void> setData(
       String username, String fullName, String city, String phoneNumber) async {
     final user = auth.currentUser;
     final userRef =
@@ -65,7 +64,7 @@ class UserModel extends ChangeNotifier {
     );
   }
 
-  void setProfilePicture(Future<Uint8List> dataStream) async {
+  Future<void> setProfilePicture(Future<Uint8List> dataStream) async {
     final user = auth.currentUser;
     final profilePictureRef = FirebaseStorage.instance
         .ref()
@@ -77,12 +76,35 @@ class UserModel extends ChangeNotifier {
     await user.updatePhotoURL(await profilePictureRef.getDownloadURL());
   }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getDataStream() {
-    final usersStream = FirebaseFirestore.instance
+  Stream<DocumentSnapshot<Map<String, dynamic>>>? getDataStream() {
+    return auth.currentUser != null
+        ? FirebaseFirestore.instance
+            .collection('users')
+            .doc(auth.currentUser!.uid)
+            .snapshots()
+        : null;
+  }
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> getData() async {
+    return await FirebaseFirestore.instance
         .collection('users')
         .doc(auth.currentUser!.uid)
-        .snapshots();
-    return usersStream;
+        .get();
+  }
+
+  Future<void> updateData(
+      String username, String fullName, String city, String phoneNumber) async {
+    final user = auth.currentUser;
+    final userRef =
+        FirebaseFirestore.instance.collection('users').doc(user!.uid);
+    await userRef.update(
+      {
+        'username': username,
+        'fullName': fullName,
+        'city': city,
+        'phoneNumber': phoneNumber,
+      },
+    );
   }
 
   ImageProvider<Object> getProfilePicture() {
