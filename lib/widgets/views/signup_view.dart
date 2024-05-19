@@ -13,26 +13,75 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
-  late String _email;
-  late String _password;
-  late String _retypedPassword;
-
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _retypedPasswordController = TextEditingController();
   bool _isVisible = false;
-  final _formKey = GlobalKey<FormState>();
 
   Future<void> _signUp() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      final user = context.read<UserModel>();
-      await user.signIn(_email, _password);
-      Modular.to.navigate(regisRoute);
+    final user = context.read<UserModel>();
+    if (!EmailValidator.validate(_emailController.text)) {
+      _showErrorSnackBar("Email is not valid");
+    } else if (_passwordController.text.length < 6) {
+      _showErrorSnackBar("Password must be at least 6 characters");
+    } else if (_passwordController.text != _retypedPasswordController.text) {
+      _showErrorSnackBar("Password and Retyped Password do not match");
+    } else {
+      await user
+          .signIn(_emailController.text, _passwordController.text)
+          .then((value) => Modular.to.navigate(regisRoute))
+          .catchError(
+        (e) {
+          _showErrorSnackBar(e.toString());
+        },
+      );
     }
+  }
+
+  void _showErrorSnackBar(String error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          "Sign Up Error: $error",
+          style: const TextStyle(
+            fontFamily: "Inter",
+            fontSize: 12.0,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _suffixPasswordIcon() {
+    return Focus(
+      canRequestFocus: false,
+      descendantsAreFocusable: false,
+      child: IconButton(
+        icon: Icon(
+          _isVisible ? Icons.visibility : Icons.visibility_off,
+          color: const Color(0xFFF15BF5),
+        ),
+        onPressed: () => setState(
+          () {
+            _isVisible = !_isVisible;
+          },
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _retypedPasswordController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: _formKey,
       child: Column(
         children: [
           Container(
@@ -45,6 +94,7 @@ class _SignUpViewState extends State<SignUpView> {
             child: Padding(
               padding: const EdgeInsets.only(left: 17.0),
               child: TextFormField(
+                controller: _emailController,
                 decoration: const InputDecoration(
                   border: InputBorder.none,
                   hintText: "email",
@@ -58,10 +108,6 @@ class _SignUpViewState extends State<SignUpView> {
                   fontSize: 14.0,
                 ),
                 textInputAction: TextInputAction.next,
-                validator: (value) => !EmailValidator.validate(value!, true)
-                    ? "Not a valid email"
-                    : null,
-                onSaved: (value) => _email = value!,
               ),
             ),
           ),
@@ -77,39 +123,23 @@ class _SignUpViewState extends State<SignUpView> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 17.0),
                 child: TextFormField(
+                  controller: _passwordController,
                   obscureText: !_isVisible,
                   enableSuggestions: false,
                   autocorrect: false,
                   decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "password",
-                    hintStyle: const TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 14.0,
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isVisible ? Icons.visibility : Icons.visibility_off,
-                        color: const Color(0xFFF15BF5),
+                      border: InputBorder.none,
+                      hintText: "password",
+                      hintStyle: const TextStyle(
+                        fontFamily: "Inter",
+                        fontSize: 14.0,
                       ),
-                      onPressed: () => setState(
-                        () {
-                          _isVisible = !_isVisible;
-                        },
-                      ),
-                    ),
-                  ),
+                      suffixIcon: _suffixPasswordIcon()),
                   style: const TextStyle(
                     fontFamily: "Inter",
                     fontSize: 14.0,
                   ),
                   textInputAction: TextInputAction.next,
-                  validator: (value) => value!.length < 6
-                      ? "Password must be at least 6 characters"
-                      : value != _retypedPassword
-                          ? "Passwords do not match"
-                          : null,
-                  onSaved: (value) => _password = value!,
                 ),
               ),
             ),
@@ -126,34 +156,23 @@ class _SignUpViewState extends State<SignUpView> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 17.0),
                 child: TextFormField(
+                  controller: _retypedPasswordController,
                   obscureText: !_isVisible,
                   enableSuggestions: false,
                   autocorrect: false,
                   decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "retype password",
-                    hintStyle: const TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 14.0,
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isVisible ? Icons.visibility : Icons.visibility_off,
-                        color: const Color(0xFFF15BF5),
+                      border: InputBorder.none,
+                      hintText: "retype password",
+                      hintStyle: const TextStyle(
+                        fontFamily: "Inter",
+                        fontSize: 14.0,
                       ),
-                      onPressed: () => setState(
-                        () {
-                          _isVisible = !_isVisible;
-                        },
-                      ),
-                    ),
-                  ),
+                      suffixIcon: _suffixPasswordIcon()),
                   style: const TextStyle(
                     fontFamily: "Inter",
                     fontSize: 14.0,
                   ),
                   textInputAction: TextInputAction.done,
-                  onChanged: (value) => _retypedPassword = value,
                   onFieldSubmitted: (value) async {
                     await _signUp();
                   },

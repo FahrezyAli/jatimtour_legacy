@@ -5,16 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class UserModel {
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  String? username;
-  String? fullName;
-  String? phoneNumber;
-  String? city;
-  bool adminStatus = false;
+  final authInstance = FirebaseAuth.instance;
 
   Future<void> signIn(String email, String password) async {
     try {
-      await auth.createUserWithEmailAndPassword(
+      await authInstance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -23,6 +18,8 @@ class UserModel {
         throw 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
         throw 'The account already exists for that email.';
+      } else {
+        rethrow;
       }
     } catch (e) {
       rethrow;
@@ -31,7 +28,7 @@ class UserModel {
 
   Future<void> logIn(String email, String password) async {
     try {
-      await auth.signInWithEmailAndPassword(
+      await authInstance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -40,32 +37,40 @@ class UserModel {
         throw 'No user found for that email.';
       } else if (e.code == 'wrong-password') {
         throw 'Wrong password provided for that user.';
+      } else {
+        rethrow;
       }
+    } catch (e) {
+      rethrow;
     }
   }
 
   Future<void> signOut() async {
-    await auth.signOut();
+    await authInstance.signOut();
   }
 
-  Future<void> setData(
-      String username, String fullName, String city, String phoneNumber) async {
-    final user = auth.currentUser;
+  Future<void> setData({
+    required String username,
+    required String fullName,
+    required String phoneNumber,
+    required String city,
+  }) async {
+    final user = authInstance.currentUser;
     final userRef =
         FirebaseFirestore.instance.collection('users').doc(user!.uid);
     await userRef.set(
       {
         'username': username,
         'fullName': fullName,
-        'city': city,
         'phoneNumber': phoneNumber,
-        'adminStatus': adminStatus,
+        'city': city,
+        'role': 0,
       },
     );
   }
 
   Future<void> setProfilePicture(Future<Uint8List> dataStream) async {
-    final user = auth.currentUser;
+    final user = authInstance.currentUser;
     final profilePictureRef = FirebaseStorage.instance
         .ref()
         .child('users')
@@ -77,10 +82,10 @@ class UserModel {
   }
 
   Stream<DocumentSnapshot<Map<String, dynamic>>>? getDataStream() {
-    return auth.currentUser != null
+    return authInstance.currentUser != null
         ? FirebaseFirestore.instance
             .collection('users')
-            .doc(auth.currentUser!.uid)
+            .doc(authInstance.currentUser!.uid)
             .snapshots()
         : null;
   }
@@ -88,29 +93,38 @@ class UserModel {
   Future<DocumentSnapshot<Map<String, dynamic>>> getData() async {
     return await FirebaseFirestore.instance
         .collection('users')
-        .doc(auth.currentUser!.uid)
+        .doc(authInstance.currentUser!.uid)
         .get();
   }
 
-  Future<void> updateData(
-      String username, String fullName, String city, String phoneNumber) async {
-    final user = auth.currentUser;
+  Future<DocumentSnapshot<Map<String, dynamic>>> getOtherUsersData(
+      String uid) async {
+    return await FirebaseFirestore.instance.collection('users').doc(uid).get();
+  }
+
+  Future<void> updateData({
+    required String username,
+    required String fullName,
+    required String phoneNumber,
+    required String city,
+  }) async {
+    final user = authInstance.currentUser;
     final userRef =
         FirebaseFirestore.instance.collection('users').doc(user!.uid);
     await userRef.update(
       {
         'username': username,
         'fullName': fullName,
-        'city': city,
         'phoneNumber': phoneNumber,
+        'city': city,
       },
     );
   }
 
   ImageProvider<Object> getProfilePicture() {
-    return auth.currentUser != null
-        ? auth.currentUser!.photoURL != null
-            ? Image.network(auth.currentUser!.photoURL!).image
+    return authInstance.currentUser != null
+        ? authInstance.currentUser!.photoURL != null
+            ? Image.network(authInstance.currentUser!.photoURL!).image
             : const AssetImage('assets/images/placeholder.png')
         : const AssetImage('assets/images/placeholder.png');
   }

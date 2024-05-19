@@ -34,5 +34,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <provider
+            android:name="com.superlist.super_native_extensions.DataProvider"
+            android:authorities="my.id.jatimtour_team.jatimtour.SuperClipboardDataProvider"
+            android:exported="true"
+            android:grantUriPermissions="true" >
+        </provider>
     </application>
 </manifest>

@@ -64,19 +64,17 @@ class HomePageDrawerWeb extends StatelessWidget {
               style: TextStyle(fontFamily: "Inter"),
             ),
             onTap: () {
-              final user = context.read<UserModel>().auth;
-              user.currentUser == null
-                  ? Modular.to.navigate(loginRoute)
-                  : Modular.to.navigate(profileRoute);
+              Modular.to.navigate(user.authInstance.currentUser != null
+                  ? profileRoute
+                  : loginRoute);
             },
           ),
           StreamBuilder(
             stream: user.getDataStream(),
             builder: (context, snapshot) {
-              final adminStatus = snapshot.hasData
-                  ? snapshot.data!.data()!['adminStatus']
-                  : false;
-              return adminStatus
+              final role =
+                  snapshot.hasData ? snapshot.data!.data()!['role'] : false;
+              return role == 2
                   ? ListTile(
                       title: const Text(
                         "Admin",
@@ -93,7 +91,7 @@ class HomePageDrawerWeb extends StatelessWidget {
               alignment: Alignment.center,
               child: Builder(
                 builder: (context) {
-                  return user.auth.currentUser == null
+                  return user.authInstance.currentUser == null
                       ? const SignButtonWeb()
                       : CircleButton(
                           text: const Text(

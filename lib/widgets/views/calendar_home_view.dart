@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class CalendarHomeView extends StatelessWidget {
   const CalendarHomeView({super.key});
 
-  final double padding = kIsWeb ? 50.0 : 10.0;
-  final double size = kIsWeb ? 350.0 : 100.0;
+  final padding = kIsWeb ? 50.0 : 10.0;
+  final size = kIsWeb ? 350.0 : 100.0;
 
   @override
   Widget build(BuildContext context) {

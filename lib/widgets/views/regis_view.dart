@@ -19,10 +19,10 @@ class RegistrationView extends StatefulWidget {
 
 class _RegistrationViewState extends State<RegistrationView> {
   CroppedFile? _profilePicture;
-  late String _username;
-  late String _fullName;
-  late String _phoneNumber;
-  late String _city;
+  final _usernameController = TextEditingController();
+  final _fullNameController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
+  String? _selectedCity;
   bool _isAcceptTerms = false;
 
   Future _pickImage(ImageSource source) async {
@@ -31,7 +31,9 @@ class _RegistrationViewState extends State<RegistrationView> {
       final croppedImage = await _cropImage(File(pickedImage.path));
       setState(
         () {
-          _profilePicture = croppedImage!;
+          if (croppedImage != null) {
+            _profilePicture = croppedImage;
+          }
           kIsWeb ? null : Modular.to.pop();
         },
       );
@@ -67,33 +69,49 @@ class _RegistrationViewState extends State<RegistrationView> {
   }
 
   Future<void> _register() async {
-    if (!_isAcceptTerms) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Anda harus menyetujui syarat dan ketentuan",
-            style: TextStyle(
-              fontFamily: "Inter",
-              fontSize: 12.0,
-              color: Colors.white,
-            ),
-          ),
-          backgroundColor: kPinkColor,
-        ),
-      );
+    if (_usernameController.text == "" ||
+        _fullNameController.text == "" ||
+        _phoneNumberController.text == "" ||
+        _selectedCity == "") {
+      _showErrorSnackBar("Please fill all the fields");
+    } else if (!_isAcceptTerms) {
+      _showErrorSnackBar("Please accept the terms and conditions");
     } else {
       final user = context.read<UserModel>();
       if (_profilePicture != null) {
         await user.setProfilePicture(_profilePicture!.readAsBytes());
       }
       await user.setData(
-        _username,
-        _fullName,
-        _city,
-        _phoneNumber,
+        username: _usernameController.text,
+        fullName: _fullNameController.text,
+        phoneNumber: _phoneNumberController.text,
+        city: _selectedCity!,
       );
-      kIsWeb ? Modular.to.navigate(rootRoute) : Modular.to.navigate(mHomeRoute);
+      Modular.to.navigate(kIsWeb ? rootRoute : mHomeRoute);
     }
+  }
+
+  void _showErrorSnackBar(String error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          error,
+          style: const TextStyle(
+            fontFamily: "Inter",
+            fontSize: 12.0,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _usernameController.dispose();
+    _fullNameController.dispose();
+    _phoneNumberController.dispose();
   }
 
   @override
@@ -237,6 +255,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 17.0),
                   child: TextFormField(
+                    controller: _usernameController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "username",
@@ -250,7 +269,6 @@ class _RegistrationViewState extends State<RegistrationView> {
                       fontSize: 14.0,
                     ),
                     textInputAction: TextInputAction.next,
-                    onChanged: (value) => _username = value,
                   ),
                 ),
               ),
@@ -269,6 +287,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 17.0),
                   child: TextFormField(
+                    controller: _fullNameController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "nama lengkap",
@@ -282,7 +301,6 @@ class _RegistrationViewState extends State<RegistrationView> {
                       fontSize: 14.0,
                     ),
                     textInputAction: TextInputAction.next,
-                    onChanged: (value) => _fullName = value,
                   ),
                 ),
               ),
@@ -301,6 +319,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 17.0),
                   child: TextFormField(
+                    controller: _phoneNumberController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "no. hp",
@@ -314,7 +333,6 @@ class _RegistrationViewState extends State<RegistrationView> {
                       fontSize: 14.0,
                     ),
                     textInputAction: TextInputAction.next,
-                    onChanged: (value) => _phoneNumber = value,
                   ),
                 ),
               ),
@@ -332,21 +350,38 @@ class _RegistrationViewState extends State<RegistrationView> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 17.0),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "kota",
-                      hintStyle: TextStyle(
+                  child: DropdownButtonFormField<String>(
+                    value: _selectedCity,
+                    iconSize: 0.0,
+                    decoration: const InputDecoration.collapsed(hintText: ''),
+                    hint: const Text(
+                      "kota",
+                      style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 14.0,
                       ),
                     ),
-                    style: const TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 14.0,
-                    ),
-                    textInputAction: TextInputAction.next,
-                    onChanged: (value) => _city = value,
+                    onChanged: (String? value) {
+                      setState(
+                        () {
+                          _selectedCity = value!;
+                        },
+                      );
+                    },
+                    items: cityList.map<DropdownMenuItem<String>>(
+                      (String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: const TextStyle(
+                              fontFamily: "Inter",
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        );
+                      },
+                    ).toList(),
                   ),
                 ),
               ),

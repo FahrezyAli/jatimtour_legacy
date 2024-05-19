@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/widgets/views/regis_view.dart';
 
 class RegistrationPageMobile extends StatelessWidget {
@@ -8,7 +7,6 @@ class RegistrationPageMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kBackgroundColor,
       appBar: AppBar(
         toolbarHeight: 0.0,
       ),

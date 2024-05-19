@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -13,15 +14,66 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  late String _email;
-  late String _password;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   bool _isVisible = false;
 
-  Future<void> _logIn() async {
+  void _logIn() async {
     final user = context.read<UserModel>();
-    await user.logIn(_email, _password);
-    kIsWeb ? Modular.to.navigate(rootRoute) : Modular.to.navigate(mHomeRoute);
+    if (!EmailValidator.validate(_emailController.text, true)) {
+      _showErrorSnackBar("Email is not valid");
+    } else {
+      await user.logIn(_emailController.text, _passwordController.text).then(
+        (value) {
+          Modular.to.navigate(kIsWeb ? regisRoute : mHomeRoute);
+        },
+      ).catchError(
+        (e) {
+          _showErrorSnackBar(e.toString());
+        },
+      );
+    }
+  }
+
+  void _showErrorSnackBar(String error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          "Login Error: $error",
+          style: const TextStyle(
+            fontFamily: "Inter",
+            fontSize: 12.0,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _suffixPasswordIcon() {
+    return Focus(
+      canRequestFocus: false,
+      descendantsAreFocusable: false,
+      child: IconButton(
+        icon: Icon(
+          _isVisible ? Icons.visibility : Icons.visibility_off,
+          color: const Color(0xFFF15BF5),
+        ),
+        onPressed: () => setState(
+          () {
+            _isVisible = !_isVisible;
+          },
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
   }
 
   @override
@@ -39,6 +91,7 @@ class _LoginViewState extends State<LoginView> {
             child: Padding(
               padding: const EdgeInsets.only(left: 17.0),
               child: TextFormField(
+                controller: _emailController,
                 decoration: const InputDecoration(
                   border: InputBorder.none,
                   hintText: "email",
@@ -52,7 +105,6 @@ class _LoginViewState extends State<LoginView> {
                   fontSize: 14.0,
                 ),
                 textInputAction: TextInputAction.next,
-                onChanged: (value) => _email = value,
               ),
             ),
           ),
@@ -68,6 +120,7 @@ class _LoginViewState extends State<LoginView> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 17.0),
                 child: TextFormField(
+                  controller: _passwordController,
                   obscureText: !_isVisible,
                   enableSuggestions: false,
                   autocorrect: false,
@@ -78,27 +131,14 @@ class _LoginViewState extends State<LoginView> {
                       fontFamily: "Inter",
                       fontSize: 14.0,
                     ),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isVisible ? Icons.visibility : Icons.visibility_off,
-                        color: const Color(0xFFF15BF5),
-                      ),
-                      onPressed: () => setState(
-                        () {
-                          _isVisible = !_isVisible;
-                        },
-                      ),
-                    ),
+                    suffixIcon: _suffixPasswordIcon(),
                   ),
                   style: const TextStyle(
                     fontFamily: "Inter",
                     fontSize: 14.0,
                   ),
                   textInputAction: TextInputAction.done,
-                  onChanged: (value) => _password = value,
-                  onFieldSubmitted: (value) async {
-                    await _logIn();
-                  },
+                  onFieldSubmitted: (value) => _logIn(),
                 ),
               ),
             ),
@@ -148,14 +188,7 @@ class _LoginViewState extends State<LoginView> {
                   decoration: TextDecoration.underline,
                   color: Color(0xFFF15BF5),
                 ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    final user = context.read<UserModel>();
-                    user.logIn(_email, _password);
-                    kIsWeb
-                        ? Modular.to.navigate(rootRoute)
-                        : Modular.to.navigate(mHomeRoute);
-                  },
+                recognizer: TapGestureRecognizer()..onTap = () => _logIn(),
               ),
             ),
           )

@@ -1,6 +1,9 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
+import 'package:jatimtour/models/user_model.dart';
 import 'package:jatimtour/widgets/buttons/sign_button.dart';
 import 'package:jatimtour/widgets/views/welcome_view.dart';
 import 'package:jatimtour/widgets/carousel/welcome_text_carousel.dart';
@@ -17,6 +20,15 @@ class StartPageMobile extends StatefulWidget {
 class _StartPageMobileState extends State<StartPageMobile> {
   int _state = 0;
   bool isUp = true;
+
+  @override
+  void initState() {
+    super.initState();
+    final user = context.read<UserModel>().authInstance.currentUser;
+    if (user != null) {
+      kIsWeb ? null : Modular.to.navigate(mHomeRoute);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

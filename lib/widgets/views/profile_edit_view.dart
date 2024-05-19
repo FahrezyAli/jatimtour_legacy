@@ -12,6 +12,7 @@ import 'package:jatimtour/models/user_model.dart';
 
 class ProfileEditView extends StatefulWidget {
   final Map<String, dynamic> data;
+
   const ProfileEditView({required this.data, super.key});
 
   @override
@@ -20,10 +21,10 @@ class ProfileEditView extends StatefulWidget {
 
 class _ProfileEditViewState extends State<ProfileEditView> {
   CroppedFile? _profilePicture;
-  String? _username;
-  String? _fullName;
-  String? _phoneNumber;
-  String? _city;
+  final _usernameController = TextEditingController();
+  final _fullNameController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
+  String? _selectedCity;
 
   Future _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
@@ -31,7 +32,9 @@ class _ProfileEditViewState extends State<ProfileEditView> {
       final croppedImage = await _cropImage(File(pickedImage.path));
       setState(
         () {
-          _profilePicture = croppedImage!;
+          if (croppedImage != null) {
+            _profilePicture = croppedImage;
+          }
           kIsWeb ? null : Modular.to.pop();
         },
       );
@@ -67,17 +70,57 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   }
 
   Future<void> _update() async {
-    final user = context.read<UserModel>();
-    if (_profilePicture != null) {
-      await user.setProfilePicture(_profilePicture!.readAsBytes());
+    if (_usernameController.text == "" ||
+        _fullNameController.text == "" ||
+        _phoneNumberController.text == "" ||
+        _selectedCity == "") {
+      _showErrorSnackBar("Please fill all the fields");
+    } else {
+      final user = context.read<UserModel>();
+      if (_profilePicture != null) {
+        await user.setProfilePicture(_profilePicture!.readAsBytes());
+      }
+      await user.updateData(
+        username: _usernameController.text,
+        fullName: _fullNameController.text,
+        phoneNumber: _phoneNumberController.text,
+        city: _selectedCity!,
+      );
+      Modular.to.pop();
     }
-    await user.updateData(
-      _username!,
-      _fullName!,
-      _city!,
-      _phoneNumber!,
+  }
+
+  void _showErrorSnackBar(String error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          error,
+          style: const TextStyle(
+            fontFamily: "Inter",
+            fontSize: 12.0,
+            color: Colors.white,
+          ),
+        ),
+      ),
     );
-    kIsWeb ? Modular.to.navigate(rootRoute) : Modular.to.navigate(mHomeRoute);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _usernameController.text = widget.data['username'];
+    _fullNameController.text = widget.data['fullName'];
+    _phoneNumberController.text = widget.data['phoneNumber'];
+    _selectedCity = widget.data['city'];
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _usernameController.dispose();
+    _fullNameController.dispose();
+    _phoneNumberController.dispose();
   }
 
   @override
@@ -209,7 +252,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 17.0),
                   child: TextFormField(
-                    initialValue: widget.data['username'],
+                    controller: _usernameController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "username",
@@ -223,7 +266,6 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       fontSize: 14.0,
                     ),
                     textInputAction: TextInputAction.next,
-                    onChanged: (value) => _username = value,
                   ),
                 ),
               ),
@@ -242,7 +284,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 17.0),
                   child: TextFormField(
-                    initialValue: widget.data['fullName'],
+                    controller: _fullNameController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "nama lengkap",
@@ -256,7 +298,6 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       fontSize: 14.0,
                     ),
                     textInputAction: TextInputAction.next,
-                    onChanged: (value) => _fullName = value,
                   ),
                 ),
               ),
@@ -275,7 +316,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 17.0),
                   child: TextFormField(
-                    initialValue: widget.data['phoneNumber'],
+                    controller: _phoneNumberController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "no. hp",
@@ -289,7 +330,6 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       fontSize: 14.0,
                     ),
                     textInputAction: TextInputAction.next,
-                    onChanged: (value) => _phoneNumber = value,
                   ),
                 ),
               ),
@@ -307,22 +347,38 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 17.0),
-                  child: TextFormField(
-                    initialValue: widget.data['city'],
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "kota",
-                      hintStyle: TextStyle(
+                  child: DropdownButtonFormField<String>(
+                    value: _selectedCity,
+                    iconSize: 0.0,
+                    decoration: const InputDecoration.collapsed(hintText: ''),
+                    hint: const Text(
+                      "kota",
+                      style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 14.0,
                       ),
                     ),
-                    style: const TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 14.0,
-                    ),
-                    textInputAction: TextInputAction.next,
-                    onChanged: (value) => _city = value,
+                    onChanged: (String? value) {
+                      setState(
+                        () {
+                          _selectedCity = value!;
+                        },
+                      );
+                    },
+                    items: cityList.map<DropdownMenuItem<String>>(
+                      (String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: const TextStyle(
+                              fontFamily: "Inter",
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        );
+                      },
+                    ).toList(),
                   ),
                 ),
               ),

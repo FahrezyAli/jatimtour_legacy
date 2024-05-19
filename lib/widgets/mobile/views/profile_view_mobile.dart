@@ -26,10 +26,6 @@ class ProfileViewMobile extends StatelessWidget {
         ),
         Column(
           children: [
-            Image.asset(
-              'assets/images/leading.png',
-              repeat: ImageRepeat.repeatX,
-            ),
             Container(
               padding: const EdgeInsets.only(top: 30.0),
               child: CircleAvatar(
@@ -53,7 +49,7 @@ class ProfileViewMobile extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      snapshot.hasData ? snapshot.data!.data()!['email'] : "",
+                      user.authInstance.currentUser!.email!,
                       style: const TextStyle(
                         fontFamily: "Inter",
                         fontSize: 15.0,

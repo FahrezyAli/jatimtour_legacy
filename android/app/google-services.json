@@ -41,6 +41,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900388906458:android:0376a95c38783d552b4ce3",
+        "android_client_info": {
+          "package_name": "my.id.jatimtour_team.jatimtour"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "900388906458-5tpri1n2rm57dr51e0rl1eur46u5am6h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_WDrdvSXmMUeiM61pSAtixOFqcsHd-H8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "900388906458-5tpri1n2rm57dr51e0rl1eur46u5am6h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "900388906458-l6j6d7vtcmudq4fages40uso36pemgc2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.jatimtour"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

@@ -1,8 +1,11 @@
+import 'package:columnbuilder/columnbuilder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:jatimtour/models/article_model.dart';
 import 'package:jatimtour/widgets/buttons/circle_button.dart';
+import 'package:jatimtour/widgets/cards/article_home_cards.dart';
 import 'package:jatimtour/widgets/carousel/news_carousel.dart';
 import 'package:jatimtour/widgets/carousel/recommendation_carousel.dart';
-import 'package:jatimtour/widgets/mobile/views/article_home_view_mobile.dart';
 import 'package:jatimtour/widgets/views/calendar_home_view.dart';
 
 class HomeViewMobile extends StatelessWidget {
@@ -116,9 +119,38 @@ class HomeViewMobile extends StatelessWidget {
             ),
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
-          child: ArticleHomeViewMobile(),
+        Padding(
+          padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
+          child: FutureBuilder(
+            future:
+                context.read<ArticleModel>().getCollectionWithOrderByAndLimit(
+                      order: 'datePublished',
+                      isDescending: true,
+                      limit: 3,
+                    ),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                final data = snapshot.data!.docs;
+                return ColumnBuilder(
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    final article = data[index].data();
+                    return ArticleHomeCards(
+                      imageUrl: article['coverImageUrl'],
+                      title: article['title'],
+                      author: article['authorUsername'],
+                      datePublished: article['datePublished'].toDate(),
+                      tags: article['tags'],
+                    );
+                  },
+                );
+              }
+            },
+          ),
         ),
         Center(
           child: CircleButton(

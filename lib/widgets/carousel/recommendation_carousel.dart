@@ -10,7 +10,7 @@ class RecommendationCarousel extends StatefulWidget {
 }
 
 class _RecommendationCarouselState extends State<RecommendationCarousel> {
-  final CarouselController _controller = CarouselController();
+  final _controller = CarouselController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
 class RecommendationCard extends StatelessWidget {
   final int index;
   final bool isCenter;
-  final List<String> image = ["situbondo", "kuda_lumping", "konser"];
+  final image = ["situbondo", "kuda_lumping", "konser"];
 
   RecommendationCard({
     this.index = 0,

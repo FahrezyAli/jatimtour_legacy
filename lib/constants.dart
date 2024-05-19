@@ -11,5 +11,43 @@ const String loginRoute = '/login';
 const String signupRoute = '/signup';
 const String regisRoute = '/regis';
 const String calendarRoute = '/calendar';
+const String yourArticleRoute = '/your-article';
+const String createArticleRoute = '/create-article';
+const String eventListRoute = '/event-list';
 const String profileRoute = '/profile';
 const String editProfileRoute = "$profileRoute/edit";
+
+const List<String> cityList = [
+  'Bangkalan',
+  'Banyuwangi',
+  'Batu',
+  'Blitar',
+  'Bojonegoro',
+  'Bondowoso',
+  'Gresik',
+  'Jember',
+  'Jombang',
+  'Kediri',
+  'Pamenang',
+  'Lamongan',
+  'Lumajang',
+  'Madiun',
+  'Magetan',
+  'Malang',
+  'Mojokerto',
+  'Nganjuk',
+  'Ngawi',
+  'Pacitan',
+  'Pamekasan',
+  'Pasuruan',
+  'Ponorogo',
+  'Probolinggo',
+  'Sampang',
+  'Sidoarjo',
+  'Situbondo',
+  'Sumenep',
+  'Trenggalek',
+  'Tuban',
+  'Tulungagung',
+  'Surabaya',
+];

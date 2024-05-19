@@ -4,7 +4,7 @@ import 'package:jatimtour/widgets/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/cards/calendar_card.dart';
 
 class CalendarViewMobile extends StatelessWidget {
-  final List<String> months = [
+  final months = [
     "April",
     "Mei",
     "Juni",
@@ -89,7 +89,7 @@ class CalendarViewMobile extends StatelessWidget {
                   children: [
                     Image.asset(
                       'assets/images/placeholder_months.png',
-                      color: placeholderColor(index),
+                      color: _placeholderColor(index),
                     ),
                     const Positioned.fill(
                       child: Center(
@@ -116,8 +116,8 @@ class CalendarViewMobile extends StatelessWidget {
     );
   }
 
-  Color placeholderColor(index) {
-    final List<Color> colors = [
+  Color _placeholderColor(index) {
+    final colors = [
       kPurpleColor,
       kPinkColor,
       kYellowColor,
