@@ -50,7 +50,30 @@ class ArticleModel {
     await setCoverImage(coverImage.readAsBytes(), articleRef.id);
   }
 
-  Future<QuerySnapshot<Map<String, dynamic>>> getCollectionWithOrderByAndLimit({
+  Future<DocumentSnapshot<Map<String, dynamic>>> getArticleFromId(String id) {
+    return FirebaseFirestore.instance.collection('articles').doc(id).get();
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> getArticlesFromAuthorUsername(
+    String authorUsername,
+  ) {
+    return FirebaseFirestore.instance
+        .collection('articles')
+        .where('authorUsername', isEqualTo: authorUsername)
+        .get();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>>
+      getArticleStreamFromAuthorUsername(
+    String authorUsername,
+  ) {
+    return FirebaseFirestore.instance
+        .collection('articles')
+        .where('authorUsername', isEqualTo: authorUsername)
+        .snapshots();
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> getArticlesWithOrderByAndLimit({
     required String order,
     required bool isDescending,
     required int limit,
@@ -60,5 +83,16 @@ class ArticleModel {
         .orderBy(order, descending: isDescending)
         .limit(limit)
         .get();
+  }
+
+  Future<void> updateArticleWithId(String id, Map<String, dynamic> data) async {
+    await FirebaseFirestore.instance
+        .collection('articles')
+        .doc(id)
+        .update(data);
+  }
+
+  Future<void> deleteArticlesWithId(String id) async {
+    await FirebaseFirestore.instance.collection('articles').doc(id).delete();
   }
 }

@@ -119,14 +119,14 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
       body: Form(
         child: Column(
           children: [
-            Container(
-              height: 180,
-              width: 360,
-              color: const Color(0xFFD9D9D9),
-              child: Builder(
-                builder: (context) {
-                  if (_coverImage == null) {
-                    return Center(
+            Builder(
+              builder: (context) {
+                if (_coverImage == null) {
+                  return Container(
+                    height: 180,
+                    width: 360,
+                    color: const Color(0xFFD9D9D9),
+                    child: Center(
                       child: CircleButton(
                         text: const Text("Tambah Gambar"),
                         color: const Color(0xFFD9D9D9),
@@ -135,14 +135,23 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
                         border: Border.all(color: Colors.black, width: 1.0),
                         onTap: () => _pickImage(ImageSource.gallery),
                       ),
-                    );
-                  } else {
-                    return kIsWeb
-                        ? Image.network(_coverImage!.path)
-                        : Image.file(File(_coverImage!.path));
-                  }
-                },
-              ),
+                    ),
+                  );
+                } else {
+                  return Material(
+                    child: InkWell(
+                        child: Ink.image(
+                          height: 180,
+                          width: 360,
+                          image: kIsWeb
+                              ? Image.network(_coverImage!.path).image
+                              : Image.file(File(_coverImage!.path)).image,
+                          fit: BoxFit.cover,
+                        ),
+                        onTap: () => _pickImage(ImageSource.gallery)),
+                  );
+                }
+              },
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10.0),
@@ -265,6 +274,8 @@ class _CreateArticlePageMobileContState
   Future<void> _saveArticle() async {
     if (_selectedCity == null || _tagsController.getTags!.isEmpty) {
       _showErrorSnackBar("Semua field harus diisi");
+    } else if (_datePublished.isBefore(DateTime.now())) {
+      _showErrorSnackBar("Tanggal Publikasi tidak valid");
     } else {
       await ArticleModel().setData(
         title: widget.titleController.text,

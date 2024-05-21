@@ -55,18 +55,17 @@ class UserModel {
     required String phoneNumber,
     required String city,
   }) async {
+    final userData = {
+      'username': username,
+      'fullName': fullName,
+      'phoneNumber': phoneNumber,
+      'city': city,
+      'role': 0,
+    };
     final user = authInstance.currentUser;
     final userRef =
         FirebaseFirestore.instance.collection('users').doc(user!.uid);
-    await userRef.set(
-      {
-        'username': username,
-        'fullName': fullName,
-        'phoneNumber': phoneNumber,
-        'city': city,
-        'role': 0,
-      },
-    );
+    await userRef.set(userData);
   }
 
   Future<void> setProfilePicture(Future<Uint8List> dataStream) async {
@@ -82,24 +81,21 @@ class UserModel {
   }
 
   Stream<DocumentSnapshot<Map<String, dynamic>>>? getDataStream() {
-    return authInstance.currentUser != null
-        ? FirebaseFirestore.instance
-            .collection('users')
-            .doc(authInstance.currentUser!.uid)
-            .snapshots()
-        : null;
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(authInstance.currentUser!.uid)
+        .snapshots();
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getData() async {
-    return await FirebaseFirestore.instance
+  Future<DocumentSnapshot<Map<String, dynamic>>> getData() {
+    return FirebaseFirestore.instance
         .collection('users')
         .doc(authInstance.currentUser!.uid)
         .get();
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getOtherUsersData(
-      String uid) async {
-    return await FirebaseFirestore.instance.collection('users').doc(uid).get();
+  Future<DocumentSnapshot<Map<String, dynamic>>> getOtherUsersData(String uid) {
+    return FirebaseFirestore.instance.collection('users').doc(uid).get();
   }
 
   Future<void> updateData({

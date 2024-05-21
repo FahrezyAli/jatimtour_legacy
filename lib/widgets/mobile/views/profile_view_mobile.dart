@@ -35,8 +35,8 @@ class ProfileViewMobile extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
-              child: StreamBuilder(
-                stream: user.getDataStream(),
+              child: FutureBuilder(
+                future: user.getData(),
                 builder: (context, snapshot) => Column(
                   children: [
                     Text(

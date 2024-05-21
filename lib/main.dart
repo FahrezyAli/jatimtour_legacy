@@ -6,12 +6,14 @@ import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/firebase_options.dart';
 import 'package:jatimtour/models/article_model.dart';
 import 'package:jatimtour/models/user_model.dart';
+import 'package:jatimtour/widgets/mobile/pages/article_page_mobile.dart';
 import 'package:jatimtour/widgets/mobile/pages/create_article_page_mobile.dart';
 import 'package:jatimtour/widgets/mobile/pages/event_list_page_mobile.dart';
 import 'package:jatimtour/widgets/mobile/pages/main_page_mobile.dart';
 import 'package:jatimtour/widgets/mobile/pages/profile_edit_page_mobile.dart';
 import 'package:jatimtour/widgets/mobile/pages/regis_page_mobile.dart';
 import 'package:jatimtour/widgets/mobile/pages/start_page_mobile.dart';
+import 'package:jatimtour/widgets/mobile/pages/update_article_page_mobile.dart';
 import 'package:jatimtour/widgets/web/pages/calendar_page_web.dart';
 import 'package:jatimtour/widgets/web/pages/home_page_web.dart';
 import 'package:jatimtour/widgets/web/pages/regis_page_web.dart';
@@ -58,17 +60,37 @@ class AppModule extends Module {
       r.child(rootRoute, child: (context) => const StartPageMobile());
       r.child(regisRoute, child: (context) => const RegistrationPageMobile());
       r.child(mHomeRoute, child: (context) => const MainPageMobile());
-      r.child(createArticleRoute,
-          child: (context) => const CreateArticlePageMobile());
-      r.child('$createArticleRoute/cont',
-          child: (context) => CreateArticlePageMobileCont(
-                r.args.data['coverImage'],
-                r.args.data['titleController'],
-                r.args.data['quillController'],
-              ));
-      r.child('$eventListRoute/:month',
+      r.child(
+        articleRoute,
+        child: (context) => ArticlePageMobile(
+          articleId: r.args.queryParams['articleId']!,
+        ),
+      );
+      r.child(
+        createArticleRoute,
+        child: (context) => const CreateArticlePageMobile(),
+      );
+      r.child(
+        '$createArticleRoute/cont',
+        child: (context) => CreateArticlePageMobileCont(
+          r.args.data['coverImage'],
+          r.args.data['titleController'],
+          r.args.data['quillController'],
+        ),
+      );
+      r.child(
+        updateArticleRoute,
+        child: (context) => UpdateArticlePageMobile(
+          articleId: r.args.queryParams['articleId']!,
+        ),
+      );
+      r.child('$updateArticleRoute/cont',
           child: (context) =>
-              EventListPageMobile(month: r.args.params['month']));
+              UpdateArticlePageMobileCont(r.args.queryParams['articleId']!));
+      r.child(
+        '$eventListRoute/:month',
+        child: (context) => EventListPageMobile(month: r.args.params['month']),
+      );
       r.child(editProfileRoute,
           child: (context) => const ProfileEditPageMobile());
     }

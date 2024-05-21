@@ -24,8 +24,8 @@ class HomePageDrawerWeb extends StatelessWidget {
                   radius: 50.0,
                   backgroundImage: user.getProfilePicture(),
                 ),
-                StreamBuilder(
-                  stream: user.getDataStream(),
+                FutureBuilder(
+                  future: user.getData(),
                   builder: (context, snapshot) => Text(
                     snapshot.hasData ? snapshot.data!.data()!['fullName'] : "",
                     style: const TextStyle(
@@ -69,12 +69,13 @@ class HomePageDrawerWeb extends StatelessWidget {
                   : loginRoute);
             },
           ),
-          StreamBuilder(
-            stream: user.getDataStream(),
+          FutureBuilder(
+            future: user.getData(),
             builder: (context, snapshot) {
-              final role =
-                  snapshot.hasData ? snapshot.data!.data()!['role'] : false;
-              return role == 2
+              final role = snapshot.hasData
+                  ? snapshot.data!.data()!['role'] == 2
+                  : false;
+              return role
                   ? ListTile(
                       title: const Text(
                         "Admin",

@@ -1,5 +1,4 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
@@ -26,7 +25,7 @@ class _StartPageMobileState extends State<StartPageMobile> {
     super.initState();
     final user = context.read<UserModel>().authInstance.currentUser;
     if (user != null) {
-      kIsWeb ? null : Modular.to.navigate(mHomeRoute);
+      Modular.to.navigate(mHomeRoute);
     }
   }
 
