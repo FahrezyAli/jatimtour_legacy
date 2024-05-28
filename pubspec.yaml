@@ -26,9 +26,10 @@ dependencies:
   intl: ^0.18.1
   rowbuilder: ^0.0.1
   shadow_overlay: ^1.0.5
-  shared_preferences: ^2.2.3
-  textfield_tags: ^3.0.1
-  transparent_image: ^2.0.1
+  textfield_tags:
+    git:
+      url: https://github.com/lionelmennig/textfield_tags.git
+      ref: fixes/allow-controller-re-registration
   universal_html: ^2.2.4
   url_strategy: ^0.2.0
 

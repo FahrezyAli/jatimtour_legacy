@@ -9,7 +9,7 @@ class ProfileViewMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<UserModel>();
+    final userInstance = Modular.get<UserModel>();
     return Stack(
       children: [
         Positioned.fill(
@@ -30,33 +30,28 @@ class ProfileViewMobile extends StatelessWidget {
               padding: const EdgeInsets.only(top: 30.0),
               child: CircleAvatar(
                 radius: 75.0,
-                backgroundImage: user.getProfilePicture(),
+                backgroundImage: userInstance.getProfilePicture(),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
-              child: FutureBuilder(
-                future: user.getData(),
-                builder: (context, snapshot) => Column(
-                  children: [
-                    Text(
-                      snapshot.hasData
-                          ? snapshot.data!.data()!['username']
-                          : "",
-                      style: const TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 20.0,
-                      ),
+              child: Column(
+                children: [
+                  Text(
+                    userInstance.userData!['username'],
+                    style: const TextStyle(
+                      fontFamily: "Inter",
+                      fontSize: 20.0,
                     ),
-                    Text(
-                      user.authInstance.currentUser!.email!,
-                      style: const TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 15.0,
-                      ),
+                  ),
+                  Text(
+                    userInstance.authInstance.currentUser!.email!,
+                    style: const TextStyle(
+                      fontFamily: "Inter",
+                      fontSize: 15.0,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -88,8 +83,7 @@ class ProfileViewMobile extends StatelessWidget {
                     ),
                     color: kPurpleColor,
                     onTap: () async {
-                      final user = context.read<UserModel>();
-                      await user.signOut();
+                      await userInstance.signOut();
                       Modular.to.navigate('/');
                     },
                   ),

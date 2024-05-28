@@ -1,36 +1,38 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/article_model.dart';
+import 'package:jatimtour/models/event_model.dart';
 import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
-import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
-import 'package:jatimtour/widgets/universal/fields/tags_field.dart';
+import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
 import 'package:textfield_tags/textfield_tags.dart';
 
-class CreateArticlePageMobile extends StatefulWidget {
-  const CreateArticlePageMobile({super.key});
+class CreateEventPageWeb extends StatefulWidget {
+  const CreateEventPageWeb({super.key});
 
   @override
-  State<CreateArticlePageMobile> createState() =>
-      _CreateArticlePageMobileState();
+  State<CreateEventPageWeb> createState() => _CreateEventPageWebState();
 }
 
-class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
+class _CreateEventPageWebState extends State<CreateEventPageWeb> {
   CroppedFile? _coverImage;
-  final _titleController = TextEditingController();
-  final _datePublishedController = TextEditingController();
-  DateTime _datePublished = DateTime.now();
   String? _selectedCity;
+
+  final _eventNameController = TextEditingController();
   final _quillController = QuillController.basic();
+
   late double _distanceToField;
-  final _tagsController = StringTagController();
+  DateTime _startDate = DateTime.now();
+
+  final TextEditingController _startDateController = TextEditingController();
+  final StringTagController _tagsController = StringTagController();
 
   Future _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
@@ -51,11 +53,17 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
       sourcePath: imageFile.path,
       aspectRatio: const CropAspectRatio(ratioX: 2.0, ratioY: 1.0),
       cropStyle: CropStyle.rectangle,
-      compressQuality: 100,
+      compressQuality: 1000,
       uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: 'Crop',
-          toolbarColor: kPinkColor,
+        WebUiSettings(
+          context: context,
+          presentStyle: CropperPresentStyle.dialog,
+          boundary: const CroppieBoundary(width: 350, height: 350),
+          viewPort:
+              const CroppieViewPort(width: 350, height: 350, type: 'rectangle'),
+          enableExif: true,
+          enableZoom: true,
+          showZoomer: false,
         )
       ],
     );
@@ -79,15 +87,15 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
     );
     if (picked != null && time != null) {
       setState(() {
-        _datePublished = DateTime(
+        _startDate = DateTime(
           picked.year,
           picked.month,
           picked.day,
           time.hour,
           time.minute,
         );
-        _datePublishedController.text =
-            DateFormat.yMd().add_Hm().format(_datePublished);
+        _startDateController.text =
+            intl.DateFormat.yMd().add_Hm().format(_startDate);
       });
     }
   }
@@ -107,18 +115,22 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
     );
   }
 
-  Future<void> _saveArticle() async {
-    if (_selectedCity == null || _tagsController.getTags!.isEmpty) {
+  Future<void> _saveEvent() async {
+    if (_eventNameController.text.isEmpty ||
+        _coverImage == null ||
+        _quillController.document.isEmpty() ||
+        _selectedCity == null ||
+        _tagsController.getTags!.isEmpty) {
       _showErrorSnackBar("Semua field harus diisi");
-    } else if (_datePublished.isBefore(DateTime.now())) {
-      _showErrorSnackBar("Tanggal Publikasi tidak valid");
+    } else if (_startDate.isBefore(DateTime.now())) {
+      _showErrorSnackBar("Tanggal Mulai Event tidak valid");
     } else {
-      await ArticleModel().setData(
-        title: _titleController.text,
+      await EventModel().setData(
+        eventName: _eventNameController.text,
         coverImage: _coverImage!,
-        datePublished: _datePublished,
+        startDate: _startDate,
         city: _selectedCity!,
-        content: jsonEncode(_quillController.document.toDelta().toJson()),
+        description: jsonEncode(_quillController.document.toDelta().toJson()),
         tags: _tagsController.getTags!,
       );
       Modular.to.pop();
@@ -129,8 +141,8 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
   void initState() {
     super.initState();
     _selectedCity = cityList[0];
-    _datePublishedController.text =
-        DateFormat.yMd().add_Hm().format(_datePublished);
+    _startDateController.text =
+        intl.DateFormat.yMd().add_Hm().format(_startDate);
   }
 
   @override
@@ -142,28 +154,23 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
   @override
   void dispose() {
     super.dispose();
-    _titleController.dispose();
     _quillController.dispose();
-    _datePublishedController.dispose();
+    _eventNameController.dispose();
+    _startDateController.dispose();
     _tagsController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MobileScaffold(
+    return WebScaffold(
       actions: [
-        IconButton(
-          onPressed: () => _saveArticle(),
-          icon: const Icon(Icons.save),
-        )
+        IconButton(onPressed: () => _saveEvent(), icon: const Icon(Icons.save))
       ],
       body: Form(
-        child: ListView(
+        child: Column(
           children: [
-            Builder(
-              builder: (context) {
-                if (_coverImage == null) {
-                  return Container(
+            _coverImage == null
+                ? Container(
                     height: 180,
                     width: 360,
                     color: const Color(0xFFD9D9D9),
@@ -177,28 +184,26 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
                         onTap: () => _pickImage(ImageSource.gallery),
                       ),
                     ),
-                  );
-                } else {
-                  return Material(
+                  )
+                : Material(
                     child: InkWell(
                         child: Ink.image(
                           height: 180,
                           width: 360,
-                          image: Image.file(File(_coverImage!.path)).image,
+                          image: kIsWeb
+                              ? Image.network(_coverImage!.path).image
+                              : Image.file(File(_coverImage!.path)).image,
                           fit: BoxFit.cover,
                         ),
                         onTap: () => _pickImage(ImageSource.gallery)),
-                  );
-                }
-              },
-            ),
+                  ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10.0),
               child: TextFormField(
-                controller: _titleController,
+                controller: _eventNameController,
                 decoration: const InputDecoration(
                   border: InputBorder.none,
-                  hintText: "Judul Artikel",
+                  hintText: "Nama Event",
                   hintStyle: TextStyle(
                     fontFamily: "Inter",
                     fontSize: 20.0,
@@ -217,11 +222,11 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
               padding: const EdgeInsets.only(left: 10.0, top: 5.0, right: 10.0),
               child: Row(
                 children: [
-                  const Text("Tanggal Publikasi: ",
+                  const Text("Tanggal Mulai Event: ",
                       style: TextStyle(fontFamily: "Inter", fontSize: 16.0)),
                   Expanded(
                     child: TextFormField(
-                      controller: _datePublishedController,
+                      controller: _startDateController,
                       readOnly: true,
                       decoration: InputDecoration(
                         border: InputBorder.none,
@@ -280,16 +285,97 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, top: 5.0, right: 10.0),
-              child: TagsField(
-                tagsController: _tagsController,
-                distanceToField: _distanceToField,
-                validator: (String tags) {
-                  if (_tagsController.getTags!.contains(tags)) {
-                    _showErrorSnackBar("Tag sudah ada");
-                    return "";
-                  }
-                  return null;
-                },
+              child: Row(
+                children: [
+                  const Text("Tags: ",
+                      style: TextStyle(fontFamily: "Inter", fontSize: 16.0)),
+                  Expanded(
+                    child: TextFieldTags<String>(
+                      textfieldTagsController: _tagsController,
+                      textSeparators: const [' ', ','],
+                      letterCase: LetterCase.normal,
+                      validator: (String tag) {
+                        if (_tagsController.getTags!.contains(tag)) {
+                          _showErrorSnackBar("Tag sudah ada");
+                          return "";
+                        }
+                        return null;
+                      },
+                      inputFieldBuilder: (context, inputFieldValues) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: TextField(
+                            controller: inputFieldValues.textEditingController,
+                            focusNode: inputFieldValues.focusNode,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              prefixIconConstraints: BoxConstraints(
+                                  maxWidth: _distanceToField * 0.5),
+                              prefixIcon: inputFieldValues.tags.isNotEmpty
+                                  ? SingleChildScrollView(
+                                      controller:
+                                          inputFieldValues.tagScrollController,
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: inputFieldValues.tags.map(
+                                          (String tag) {
+                                            return Container(
+                                              decoration: const BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(20.0),
+                                                ),
+                                                color: kPinkColor,
+                                              ),
+                                              margin: const EdgeInsets.only(
+                                                  right: 10.0),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10.0,
+                                                      vertical: 4.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  InkWell(
+                                                    child: Text(
+                                                      '#$tag',
+                                                      style: const TextStyle(
+                                                          fontFamily: 'Inter',
+                                                          fontSize: 14.0,
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 4.0),
+                                                  InkWell(
+                                                    child: const Icon(
+                                                      Icons.cancel,
+                                                      size: 14.0,
+                                                      color: Color.fromARGB(
+                                                          255, 233, 233, 233),
+                                                    ),
+                                                    onTap: () {
+                                                      inputFieldValues
+                                                          .onTagRemoved(tag);
+                                                    },
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ).toList(),
+                                      ),
+                                    )
+                                  : null,
+                            ),
+                            onChanged: inputFieldValues.onTagChanged,
+                            onSubmitted: inputFieldValues.onTagSubmitted,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
             SingleChildScrollView(
@@ -308,7 +394,6 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
                 padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                 child: QuillEditor.basic(
                   configurations: QuillEditorConfigurations(
-                    scrollable: false,
                     controller: _quillController,
                     sharedConfigurations: const QuillSharedConfigurations(
                       locale: Locale('id'),

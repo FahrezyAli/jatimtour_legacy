@@ -3,9 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class UserModel {
   final authInstance = FirebaseAuth.instance;
+  Map<String, dynamic>? userData;
 
   Future<void> signIn(String email, String password) async {
     try {
@@ -43,25 +45,34 @@ class UserModel {
     } catch (e) {
       rethrow;
     }
+    final userData = await getUserData();
+    this.userData = userData.data();
+  }
+
+  bool isSignedIn() {
+    return authInstance.currentUser != null;
   }
 
   Future<void> signOut() async {
     await authInstance.signOut();
+    Modular.dispose<UserModel>();
   }
 
-  Future<void> setData({
+  Future<void> setUserData({
     required String username,
     required String fullName,
     required String phoneNumber,
     required String city,
   }) async {
     final userData = {
+      'email': authInstance.currentUser!.email,
       'username': username,
       'fullName': fullName,
       'phoneNumber': phoneNumber,
       'city': city,
       'role': 0,
     };
+    this.userData = userData;
     final user = authInstance.currentUser;
     final userRef =
         FirebaseFirestore.instance.collection('users').doc(user!.uid);
@@ -80,41 +91,40 @@ class UserModel {
     await user.updatePhotoURL(await profilePictureRef.getDownloadURL());
   }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>>? getDataStream() {
+  Stream<DocumentSnapshot<Map<String, dynamic>>>? getUserDataStream() {
     return FirebaseFirestore.instance
         .collection('users')
         .doc(authInstance.currentUser!.uid)
         .snapshots();
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getData() {
+  Future<DocumentSnapshot<Map<String, dynamic>>> getUserData() {
     return FirebaseFirestore.instance
         .collection('users')
         .doc(authInstance.currentUser!.uid)
         .get();
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getOtherUsersData(String uid) {
-    return FirebaseFirestore.instance.collection('users').doc(uid).get();
+  Stream<QuerySnapshot<Map<String, dynamic>>> getSortedUsersStream(String field,
+      {bool isDescending = false}) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .orderBy(field, descending: isDescending)
+        .snapshots();
   }
 
-  Future<void> updateData({
-    required String username,
-    required String fullName,
-    required String phoneNumber,
-    required String city,
-  }) async {
+  Future<void> updateUserData(Map<String, dynamic> userData) async {
+    this.userData = userData;
     final user = authInstance.currentUser;
     final userRef =
         FirebaseFirestore.instance.collection('users').doc(user!.uid);
-    await userRef.update(
-      {
-        'username': username,
-        'fullName': fullName,
-        'phoneNumber': phoneNumber,
-        'city': city,
-      },
-    );
+    await userRef.update(userData);
+  }
+
+  Future<void> updateUserDataFromUid(
+      String uid, Map<String, dynamic> userData) async {
+    final userRef = FirebaseFirestore.instance.collection('users').doc(uid);
+    await userRef.update(userData);
   }
 
   ImageProvider<Object> getProfilePicture() {

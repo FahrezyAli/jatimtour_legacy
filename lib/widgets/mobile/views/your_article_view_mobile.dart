@@ -3,7 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/article_model.dart';
 import 'package:jatimtour/models/user_model.dart';
-import 'package:jatimtour/widgets/buttons/circle_button.dart';
+import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/mobile/cards/article_card_mobile.dart';
 
 class YourArticleViewMobile extends StatelessWidget {
@@ -58,38 +58,25 @@ class YourArticleViewMobile extends StatelessWidget {
   Widget _publishedPage(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
-      child: FutureBuilder(
-        future: context.read<UserModel>().getData(),
-        builder: (context, userSnapshot) {
-          if (userSnapshot.connectionState == ConnectionState.waiting) {
+      child: StreamBuilder(
+        stream: Modular.get<ArticleModel>().getArticleStreamFromAuthorUsername(
+          Modular.get<UserModel>().userData!['username'],
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           } else {
-            return StreamBuilder(
-              stream: context
-                  .read<ArticleModel>()
-                  .getArticleStreamFromAuthorUsername(
-                    userSnapshot.data!.data()!['username'],
-                  ),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else {
-                  final data = snapshot.data!.docs;
-                  return ListView.builder(
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
-                      return ArticleCardMobile(
-                        articleId: data[index].id,
-                        articleData: data[index].data(),
-                        withUpdateAndDelete: true,
-                      );
-                    },
-                  );
-                }
+            final data = snapshot.data!.docs;
+            return ListView.builder(
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                return ArticleCardMobile(
+                  articleId: data[index].id,
+                  articleData: data[index].data(),
+                  withUpdateAndDelete: true,
+                );
               },
             );
           }

@@ -5,12 +5,12 @@ import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/article_model.dart';
 import 'package:rowbuilder/rowbuilder.dart';
 
-class ArticleCardMobile extends StatelessWidget {
+class ArticleCardWeb extends StatelessWidget {
   final String articleId;
   final Map<String, dynamic> articleData;
   final bool withUpdateAndDelete;
 
-  const ArticleCardMobile({
+  const ArticleCardWeb({
     required this.articleId,
     required this.articleData,
     this.withUpdateAndDelete = false,
@@ -20,7 +20,7 @@ class ArticleCardMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: kBackgroundColor,
+      color: const Color(0xFFE1E1E1),
       child: InkWell(
         onTap: () {
           Modular.to.pushNamed('/article?articleId=$articleId');
@@ -32,16 +32,16 @@ class ArticleCardMobile extends StatelessWidget {
             right: 20.0,
           ),
           child: Ink(
-            height: 100.0,
+            height: 300.0,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(15.0),
             ),
-            child: Row(
+            child: Column(
               children: [
                 Ink(
-                  height: 100.0,
-                  width: 160.0,
+                  height: 180.0,
+                  width: 360.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.0),
                     image: DecorationImage(
@@ -52,40 +52,39 @@ class ArticleCardMobile extends StatelessWidget {
                 ),
                 Expanded(
                   child: Ink(
-                    padding: const EdgeInsets.only(top: 5.0, left: 5.0),
+                    width: 360.0,
+                    padding: const EdgeInsets.only(top: 15.0, left: 20.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: RichText(
-                            text: TextSpan(
-                              text: articleData['title'],
-                              style: const TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text:
-                                      '\n${articleData['authorUsername']}, ${DateFormat('d MMMM y').format(articleData['datePublished'].toDate())}',
-                                  style: const TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
+                        RichText(
+                          text: TextSpan(
+                            text: articleData['title'],
+                            style: const TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
                             ),
+                            children: [
+                              TextSpan(
+                                text:
+                                    '\n${articleData['authorUsername']}, ${DateFormat('d MMMM y').format(articleData['datePublished'].toDate())}',
+                                style: const TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
+                          padding: const EdgeInsets.only(top: 12.0),
                           child: RowBuilder(
                             itemCount: articleData['tags'].length > 3
                                 ? 3

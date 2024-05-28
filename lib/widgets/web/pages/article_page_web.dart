@@ -6,23 +6,23 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:intl/intl.dart';
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/article_model.dart';
-import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
+import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
 import 'package:rowbuilder/rowbuilder.dart';
 
-class ArticlePageMobile extends StatelessWidget {
+class ArticlePageWeb extends StatelessWidget {
   final String articleId;
   final QuillController _quillController = QuillController.basic();
 
-  ArticlePageMobile({required this.articleId, super.key});
+  ArticlePageWeb({required this.articleId, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MobileScaffold(
+    return WebScaffold(
       body: FutureBuilder(
         future: Modular.get<ArticleModel>().getArticleFromId(articleId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return _buildPage(context, snapshot.data!.data()!);
+            return _buildArticlePage(context, snapshot.data!.data()!);
           } else {
             return const Center(child: CircularProgressIndicator());
           }
@@ -31,7 +31,7 @@ class ArticlePageMobile extends StatelessWidget {
     );
   }
 
-  Widget _buildPage(
+  Widget _buildArticlePage(
     BuildContext context,
     Map<String, dynamic> articleData,
   ) {
@@ -113,7 +113,6 @@ class ArticlePageMobile extends StatelessWidget {
         SliverFillRemaining(
           hasScrollBody: false,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Padding(
                 padding: const EdgeInsets.only(
@@ -142,22 +141,19 @@ class ArticlePageMobile extends StatelessWidget {
                   },
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  color: kPinkColor,
-                  height: 80.0,
-                  width: MediaQuery.sizeOf(context).width,
-                  child: const Padding(
-                    padding: EdgeInsets.only(top: 30.0, left: 20.0),
-                    child: Text(
-                      "© 2024 JATIMTOUR",
-                      style: TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+              Container(
+                color: kPinkColor,
+                height: 80.0,
+                width: MediaQuery.sizeOf(context).width,
+                child: const Padding(
+                  padding: EdgeInsets.only(top: 30.0, left: 20.0),
+                  child: Text(
+                    "© 2024 JATIMTOUR",
+                    style: TextStyle(
+                      fontFamily: "Inter",
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
                 ),

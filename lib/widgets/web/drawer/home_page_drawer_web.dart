@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/user_model.dart';
-import 'package:jatimtour/widgets/buttons/circle_button.dart';
+import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/web/buttons/sign_button_web.dart';
 
 class HomePageDrawerWeb extends StatelessWidget {
@@ -10,7 +10,10 @@ class HomePageDrawerWeb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<UserModel>();
+    final userInstance = Modular.get<UserModel>();
+    final userRole = userInstance.userData != null
+        ? Modular.get<UserModel>().userData!['role']
+        : 0;
     return Drawer(
       child: ListView(
         children: [
@@ -22,18 +25,17 @@ class HomePageDrawerWeb extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 50.0,
-                  backgroundImage: user.getProfilePicture(),
+                  backgroundImage: userInstance.getProfilePicture(),
                 ),
-                FutureBuilder(
-                  future: user.getData(),
-                  builder: (context, snapshot) => Text(
-                    snapshot.hasData ? snapshot.data!.data()!['fullName'] : "",
-                    style: const TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 20.0,
-                    ),
+                Text(
+                  userInstance.userData != null
+                      ? userInstance.userData!['username']
+                      : "Guest",
+                  style: const TextStyle(
+                    fontFamily: "Inter",
+                    fontSize: 20.0,
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -49,7 +51,7 @@ class HomePageDrawerWeb extends StatelessWidget {
               "Artikel",
               style: TextStyle(fontFamily: "Inter"),
             ),
-            onTap: () {},
+            onTap: () => Modular.to.navigate(yourArticleRoute),
           ),
           ListTile(
             title: const Text(
@@ -64,35 +66,27 @@ class HomePageDrawerWeb extends StatelessWidget {
               style: TextStyle(fontFamily: "Inter"),
             ),
             onTap: () {
-              Modular.to.navigate(user.authInstance.currentUser != null
+              Modular.to.navigate(userInstance.authInstance.currentUser != null
                   ? profileRoute
                   : loginRoute);
             },
           ),
-          FutureBuilder(
-            future: user.getData(),
-            builder: (context, snapshot) {
-              final role = snapshot.hasData
-                  ? snapshot.data!.data()!['role'] == 2
-                  : false;
-              return role
-                  ? ListTile(
-                      title: const Text(
-                        "Admin",
-                        style: TextStyle(fontFamily: "Inter"),
-                      ),
-                      onTap: () {},
-                    )
-                  : const SizedBox.shrink();
-            },
-          ),
+          userRole == 2
+              ? ListTile(
+                  title: const Text(
+                    "Admin",
+                    style: TextStyle(fontFamily: "Inter"),
+                  ),
+                  onTap: () => Modular.to.navigate(adminRoute),
+                )
+              : const SizedBox.shrink(),
           Padding(
             padding: const EdgeInsets.only(top: 30.0),
             child: Align(
               alignment: Alignment.center,
               child: Builder(
                 builder: (context) {
-                  return user.authInstance.currentUser == null
+                  return !userInstance.isSignedIn()
                       ? const SignButtonWeb()
                       : CircleButton(
                           text: const Text(
@@ -105,7 +99,7 @@ class HomePageDrawerWeb extends StatelessWidget {
                           ),
                           color: kPinkColor,
                           onTap: () {
-                            user.signOut();
+                            userInstance.signOut();
                             Modular.to.pop();
                           },
                         );

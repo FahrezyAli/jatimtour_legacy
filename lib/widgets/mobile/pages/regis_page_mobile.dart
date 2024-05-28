@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/widgets/views/regis_view.dart';
+import 'package:jatimtour/widgets/universal/views/regis_view.dart';
 
 class RegistrationPageMobile extends StatelessWidget {
   const RegistrationPageMobile({super.key});

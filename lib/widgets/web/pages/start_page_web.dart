@@ -1,11 +1,11 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/widgets/buttons/sign_button.dart';
-import 'package:jatimtour/widgets/carousel/welcome_text_carousel.dart';
-import 'package:jatimtour/widgets/views/login_view.dart';
-import 'package:jatimtour/widgets/views/signup_view.dart';
-import 'package:jatimtour/widgets/views/welcome_view.dart';
+import 'package:jatimtour/widgets/universal/buttons/sign_button.dart';
+import 'package:jatimtour/widgets/universal/carousel/welcome_text_carousel.dart';
+import 'package:jatimtour/widgets/universal/views/login_view.dart';
+import 'package:jatimtour/widgets/universal/views/signup_view.dart';
+import 'package:jatimtour/widgets/universal/views/welcome_view.dart';
 
 class StartPageWeb extends StatefulWidget {
   final int state;

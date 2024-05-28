@@ -20,13 +20,15 @@ class _LoginViewState extends State<LoginView> {
   bool _isVisible = false;
 
   void _logIn() async {
-    final user = context.read<UserModel>();
+    final userInstance = Modular.get<UserModel>();
     if (!EmailValidator.validate(_emailController.text, true)) {
       _showErrorSnackBar("Email is not valid");
     } else {
-      await user.logIn(_emailController.text, _passwordController.text).then(
-        (value) {
-          Modular.to.navigate(kIsWeb ? regisRoute : mHomeRoute);
+      await userInstance
+          .logIn(_emailController.text, _passwordController.text)
+          .then(
+        (value) async {
+          Modular.to.navigate(kIsWeb ? rootRoute : mHomeRoute);
         },
       ).catchError(
         (e) {
@@ -104,6 +106,8 @@ class _LoginViewState extends State<LoginView> {
                   fontFamily: "Inter",
                   fontSize: 14.0,
                 ),
+                autofillHints: const [AutofillHints.email],
+                keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
               ),
             ),
@@ -137,6 +141,8 @@ class _LoginViewState extends State<LoginView> {
                     fontFamily: "Inter",
                     fontSize: 14.0,
                   ),
+                  autofillHints: const [AutofillHints.password],
+                  keyboardType: TextInputType.visiblePassword,
                   textInputAction: TextInputAction.done,
                   onFieldSubmitted: (value) => _logIn(),
                 ),

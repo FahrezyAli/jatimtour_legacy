@@ -35,7 +35,7 @@ class ArticleModel {
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
-    final authorUsername = authorRef.data()!['username'];
+    final authorUsername = authorRef['username'];
     await articleRef.set(
       {
         'authorUsername': authorUsername,
@@ -45,6 +45,7 @@ class ArticleModel {
         'content': content,
         'tags': tags,
         'dateCreated': DateTime.now(),
+        'isFeatured': false,
       },
     );
     await setCoverImage(coverImage.readAsBytes(), articleRef.id);
@@ -52,15 +53,6 @@ class ArticleModel {
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getArticleFromId(String id) {
     return FirebaseFirestore.instance.collection('articles').doc(id).get();
-  }
-
-  Future<QuerySnapshot<Map<String, dynamic>>> getArticlesFromAuthorUsername(
-    String authorUsername,
-  ) {
-    return FirebaseFirestore.instance
-        .collection('articles')
-        .where('authorUsername', isEqualTo: authorUsername)
-        .get();
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>>
@@ -73,26 +65,46 @@ class ArticleModel {
         .snapshots();
   }
 
-  Future<QuerySnapshot<Map<String, dynamic>>> getArticlesWithOrderByAndLimit({
-    required String order,
-    required bool isDescending,
+  Future<QuerySnapshot<Map<String, dynamic>>> getFeaturedArticle() {
+    return FirebaseFirestore.instance
+        .collection('articles')
+        .where('isFeatured', isEqualTo: true)
+        .get();
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> getSortedArticlesWithLimit({
+    required String field,
+    bool isDescending = false,
     required int limit,
   }) async {
     return await FirebaseFirestore.instance
         .collection('articles')
-        .orderBy(order, descending: isDescending)
+        .orderBy(field, descending: isDescending)
         .limit(limit)
         .get();
   }
 
-  Future<void> updateArticleWithId(String id, Map<String, dynamic> data) async {
+  Stream<QuerySnapshot<Map<String, dynamic>>> getArticlesStream() {
+    return FirebaseFirestore.instance.collection('articles').snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getSortedArticlesStream(
+      String field,
+      {bool isDescending = false}) {
+    return FirebaseFirestore.instance
+        .collection('articles')
+        .orderBy(field, descending: isDescending)
+        .snapshots();
+  }
+
+  Future<void> updateArticleFromId(String id, Map<String, dynamic> data) async {
     await FirebaseFirestore.instance
         .collection('articles')
         .doc(id)
         .update(data);
   }
 
-  Future<void> deleteArticlesWithId(String id) async {
+  Future<void> deleteArticlesFromId(String id) async {
     await FirebaseFirestore.instance.collection('articles').doc(id).delete();
   }
 }

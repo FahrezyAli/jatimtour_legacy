@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/widgets/carousel/news_carousel.dart';
-import 'package:jatimtour/widgets/carousel/recommendation_carousel.dart';
-import 'package:jatimtour/widgets/views/calendar_home_view.dart';
+import 'package:jatimtour/models/article_model.dart';
+import 'package:jatimtour/models/user_model.dart';
+import 'package:jatimtour/widgets/universal/carousel/featured_article_carousel.dart';
+import 'package:jatimtour/widgets/universal/carousel/recommendation_carousel.dart';
+import 'package:jatimtour/widgets/universal/views/calendar_home_view.dart';
 import 'package:jatimtour/widgets/web/buttons/box_button_web.dart';
-import 'package:jatimtour/widgets/web/views/article_home_view_web.dart';
+import 'package:jatimtour/widgets/web/cards/article_card_web.dart';
 import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
+import 'package:rowbuilder/rowbuilder.dart';
 
 class HomePageWeb extends StatelessWidget {
   const HomePageWeb({super.key});
 
+  void _autoLogin() {
+    final userInstance = Modular.get<UserModel>();
+    if (userInstance.isSignedIn()) {
+      userInstance.getUserData().then((userData) {
+        userInstance.userData = userData.data();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _autoLogin();
     return WebScaffold(
       backgroundColor: const Color(0xFFE1E1E1),
       body: ListView(
@@ -22,7 +36,7 @@ class HomePageWeb extends StatelessWidget {
             height: 10.0,
             repeat: ImageRepeat.repeatX,
           ),
-          const NewsCarousel(),
+          const FeaturedArticleCarousel(),
           Image.asset(
             'assets/images/border1.png',
             height: 40.0,
@@ -127,9 +141,34 @@ class HomePageWeb extends StatelessWidget {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(top: 20.0, bottom: 50.0),
-            child: ArticleHomeViewWeb(),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0, bottom: 50.0),
+            child: FutureBuilder(
+              future: Modular.get<ArticleModel>().getSortedArticlesWithLimit(
+                field: 'datePublished',
+                isDescending: false,
+                limit: 3,
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  final data = snapshot.data!.docs;
+                  return RowBuilder(
+                    itemCount: data.length,
+                    reversed: false,
+                    itemBuilder: (context, index) {
+                      return ArticleCardWeb(
+                        articleId: data[index].id,
+                        articleData: data[index].data(),
+                      );
+                    },
+                  );
+                }
+              },
+            ),
           ),
           UnconstrainedBox(
             child: Padding(

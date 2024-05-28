@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/widgets/buttons/circle_button.dart';
-import 'package:jatimtour/widgets/cards/calendar_card.dart';
+import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
+import 'package:jatimtour/widgets/universal/cards/calendar_card.dart';
 
 class CalendarViewMobile extends StatelessWidget {
   final months = [

@@ -2,11 +2,11 @@ import 'package:columnbuilder/columnbuilder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/models/article_model.dart';
-import 'package:jatimtour/widgets/buttons/circle_button.dart';
+import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/mobile/cards/article_card_mobile.dart';
-import 'package:jatimtour/widgets/carousel/news_carousel.dart';
-import 'package:jatimtour/widgets/carousel/recommendation_carousel.dart';
-import 'package:jatimtour/widgets/views/calendar_home_view.dart';
+import 'package:jatimtour/widgets/universal/carousel/featured_article_carousel.dart';
+import 'package:jatimtour/widgets/universal/carousel/recommendation_carousel.dart';
+import 'package:jatimtour/widgets/universal/views/calendar_home_view.dart';
 
 class HomeViewMobile extends StatelessWidget {
   const HomeViewMobile({super.key});
@@ -19,7 +19,7 @@ class HomeViewMobile extends StatelessWidget {
           'assets/images/leading.png',
           repeat: ImageRepeat.repeatX,
         ),
-        const NewsCarousel(),
+        const FeaturedArticleCarousel(),
         Image.asset(
           'assets/images/border1.png',
           repeat: ImageRepeat.repeatX,
@@ -122,11 +122,11 @@ class HomeViewMobile extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
           child: FutureBuilder(
-            future: context.read<ArticleModel>().getArticlesWithOrderByAndLimit(
-                  order: 'datePublished',
-                  isDescending: true,
-                  limit: 3,
-                ),
+            future: Modular.get<ArticleModel>().getSortedArticlesWithLimit(
+              field: 'datePublished',
+              isDescending: true,
+              limit: 3,
+            ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(

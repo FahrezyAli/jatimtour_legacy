@@ -19,7 +19,7 @@ class _SignUpViewState extends State<SignUpView> {
   bool _isVisible = false;
 
   Future<void> _signUp() async {
-    final user = context.read<UserModel>();
+    final userInstance = Modular.get<UserModel>();
     if (!EmailValidator.validate(_emailController.text)) {
       _showErrorSnackBar("Email is not valid");
     } else if (_passwordController.text.length < 6) {
@@ -27,7 +27,7 @@ class _SignUpViewState extends State<SignUpView> {
     } else if (_passwordController.text != _retypedPasswordController.text) {
       _showErrorSnackBar("Password and Retyped Password do not match");
     } else {
-      await user
+      await userInstance
           .signIn(_emailController.text, _passwordController.text)
           .then((value) => Modular.to.navigate(regisRoute))
           .catchError(
@@ -107,6 +107,8 @@ class _SignUpViewState extends State<SignUpView> {
                   fontFamily: "Inter",
                   fontSize: 14.0,
                 ),
+                autofillHints: const [AutofillHints.email],
+                keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
               ),
             ),
@@ -139,6 +141,8 @@ class _SignUpViewState extends State<SignUpView> {
                     fontFamily: "Inter",
                     fontSize: 14.0,
                   ),
+                  autofillHints: const [AutofillHints.password],
+                  keyboardType: TextInputType.visiblePassword,
                   textInputAction: TextInputAction.next,
                 ),
               ),
@@ -172,6 +176,7 @@ class _SignUpViewState extends State<SignUpView> {
                     fontFamily: "Inter",
                     fontSize: 14.0,
                   ),
+                  keyboardType: TextInputType.visiblePassword,
                   textInputAction: TextInputAction.done,
                   onFieldSubmitted: (value) async {
                     await _signUp();

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/user_model.dart';
-import 'package:jatimtour/widgets/buttons/sign_button.dart';
-import 'package:jatimtour/widgets/views/welcome_view.dart';
-import 'package:jatimtour/widgets/carousel/welcome_text_carousel.dart';
-import 'package:jatimtour/widgets/views/login_view.dart';
-import 'package:jatimtour/widgets/views/signup_view.dart';
+import 'package:jatimtour/widgets/universal/buttons/sign_button.dart';
+import 'package:jatimtour/widgets/universal/views/welcome_view.dart';
+import 'package:jatimtour/widgets/universal/carousel/welcome_text_carousel.dart';
+import 'package:jatimtour/widgets/universal/views/login_view.dart';
+import 'package:jatimtour/widgets/universal/views/signup_view.dart';
 
 class StartPageMobile extends StatefulWidget {
   const StartPageMobile({super.key});
@@ -20,13 +20,19 @@ class _StartPageMobileState extends State<StartPageMobile> {
   int _state = 0;
   bool isUp = true;
 
+  Future<void> _autoLogin() async {
+    final userInstance = Modular.get<UserModel>();
+    if (userInstance.authInstance.currentUser != null) {
+      final userData = await userInstance.getUserData();
+      userInstance.userData = userData.data();
+      Modular.to.navigate(mHomeRoute);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    final user = context.read<UserModel>().authInstance.currentUser;
-    if (user != null) {
-      Modular.to.navigate(mHomeRoute);
-    }
+    _autoLogin();
   }
 
   @override

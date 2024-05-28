@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/widgets/carousel/welcome_text_carousel.dart';
-import 'package:jatimtour/widgets/views/regis_view.dart';
-import 'package:jatimtour/widgets/views/welcome_view.dart';
+import 'package:jatimtour/widgets/universal/carousel/welcome_text_carousel.dart';
+import 'package:jatimtour/widgets/universal/views/regis_view.dart';
+import 'package:jatimtour/widgets/universal/views/welcome_view.dart';
 
 class RegistrationPageWeb extends StatelessWidget {
   const RegistrationPageWeb({super.key});

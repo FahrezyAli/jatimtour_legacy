@@ -6,8 +6,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/widgets/buttons/picture_select_button.dart';
-import 'package:jatimtour/widgets/buttons/circle_button.dart';
+import 'package:jatimtour/widgets/universal/buttons/picture_select_button.dart';
+import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
 import 'package:jatimtour/models/user_model.dart';
 
 class RegistrationView extends StatefulWidget {
@@ -45,6 +45,7 @@ class _RegistrationViewState extends State<RegistrationView> {
       sourcePath: imageFile.path,
       aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
       cropStyle: CropStyle.circle,
+      compressQuality: 100,
       uiSettings: [
         AndroidUiSettings(
           toolbarTitle: 'Crop',
@@ -77,11 +78,11 @@ class _RegistrationViewState extends State<RegistrationView> {
     } else if (!_isAcceptTerms) {
       _showErrorSnackBar("Please accept the terms and conditions");
     } else {
-      final user = context.read<UserModel>();
+      final userInstance = Modular.get<UserModel>();
       if (_profilePicture != null) {
-        await user.setProfilePicture(_profilePicture!.readAsBytes());
+        await userInstance.setProfilePicture(_profilePicture!.readAsBytes());
       }
-      await user.setData(
+      await userInstance.setUserData(
         username: _usernameController.text,
         fullName: _fullNameController.text,
         phoneNumber: _phoneNumberController.text,
@@ -268,6 +269,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                       fontFamily: "Inter",
                       fontSize: 14.0,
                     ),
+                    keyboardType: TextInputType.name,
                     textInputAction: TextInputAction.next,
                   ),
                 ),
@@ -300,6 +302,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                       fontFamily: "Inter",
                       fontSize: 14.0,
                     ),
+                    keyboardType: TextInputType.name,
                     textInputAction: TextInputAction.next,
                   ),
                 ),
@@ -332,6 +335,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                       fontFamily: "Inter",
                       fontSize: 14.0,
                     ),
+                    keyboardType: TextInputType.phone,
                     textInputAction: TextInputAction.next,
                   ),
                 ),

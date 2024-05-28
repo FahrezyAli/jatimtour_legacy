@@ -6,8 +6,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/widgets/buttons/picture_select_button.dart';
-import 'package:jatimtour/widgets/buttons/circle_button.dart';
+import 'package:jatimtour/widgets/universal/buttons/picture_select_button.dart';
+import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
 import 'package:jatimtour/models/user_model.dart';
 
 class ProfileEditView extends StatefulWidget {
@@ -46,6 +46,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
       sourcePath: imageFile.path,
       aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
       cropStyle: CropStyle.circle,
+      compressQuality: 100,
       uiSettings: [
         AndroidUiSettings(
           toolbarTitle: 'Crop',
@@ -76,16 +77,16 @@ class _ProfileEditViewState extends State<ProfileEditView> {
         _selectedCity == "") {
       _showErrorSnackBar("Please fill all the fields");
     } else {
-      final user = context.read<UserModel>();
+      final userInstance = Modular.get<UserModel>();
       if (_profilePicture != null) {
-        await user.setProfilePicture(_profilePicture!.readAsBytes());
+        await userInstance.setProfilePicture(_profilePicture!.readAsBytes());
       }
-      await user.updateData(
-        username: _usernameController.text,
-        fullName: _fullNameController.text,
-        phoneNumber: _phoneNumberController.text,
-        city: _selectedCity!,
-      );
+      await userInstance.updateUserData({
+        'username': _usernameController.text,
+        'fullName': _fullNameController.text,
+        'phoneNumber': _phoneNumberController.text,
+        'city': _selectedCity!,
+      });
       Modular.to.pop();
     }
   }
@@ -153,7 +154,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                         ? kIsWeb
                             ? Image.network(_profilePicture!.path).image
                             : FileImage(File(_profilePicture!.path))
-                        : context.read<UserModel>().getProfilePicture(),
+                        : Modular.get<UserModel>().getProfilePicture(),
                   ),
                   Positioned.fill(
                     bottom: 5.0,

@@ -7,17 +7,24 @@ const Color kPurpleColor = Color(0xFF9B5DE5);
 
 const String rootRoute = '/';
 const String mHomeRoute = '/mhome';
+
 const String loginRoute = '/login';
 const String signupRoute = '/signup';
 const String regisRoute = '/regis';
+
 const String calendarRoute = '/calendar';
+const String eventListRoute = '/event-list';
+const String createEventRoute = '/create-event';
+
 const String articleRoute = '/article';
 const String yourArticleRoute = '/your-article';
 const String createArticleRoute = '/create-article';
 const String updateArticleRoute = '/update-article';
-const String eventListRoute = '/event-list';
+
 const String profileRoute = '/profile';
 const String editProfileRoute = "$profileRoute/edit";
+
+const String adminRoute = '/admin';
 
 const List<String> cityList = [
   'Bangkalan',
