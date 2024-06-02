@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/article_model.dart';
 import 'package:rowbuilder/rowbuilder.dart';
 
-class ArticleCardMobile extends StatelessWidget {
-  final String articleId;
-  final Map<String, dynamic> articleData;
-  final bool withUpdateAndDelete;
+class EventCardMobile extends StatelessWidget {
+  final String eventId;
+  final Map<String, dynamic> eventData;
 
-  const ArticleCardMobile({
-    required this.articleId,
-    required this.articleData,
-    this.withUpdateAndDelete = false,
+  const EventCardMobile({
+    required this.eventId,
+    required this.eventData,
     super.key,
   });
 
@@ -30,10 +27,10 @@ class ArticleCardMobile extends StatelessWidget {
         borderRadius: BorderRadius.circular(15.0),
         child: InkWell(
           onTap: () {
-            Modular.to.pushNamed('$articleRoute?articleId=$articleId');
+            Modular.to.pushNamed('$eventRoute?eventId=$eventId');
           },
           child: Ink(
-            height: 100.0,
+            height: 130.0,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(15.0),
@@ -41,12 +38,12 @@ class ArticleCardMobile extends StatelessWidget {
             child: Row(
               children: [
                 Ink(
-                  height: 100.0,
-                  width: 160.0,
+                  height: 130.0,
+                  width: 130.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.0),
                     image: DecorationImage(
-                      image: NetworkImage(articleData['coverImageUrl']),
+                      image: NetworkImage(eventData['coverImageUrl']),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -63,7 +60,7 @@ class ArticleCardMobile extends StatelessWidget {
                           alignment: Alignment.topLeft,
                           child: RichText(
                             text: TextSpan(
-                              text: articleData['title'],
+                              text: eventData['eventName'],
                               style: const TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 14.0,
@@ -73,7 +70,16 @@ class ArticleCardMobile extends StatelessWidget {
                               children: [
                                 TextSpan(
                                   text:
-                                      '\n${articleData['authorUsername']}, ${DateFormat('d MMMM y').format(articleData['datePublished'].toDate())}',
+                                      '\n${eventData['eventOrganizer']}, ${intl.DateFormat('d MMMM y').format(eventData['startDate'].toDate())}',
+                                  style: const TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: '\n${eventData['city']}',
                                   style: const TextStyle(
                                     fontFamily: 'Inter',
                                     fontSize: 12.0,
@@ -88,9 +94,9 @@ class ArticleCardMobile extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: RowBuilder(
-                            itemCount: articleData['tags'].length > 3
-                                ? 3
-                                : articleData['tags'].length,
+                            itemCount: eventData['tags'].length > 2
+                                ? 2
+                                : eventData['tags'].length,
                             reversed: false,
                             itemBuilder: (context, index) {
                               return Container(
@@ -101,7 +107,7 @@ class ArticleCardMobile extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: Text(
-                                  '#${articleData['tags'][index]}',
+                                  '#${eventData['tags'][index]}',
                                   style: const TextStyle(
                                     fontFamily: 'Inter',
                                     fontSize: 10.0,
@@ -117,51 +123,6 @@ class ArticleCardMobile extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (withUpdateAndDelete)
-                  Column(
-                    children: [
-                      IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            Modular.to.pushNamed(
-                              '$updateArticleRoute?articleId=$articleId',
-                            );
-                          }),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text('Hapus Artikel'),
-                                content: const Text(
-                                  'Apakah Anda yakin ingin menghapus artikel ini?',
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Modular.to.pop(context);
-                                    },
-                                    child: const Text('Batal'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Modular.to.pop(context);
-                                      context
-                                          .read<ArticleModel>()
-                                          .deleteArticlesFromId(articleId);
-                                    },
-                                    child: const Text('Hapus'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      )
-                    ],
-                  ),
               ],
             ),
           ),

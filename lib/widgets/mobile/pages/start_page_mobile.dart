@@ -1,8 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/user_model.dart';
 import 'package:jatimtour/widgets/universal/buttons/sign_button.dart';
 import 'package:jatimtour/widgets/universal/views/welcome_view.dart';
 import 'package:jatimtour/widgets/universal/carousel/welcome_text_carousel.dart';
@@ -19,21 +17,6 @@ class StartPageMobile extends StatefulWidget {
 class _StartPageMobileState extends State<StartPageMobile> {
   int _state = 0;
   bool isUp = true;
-
-  Future<void> _autoLogin() async {
-    final userInstance = Modular.get<UserModel>();
-    if (userInstance.authInstance.currentUser != null) {
-      final userData = await userInstance.getUserData();
-      userInstance.userData = userData.data();
-      Modular.to.navigate(mHomeRoute);
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _autoLogin();
-  }
 
   @override
   Widget build(BuildContext context) {

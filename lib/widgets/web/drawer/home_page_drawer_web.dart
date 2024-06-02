@@ -71,6 +71,15 @@ class HomePageDrawerWeb extends StatelessWidget {
                   : loginRoute);
             },
           ),
+          userRole == 1
+              ? ListTile(
+                  title: const Text(
+                    "Event",
+                    style: TextStyle(fontFamily: "Inter"),
+                  ),
+                  onTap: () => Modular.to.navigate(eventAdminRoute),
+                )
+              : const SizedBox.shrink(),
           userRole == 2
               ? ListTile(
                   title: const Text(

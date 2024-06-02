@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/article_model.dart';
 
@@ -110,13 +110,13 @@ class _DataSource extends DataTableSource {
         DataCell(Text(article['city'], style: _defaultStyle)),
         DataCell(Text(article['tags'].join(', '), style: _defaultStyle)),
         DataCell(Text(
-          DateFormat('dd MMMM yyyy').format(
+          intl.DateFormat.yMd().format(
             article['datePublished'].toDate(),
           ),
           style: _defaultStyle,
         )),
         DataCell(Text(
-          DateFormat('dd MMMM yyyy').format(
+          intl.DateFormat.yMd().format(
             article['dateCreated'].toDate(),
           ),
           style: _defaultStyle,

@@ -70,6 +70,7 @@ class _RegistrationViewState extends State<RegistrationView> {
   }
 
   Future<void> _register() async {
+    final usedUsername = await Modular.get<UserModel>().getUsedUsername();
     if (_usernameController.text == "" ||
         _fullNameController.text == "" ||
         _phoneNumberController.text == "" ||
@@ -77,6 +78,8 @@ class _RegistrationViewState extends State<RegistrationView> {
       _showErrorSnackBar("Please fill all the fields");
     } else if (!_isAcceptTerms) {
       _showErrorSnackBar("Please accept the terms and conditions");
+    } else if (usedUsername.contains(_usernameController.text)) {
+      _showErrorSnackBar("Username already used");
     } else {
       final userInstance = Modular.get<UserModel>();
       if (_profilePicture != null) {

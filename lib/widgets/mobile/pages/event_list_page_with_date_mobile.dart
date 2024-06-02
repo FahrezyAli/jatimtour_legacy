@@ -1,38 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/models/event_model.dart';
 import 'package:jatimtour/widgets/mobile/cards/event_card_mobile.dart';
 import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
 
-class EventListPageMobile extends StatefulWidget {
-  final String month;
-  const EventListPageMobile({required this.month, super.key});
+class EventListPageWithDateMobile extends StatefulWidget {
+  final String date;
+  const EventListPageWithDateMobile({required this.date, super.key});
 
   @override
-  State<EventListPageMobile> createState() => _EventListPageMobileState();
+  State<EventListPageWithDateMobile> createState() =>
+      _EventListPageWithDateMobileState();
 }
 
-class _EventListPageMobileState extends State<EventListPageMobile> {
-  int? _getMonthNumber() {
-    final monthNumber = {
-      'Januari': 1,
-      'Februari': 2,
-      'Maret': 3,
-      'April': 4,
-      'Mei': 5,
-      'Juni': 6,
-      'Juli': 7,
-      'Agustus': 8,
-      'September': 9,
-      'Oktober': 10,
-      'November': 11,
-      'Desember': 12,
-    };
-    return monthNumber[widget.month];
+class _EventListPageWithDateMobileState
+    extends State<EventListPageWithDateMobile> {
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final dateFormatEn = intl.DateFormat('yyyy-MM-dd');
+    final dateFormatId = intl.DateFormat('d MMMM yyyy', 'id_ID');
+
     return MobileScaffold(
       body: ListView(
         children: [
@@ -44,7 +37,7 @@ class _EventListPageMobileState extends State<EventListPageMobile> {
             padding: const EdgeInsets.only(top: 20.0),
             child: Center(
               child: Text(
-                widget.month,
+                dateFormatId.format(dateFormatEn.parse(widget.date)),
                 style: const TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 40,
@@ -67,10 +60,8 @@ class _EventListPageMobileState extends State<EventListPageMobile> {
             ),
           ),
           FutureBuilder(
-            future: Modular.get<EventModel>().getEventsByMonths(
-              field: 'startDate',
-              monthNumber: _getMonthNumber()!,
-            ),
+            future: Modular.get<EventModel>().getEventsByDate(
+                field: 'startDate', date: dateFormatEn.parse(widget.date)),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());

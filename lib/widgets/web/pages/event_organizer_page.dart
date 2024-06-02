@@ -4,17 +4,19 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/event_model.dart';
+import 'package:jatimtour/models/user_model.dart';
+import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
 
 TextStyle _defaultStyle = const TextStyle(fontFamily: 'Inter');
 
-class AdminEventView extends StatefulWidget {
-  const AdminEventView({super.key});
+class EventOrganizerView extends StatefulWidget {
+  const EventOrganizerView({super.key});
 
   @override
-  State<AdminEventView> createState() => _AdminEventViewState();
+  State<EventOrganizerView> createState() => _EventOrganizerViewState();
 }
 
-class _AdminEventViewState extends State<AdminEventView> {
+class _EventOrganizerViewState extends State<EventOrganizerView> {
   int _currentSortColumn = 0;
   bool _isAscending = true;
 
@@ -40,52 +42,57 @@ class _AdminEventViewState extends State<AdminEventView> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: Modular.get<EventModel>().getSortedEventsStream(
-        _getFieldFromIndex(_currentSortColumn),
-        isDescending: !_isAscending,
-      ),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
+    return WebScaffold(
+      body: StreamBuilder(
+        stream:
+            Modular.get<EventModel>().getSortedEventsStreamWithEventOrganizer(
+          _getFieldFromIndex(_currentSortColumn),
+          eventOrganizer: Modular.get<UserModel>().userData!['username'],
+          isDescending: !_isAscending,
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          final events = snapshot.data!;
+          return PaginatedDataTable(
+            header: Text("Events", style: _defaultStyle),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  Modular.to.pushNamed(createEventRoute);
+                },
+              ),
+            ],
+            rowsPerPage: 9,
+            sortColumnIndex: _currentSortColumn,
+            sortAscending: _isAscending,
+            columns: [
+              DataColumn(
+                  label: Text("Nama Event", style: _defaultStyle),
+                  onSort: _sort),
+              DataColumn(
+                  label: Text("Event Organizer", style: _defaultStyle),
+                  onSort: _sort),
+              DataColumn(
+                  label: Text("Kota", style: _defaultStyle), onSort: _sort),
+              DataColumn(
+                  label: Text("Tags", style: _defaultStyle), onSort: _sort),
+              DataColumn(
+                  label: Text("Tanggal Mulai Event", style: _defaultStyle),
+                  onSort: _sort),
+              DataColumn(
+                  label: Text("Tanggal Kreasi", style: _defaultStyle),
+                  onSort: _sort),
+              DataColumn(label: Text("Action", style: _defaultStyle)),
+            ],
+            source: _DataSource(events, context),
           );
-        }
-        final events = snapshot.data!;
-        return PaginatedDataTable(
-          header: Text("Events", style: _defaultStyle),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                Modular.to.pushNamed(createEventRoute);
-              },
-            ),
-          ],
-          rowsPerPage: 9,
-          sortColumnIndex: _currentSortColumn,
-          sortAscending: _isAscending,
-          columns: [
-            DataColumn(
-                label: Text("Nama Event", style: _defaultStyle), onSort: _sort),
-            DataColumn(
-                label: Text("Event Organizer", style: _defaultStyle),
-                onSort: _sort),
-            DataColumn(
-                label: Text("Kota", style: _defaultStyle), onSort: _sort),
-            DataColumn(
-                label: Text("Tags", style: _defaultStyle), onSort: _sort),
-            DataColumn(
-                label: Text("Tanggal Mulai Event", style: _defaultStyle),
-                onSort: _sort),
-            DataColumn(
-                label: Text("Tanggal Kreasi", style: _defaultStyle),
-                onSort: _sort),
-            DataColumn(label: Text("Action", style: _defaultStyle)),
-          ],
-          source: _DataSource(events, context),
-        );
-      },
+        },
+      ),
     );
   }
 }

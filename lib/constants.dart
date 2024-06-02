@@ -1,32 +1,49 @@
 import 'package:flutter/material.dart';
 
-const Color kPinkColor = Color(0xFFF15BB5);
-const Color kYellowColor = Color(0xFFFEE440);
-const Color kBackgroundColor = Color(0xFFFFFBE2);
-const Color kPurpleColor = Color(0xFF9B5DE5);
+const kPinkColor = Color(0xFFF15BB5);
+const kYellowColor = Color(0xFFFEE440);
+const kBackgroundColor = Color(0xFFFFFBE2);
+const kPurpleColor = Color(0xFF9B5DE5);
 
-const String rootRoute = '/';
-const String mHomeRoute = '/mhome';
+const rootRoute = '/';
+const mHomeRoute = '/mhome';
 
-const String loginRoute = '/login';
-const String signupRoute = '/signup';
-const String regisRoute = '/regis';
+const loginRoute = '/login';
+const signupRoute = '/signup';
+const regisRoute = '/regis';
 
-const String calendarRoute = '/calendar';
-const String eventListRoute = '/event-list';
-const String createEventRoute = '/create-event';
+const calendarRoute = '/calendar';
+const eventRoute = '/event';
+const eventListRoute = '/event-list';
+const createEventRoute = '/create-event';
+const eventAdminRoute = '/event-admin';
 
-const String articleRoute = '/article';
-const String yourArticleRoute = '/your-article';
-const String createArticleRoute = '/create-article';
-const String updateArticleRoute = '/update-article';
+const articleRoute = '/article';
+const yourArticleRoute = '/your-article';
+const createArticleRoute = '/create-article';
+const updateArticleRoute = '/update-article';
 
-const String profileRoute = '/profile';
-const String editProfileRoute = "$profileRoute/edit";
+const profileRoute = '/profile';
+const editProfileRoute = "$profileRoute/edit";
 
-const String adminRoute = '/admin';
+const adminRoute = '/admin';
 
-const List<String> cityList = [
+const months = {
+  "january": "Januari",
+  "february": "Februari",
+  "march": "Maret",
+  "april": "April",
+  "may": "Mei",
+  "june": "Juni",
+  "july": "Juli",
+  "august": "Agustus",
+  "september": "September",
+  "october": "Oktober",
+  "november": "November",
+  "december": "Desember",
+};
+
+const cityList = [
   'Bangkalan',
   'Banyuwangi',
   'Batu',

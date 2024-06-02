@@ -53,15 +53,6 @@ class EventModel {
     return FirebaseFirestore.instance.collection('events').doc(id).get();
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getEventStreamFromAuthorUsername(
-    String authorUsername,
-  ) {
-    return FirebaseFirestore.instance
-        .collection('events')
-        .where('authorUsername', isEqualTo: authorUsername)
-        .snapshots();
-  }
-
   Future<QuerySnapshot<Map<String, dynamic>>> getSortedEventsWithLimit({
     required String field,
     bool isDescending = false,
@@ -74,6 +65,41 @@ class EventModel {
         .get();
   }
 
+  Future<QuerySnapshot<Map<String, dynamic>>> getEventsByMonths({
+    required String field,
+    required int monthNumber,
+  }) async {
+    final currentYear = DateTime.now().year;
+    final start = DateTime(currentYear, monthNumber, 1);
+    final end = DateTime(currentYear, monthNumber + 1, 1);
+    return await FirebaseFirestore.instance
+        .collection('events')
+        .where(field, isGreaterThanOrEqualTo: start, isLessThan: end)
+        .get();
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> getEventsByDate({
+    required String field,
+    required DateTime date,
+  }) async {
+    final currentYear = DateTime.now().year;
+    final start = DateTime(currentYear, date.month, date.day);
+    final end = DateTime(currentYear, date.month, date.day + 1);
+    return await FirebaseFirestore.instance
+        .collection('events')
+        .where(field, isGreaterThanOrEqualTo: start, isLessThan: end)
+        .get();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getEventStreamFromAuthorUsername(
+    String authorUsername,
+  ) {
+    return FirebaseFirestore.instance
+        .collection('events')
+        .where('authorUsername', isEqualTo: authorUsername)
+        .snapshots();
+  }
+
   Stream<QuerySnapshot<Map<String, dynamic>>> getEventsStream() {
     return FirebaseFirestore.instance.collection('events').snapshots();
   }
@@ -83,6 +109,19 @@ class EventModel {
       {bool isDescending = false}) {
     return FirebaseFirestore.instance
         .collection('events')
+        .orderBy(field, descending: isDescending)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>>
+      getSortedEventsStreamWithEventOrganizer(
+    String field, {
+    required String eventOrganizer,
+    bool isDescending = false,
+  }) {
+    return FirebaseFirestore.instance
+        .collection('events')
+        .where('eventOrganizer', isEqualTo: eventOrganizer)
         .orderBy(field, descending: isDescending)
         .snapshots();
   }

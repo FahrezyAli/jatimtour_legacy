@@ -9,6 +9,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/article_model.dart';
 import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
+import 'package:jatimtour/widgets/universal/fields/tags_field.dart';
 import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
 import 'package:textfield_tags/textfield_tags.dart';
 
@@ -21,17 +22,13 @@ class CreateArticlePageWeb extends StatefulWidget {
 
 class _CreateArticlePageWebState extends State<CreateArticlePageWeb> {
   CroppedFile? _coverImage;
-  String? _selectedCity;
-
   final _titleController = TextEditingController();
-  final _quillController = QuillController.basic();
-
-  late double _distanceToField;
+  final _datePublishedController = TextEditingController();
   DateTime _datePublished = DateTime.now();
-
-  final TextEditingController _datePublishedController =
-      TextEditingController();
-  final StringTagController _tagsController = StringTagController();
+  String? _selectedCity;
+  final _quillController = QuillController.basic();
+  late double _distanceToField;
+  final _tagsController = StringTagController();
 
   Future _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
@@ -153,8 +150,8 @@ class _CreateArticlePageWebState extends State<CreateArticlePageWeb> {
   @override
   void dispose() {
     super.dispose();
-    _quillController.dispose();
     _titleController.dispose();
+    _quillController.dispose();
     _datePublishedController.dispose();
     _tagsController.dispose();
   }
@@ -164,11 +161,12 @@ class _CreateArticlePageWebState extends State<CreateArticlePageWeb> {
     return WebScaffold(
       actions: [
         IconButton(
-            onPressed: () => _saveArticle(), icon: const Icon(Icons.save))
+          onPressed: () => _saveArticle(),
+          icon: const Icon(Icons.save),
+        )
       ],
       body: Stack(
         children: [
-          // Background Image
           Positioned.fill(
             child: _coverImage == null
                 ? Container(color: const Color(0xFFD9D9D9))
@@ -177,7 +175,6 @@ class _CreateArticlePageWebState extends State<CreateArticlePageWeb> {
                     fit: BoxFit.cover,
                   ),
           ),
-          // Opaque Layer
           Positioned.fill(
             child: Container(
               color: Colors.black.withOpacity(0.5),
@@ -191,283 +188,191 @@ class _CreateArticlePageWebState extends State<CreateArticlePageWeb> {
             bottom: 0.0,
             child: Material(
               color: Colors.white,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(
-                        height: 50), // Add some top padding for better visual
-                    _coverImage == null
-                        ? Container(
-                            height: 270,
-                            width: 540,
-                            color: const Color(0xFFD9D9D9),
-                            child: Center(
-                              child: CircleButton(
-                                text: const Text("Tambah Gambar"),
-                                color: const Color(0xFFD9D9D9),
-                                width: 200.0,
-                                elevation: 0.0,
-                                border:
-                                    Border.all(color: Colors.black, width: 1.0),
-                                onTap: () => _pickImage(ImageSource.gallery),
-                              ),
+              child: ListView(
+                children: [
+                  _coverImage == null
+                      ? Container(
+                          height: 270,
+                          width: 540,
+                          color: const Color(0xFFD9D9D9),
+                          child: Center(
+                            child: CircleButton(
+                              text: const Text("Tambah Gambar"),
+                              color: const Color(0xFFD9D9D9),
+                              width: 200.0,
+                              elevation: 0.0,
+                              border:
+                                  Border.all(color: Colors.black, width: 1.0),
+                              onTap: () => _pickImage(ImageSource.gallery),
                             ),
-                          )
-                        : Material(
-                            child: InkWell(
-                                child: Ink.image(
-                                  height: 270,
-                                  width: 540,
-                                  image: Image.network(_coverImage!.path).image,
-                                  fit: BoxFit.cover,
-                                ),
-                                onTap: () => _pickImage(ImageSource.gallery)),
                           ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, right: 10.0, top: 20),
-                      child: TextFormField(
-                        controller: _titleController,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Judul Artikel",
-                          hintStyle: TextStyle(
-                            fontFamily: "Inter",
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w500,
+                        )
+                      : Material(
+                          child: InkWell(
+                            child: Ink.image(
+                              height: 270,
+                              width: 540,
+                              image: Image.network(_coverImage!.path).image,
+                              fit: BoxFit.cover,
+                            ),
+                            onTap: () => _pickImage(ImageSource.gallery),
                           ),
                         ),
-                        textInputAction: TextInputAction.next,
-                        style: const TextStyle(
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10.0, right: 10.0, top: 20),
+                    child: TextFormField(
+                      controller: _titleController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Judul Artikel",
+                        hintStyle: TextStyle(
                           fontFamily: "Inter",
                           fontSize: 20.0,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, top: 5.0, right: 10.0),
-                      child: Row(
-                        children: [
-                          const Text(
-                            "Tanggal Publikasi: ",
-                            style: TextStyle(
-                              fontFamily: "Inter",
-                              fontSize: 16.0,
-                            ),
-                          ),
-                          Expanded(
-                            child: TextFormField(
-                              controller: _datePublishedController,
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                suffixIcon: IconButton(
-                                  onPressed: () => _selectDate(),
-                                  icon: const Icon(Icons.calendar_today),
-                                ),
-                              ),
-                              textInputAction: TextInputAction.next,
-                              style: const TextStyle(
-                                fontFamily: "Inter",
-                                fontSize: 16.0,
-                              ),
-                            ),
-                          ),
-                        ],
+                      textInputAction: TextInputAction.next,
+                      style: const TextStyle(
+                        fontFamily: "Inter",
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, top: 5.0, right: 10.0),
-                      child: Row(
-                        children: [
-                          const Text(
-                            "Kota: ",
-                            style: TextStyle(
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 10.0, top: 5.0, right: 10.0),
+                    child: Row(
+                      children: [
+                        const Text(
+                          "Tanggal Publikasi: ",
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _datePublishedController,
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              suffixIcon: IconButton(
+                                onPressed: () => _selectDate(),
+                                icon: const Icon(Icons.calendar_today),
+                              ),
+                            ),
+                            textInputAction: TextInputAction.next,
+                            style: const TextStyle(
                               fontFamily: "Inter",
                               fontSize: 16.0,
                             ),
                           ),
-                          Expanded(
-                            child: DropdownButtonFormField<String>(
-                              value: _selectedCity,
-                              isDense: false,
-                              iconSize: 0.0,
-                              decoration:
-                                  const InputDecoration.collapsed(hintText: ''),
-                              onChanged: (String? value) {
-                                setState(
-                                  () {
-                                    _selectedCity = value!;
-                                  },
-                                );
-                              },
-                              items: cityList.map<DropdownMenuItem<String>>(
-                                (String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value,
-                                      style: const TextStyle(
-                                        fontFamily: "Inter",
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
-                                  );
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 10.0, top: 5.0, right: 10.0),
+                    child: Row(
+                      children: [
+                        const Text(
+                          "Kota: ",
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            value: _selectedCity,
+                            isDense: false,
+                            iconSize: 0.0,
+                            decoration:
+                                const InputDecoration.collapsed(hintText: ''),
+                            onChanged: (String? value) {
+                              setState(
+                                () {
+                                  _selectedCity = value!;
                                 },
-                              ).toList(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10.0, top: 5.0, right: 10.0),
-                      child: Row(
-                        children: [
-                          const Text(
-                            "Tags: ",
-                            style: TextStyle(
-                              fontFamily: "Inter",
-                              fontSize: 16.0,
-                            ),
-                          ),
-                          Expanded(
-                            child: TextFieldTags<String>(
-                              textfieldTagsController: _tagsController,
-                              textSeparators: const [' ', ','],
-                              letterCase: LetterCase.normal,
-                              validator: (String tag) {
-                                if (_tagsController.getTags!.contains(tag)) {
-                                  _showErrorSnackBar("Tag sudah ada");
-                                  return "";
-                                }
-                                return null;
-                              },
-                              inputFieldBuilder: (context, inputFieldValues) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0),
-                                  child: TextField(
-                                    controller:
-                                        inputFieldValues.textEditingController,
-                                    focusNode: inputFieldValues.focusNode,
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      prefixIconConstraints: BoxConstraints(
-                                          maxWidth: _distanceToField * 0.5),
-                                      prefixIcon: inputFieldValues
-                                              .tags.isNotEmpty
-                                          ? SingleChildScrollView(
-                                              controller: inputFieldValues
-                                                  .tagScrollController,
-                                              scrollDirection: Axis.horizontal,
-                                              child: Row(
-                                                children:
-                                                    inputFieldValues.tags.map(
-                                                  (String tag) {
-                                                    return Container(
-                                                      decoration:
-                                                          const BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(20.0),
-                                                        ),
-                                                        color: kPinkColor,
-                                                      ),
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              right: 10.0),
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 10.0,
-                                                          vertical: 4.0),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          InkWell(
-                                                            child: Text(
-                                                              '#$tag',
-                                                              style: const TextStyle(
-                                                                  fontFamily:
-                                                                      'Inter',
-                                                                  fontSize:
-                                                                      14.0,
-                                                                  color: Colors
-                                                                      .white),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                              width: 4.0),
-                                                          InkWell(
-                                                            child: const Icon(
-                                                              Icons.cancel,
-                                                              size: 14.0,
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      233,
-                                                                      233,
-                                                                      233),
-                                                            ),
-                                                            onTap: () {
-                                                              inputFieldValues
-                                                                  .onTagRemoved(
-                                                                      tag);
-                                                            },
-                                                          )
-                                                        ],
-                                                      ),
-                                                    );
-                                                  },
-                                                ).toList(),
-                                              ),
-                                            )
-                                          : null,
+                              );
+                            },
+                            items: cityList.map<DropdownMenuItem<String>>(
+                              (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: const TextStyle(
+                                      fontFamily: "Inter",
+                                      fontSize: 16.0,
                                     ),
-                                    onChanged: inputFieldValues.onTagChanged,
-                                    onSubmitted:
-                                        inputFieldValues.onTagSubmitted,
                                   ),
                                 );
                               },
-                            ),
+                            ).toList(),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: QuillToolbar.simple(
-                        configurations: QuillSimpleToolbarConfigurations(
-                          controller: _quillController,
-                          sharedConfigurations: const QuillSharedConfigurations(
-                            locale: Locale('id'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 10.0, top: 5.0, right: 10.0),
+                    child: Row(
+                      children: [
+                        const Text(
+                          "Tags: ",
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            fontSize: 16.0,
                           ),
+                        ),
+                        Expanded(
+                          child: TagsField(
+                            tagsController: _tagsController,
+                            distanceToField: _distanceToField,
+                            validator: (String tags) {
+                              if (_tagsController.getTags!.contains(tags)) {
+                                _showErrorSnackBar("Tag sudah ada");
+                                return "";
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: QuillToolbar.simple(
+                      configurations: QuillSimpleToolbarConfigurations(
+                        controller: _quillController,
+                        sharedConfigurations: const QuillSharedConfigurations(
+                          locale: Locale('id'),
                         ),
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(10.0),
-                      constraints: BoxConstraints(
-                        maxHeight: MediaQuery.of(context).size.height * 0.5,
-                      ),
-                      child: QuillEditor.basic(
-                        configurations: QuillEditorConfigurations(
-                          controller: _quillController,
-                          sharedConfigurations: const QuillSharedConfigurations(
-                            locale: Locale('id'),
-                          ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10.0),
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height * 0.5,
+                    ),
+                    child: QuillEditor.basic(
+                      configurations: QuillEditorConfigurations(
+                        scrollable: false,
+                        controller: _quillController,
+                        sharedConfigurations: const QuillSharedConfigurations(
+                          locale: Locale('id'),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

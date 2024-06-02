@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/article_model.dart';
 import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
@@ -11,7 +11,7 @@ import 'package:rowbuilder/rowbuilder.dart';
 
 class ArticlePageMobile extends StatelessWidget {
   final String articleId;
-  final QuillController _quillController = QuillController.basic();
+  final _quillController = QuillController.basic();
 
   ArticlePageMobile({required this.articleId, super.key});
 
@@ -81,7 +81,7 @@ class ArticlePageMobile extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: Text(
-                          DateFormat('d MMMM y')
+                          intl.DateFormat('d MMMM y')
                               .format(articleData['datePublished'].toDate()),
                           style: const TextStyle(
                             fontFamily: "Inter",

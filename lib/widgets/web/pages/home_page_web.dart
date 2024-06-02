@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/article_model.dart';
-import 'package:jatimtour/models/user_model.dart';
 import 'package:jatimtour/widgets/universal/carousel/featured_article_carousel.dart';
 import 'package:jatimtour/widgets/universal/carousel/recommendation_carousel.dart';
 import 'package:jatimtour/widgets/universal/views/calendar_home_view.dart';
@@ -14,18 +13,8 @@ import 'package:rowbuilder/rowbuilder.dart';
 class HomePageWeb extends StatelessWidget {
   const HomePageWeb({super.key});
 
-  void _autoLogin() {
-    final userInstance = Modular.get<UserModel>();
-    if (userInstance.isSignedIn()) {
-      userInstance.getUserData().then((userData) {
-        userInstance.userData = userData.data();
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    _autoLogin();
     return WebScaffold(
       backgroundColor: const Color(0xFFE1E1E1),
       body: ListView(

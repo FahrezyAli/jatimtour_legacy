@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/article_model.dart';
 import 'package:rowbuilder/rowbuilder.dart';
@@ -23,7 +23,7 @@ class ArticleCardWeb extends StatelessWidget {
       color: const Color(0xFFE1E1E1),
       child: InkWell(
         onTap: () {
-          Modular.to.pushNamed('/article?articleId=$articleId');
+          Modular.to.pushNamed('$articleRoute?articleId=$articleId');
         },
         child: Padding(
           padding: const EdgeInsets.only(
@@ -72,7 +72,7 @@ class ArticleCardWeb extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text:
-                                    '\n${articleData['authorUsername']}, ${DateFormat('d MMMM y').format(articleData['datePublished'].toDate())}',
+                                    '\n${articleData['authorUsername']}, ${intl.DateFormat('d MMMM y').format(articleData['datePublished'].toDate())}',
                                 style: const TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 14.0,

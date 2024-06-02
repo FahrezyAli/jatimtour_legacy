@@ -91,18 +91,23 @@ class UserModel {
     await user.updatePhotoURL(await profilePictureRef.getDownloadURL());
   }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>>? getUserDataStream() {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(authInstance.currentUser!.uid)
-        .snapshots();
-  }
-
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserData() {
     return FirebaseFirestore.instance
         .collection('users')
         .doc(authInstance.currentUser!.uid)
         .get();
+  }
+
+  Future<List<String>> getUsedUsername() {
+    return FirebaseFirestore.instance.collection('users').get().then(
+        (value) => value.docs.map((e) => e['username'].toString()).toList());
+  }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>>? getUserDataStream() {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(authInstance.currentUser!.uid)
+        .snapshots();
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getSortedUsersStream(String field,
@@ -111,6 +116,14 @@ class UserModel {
         .collection('users')
         .orderBy(field, descending: isDescending)
         .snapshots();
+  }
+
+  ImageProvider<Object> getProfilePicture() {
+    return authInstance.currentUser != null
+        ? authInstance.currentUser!.photoURL != null
+            ? Image.network(authInstance.currentUser!.photoURL!).image
+            : const AssetImage('assets/images/placeholder.png')
+        : const AssetImage('assets/images/placeholder.png');
   }
 
   Future<void> updateUserData(Map<String, dynamic> userData) async {
@@ -125,13 +138,5 @@ class UserModel {
       String uid, Map<String, dynamic> userData) async {
     final userRef = FirebaseFirestore.instance.collection('users').doc(uid);
     await userRef.update(userData);
-  }
-
-  ImageProvider<Object> getProfilePicture() {
-    return authInstance.currentUser != null
-        ? authInstance.currentUser!.photoURL != null
-            ? Image.network(authInstance.currentUser!.photoURL!).image
-            : const AssetImage('assets/images/placeholder.png')
-        : const AssetImage('assets/images/placeholder.png');
   }
 }

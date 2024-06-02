@@ -9,7 +9,9 @@ import 'package:jatimtour/widgets/universal/carousel/recommendation_carousel.dar
 import 'package:jatimtour/widgets/universal/views/calendar_home_view.dart';
 
 class HomeViewMobile extends StatelessWidget {
-  const HomeViewMobile({super.key});
+  final Function(int state) notifyParent;
+
+  const HomeViewMobile(this.notifyParent, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +87,7 @@ class HomeViewMobile extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            onTap: () {},
+            onTap: () => notifyParent(1),
           ),
         ),
         Padding(
@@ -157,7 +159,7 @@ class HomeViewMobile extends StatelessWidget {
                   fontSize: 11.0,
                   fontWeight: FontWeight.bold),
             ),
-            onTap: () {},
+            onTap: () => notifyParent(3),
           ),
         ),
         const Padding(

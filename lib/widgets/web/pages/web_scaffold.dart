@@ -6,26 +6,36 @@ class WebScaffold extends StatelessWidget {
   final Color? backgroundColor;
   final Widget? body;
   final List<Widget>? actions;
+  final double horizontalPadding;
 
-  const WebScaffold({this.backgroundColor, this.body, this.actions, super.key});
+  const WebScaffold({
+    this.backgroundColor,
+    this.body,
+    this.actions,
+    this.horizontalPadding = 300.0,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: AppBar(
-        actions: actions,
-        backgroundColor: kPinkColor,
-        title: const Text(
-          "JATIMTOUR",
-          style: TextStyle(
-            fontFamily: "KronaOne",
-            fontSize: 30.0,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      child: Scaffold(
+        backgroundColor: backgroundColor,
+        appBar: AppBar(
+          actions: actions,
+          backgroundColor: kPinkColor,
+          title: const Text(
+            "JATIMTOUR",
+            style: TextStyle(
+              fontFamily: "KronaOne",
+              fontSize: 30.0,
+            ),
           ),
         ),
+        endDrawer: const HomePageDrawerWeb(),
+        body: body,
       ),
-      endDrawer: const HomePageDrawerWeb(),
-      body: body,
     );
   }
 }

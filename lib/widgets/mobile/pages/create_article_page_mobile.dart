@@ -6,7 +6,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/article_model.dart';
 import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
@@ -66,13 +66,13 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
   }
 
   Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
+    final picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2101),
     );
-    final TimeOfDay? time = await showTimePicker(
+    final time = await showTimePicker(
       // ignore: use_build_context_synchronously
       context: context,
       initialTime: TimeOfDay.now(),
@@ -87,7 +87,7 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
           time.minute,
         );
         _datePublishedController.text =
-            DateFormat.yMd().add_Hm().format(_datePublished);
+            intl.DateFormat.yMd().add_Hm().format(_datePublished);
       });
     }
   }
@@ -130,7 +130,7 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
     super.initState();
     _selectedCity = cityList[0];
     _datePublishedController.text =
-        DateFormat.yMd().add_Hm().format(_datePublished);
+        intl.DateFormat.yMd().add_Hm().format(_datePublished);
   }
 
   @override
@@ -280,16 +280,24 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, top: 5.0, right: 10.0),
-              child: TagsField(
-                tagsController: _tagsController,
-                distanceToField: _distanceToField,
-                validator: (String tags) {
-                  if (_tagsController.getTags!.contains(tags)) {
-                    _showErrorSnackBar("Tag sudah ada");
-                    return "";
-                  }
-                  return null;
-                },
+              child: Row(
+                children: [
+                  const Text("Tags: ",
+                      style: TextStyle(fontFamily: "Inter", fontSize: 16.0)),
+                  Expanded(
+                    child: TagsField(
+                      tagsController: _tagsController,
+                      distanceToField: _distanceToField,
+                      validator: (String tags) {
+                        if (_tagsController.getTags!.contains(tags)) {
+                          _showErrorSnackBar("Tag sudah ada");
+                          return "";
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
             SingleChildScrollView(

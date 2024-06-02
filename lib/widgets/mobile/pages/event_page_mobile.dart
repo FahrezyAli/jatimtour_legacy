@@ -5,24 +5,24 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/article_model.dart';
-import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
+import 'package:jatimtour/models/event_model.dart';
+import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
 import 'package:rowbuilder/rowbuilder.dart';
 
-class ArticlePageWeb extends StatelessWidget {
-  final String articleId;
+class EventPageMobile extends StatelessWidget {
+  final String eventId;
   final _quillController = QuillController.basic();
 
-  ArticlePageWeb({required this.articleId, super.key});
+  EventPageMobile({required this.eventId, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return WebScaffold(
+    return MobileScaffold(
       body: FutureBuilder(
-        future: Modular.get<ArticleModel>().getArticleFromId(articleId),
+        future: Modular.get<EventModel>().getEventFromId(eventId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return _buildArticlePage(context, snapshot.data!.data()!);
+            return _buildPage(context, snapshot.data!.data()!);
           } else {
             return const Center(child: CircularProgressIndicator());
           }
@@ -31,12 +31,12 @@ class ArticlePageWeb extends StatelessWidget {
     );
   }
 
-  Widget _buildArticlePage(
+  Widget _buildPage(
     BuildContext context,
-    Map<String, dynamic> articleData,
+    Map<String, dynamic> eventData,
   ) {
     _quillController.document =
-        Document.fromJson(jsonDecode(articleData['content']));
+        Document.fromJson(jsonDecode(eventData['description']));
     _quillController.readOnly = true;
     return CustomScrollView(
       shrinkWrap: true,
@@ -48,45 +48,47 @@ class ArticlePageWeb extends StatelessWidget {
                 'assets/images/leading.png',
                 repeat: ImageRepeat.repeatX,
               ),
-              SizedBox(
-                  width: MediaQuery.sizeOf(context).width,
-                  child: Image.network(articleData['coverImageUrl'])),
-              Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Text(
-                    articleData['title'],
-                    style: const TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
               Padding(
                 padding:
-                    const EdgeInsets.only(top: 15.0, left: 15.0, right: 10.0),
+                    const EdgeInsets.only(top: 20.0, left: 15.0, right: 15.0),
                 child: Row(
                   children: [
-                    Text(
-                      articleData['authorUsername'],
-                      style: const TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 16.0,
-                      ),
+                    Image.network(
+                      eventData['coverImageUrl'],
+                      height: 150.0,
+                      fit: BoxFit.cover,
                     ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          intl.DateFormat('d MMMM y')
-                              .format(articleData['datePublished'].toDate()),
-                          style: const TextStyle(
-                            fontFamily: "Inter",
-                            fontSize: 16.0,
-                          ),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 15.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              eventData['eventName'],
+                              style: const TextStyle(
+                                fontFamily: "Inter",
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              eventData['eventOrganizer'],
+                              style: const TextStyle(
+                                fontFamily: "Inter",
+                                fontSize: 16.0,
+                              ),
+                            ),
+                            Text(
+                              intl.DateFormat('d MMMM y')
+                                  .format(eventData['startDate'].toDate()),
+                              style: const TextStyle(
+                                fontFamily: "Inter",
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -113,12 +115,13 @@ class ArticlePageWeb extends StatelessWidget {
         SliverFillRemaining(
           hasScrollBody: false,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Padding(
                 padding: const EdgeInsets.only(
                     top: 10.0, left: 15.0, bottom: 10.0, right: 15.0),
                 child: RowBuilder(
-                  itemCount: articleData['tags'].length,
+                  itemCount: eventData['tags'].length,
                   reversed: false,
                   itemBuilder: (context, index) {
                     return Container(
@@ -129,7 +132,7 @@ class ArticlePageWeb extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: Text(
-                        '#${articleData['tags'][index]}',
+                        '#${eventData['tags'][index]}',
                         style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 14.0,
@@ -141,19 +144,22 @@ class ArticlePageWeb extends StatelessWidget {
                   },
                 ),
               ),
-              Container(
-                color: kPinkColor,
-                height: 80.0,
-                width: MediaQuery.sizeOf(context).width,
-                child: const Padding(
-                  padding: EdgeInsets.only(top: 30.0, left: 20.0),
-                  child: Text(
-                    "© 2024 JATIMTOUR",
-                    style: TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  color: kPinkColor,
+                  height: 80.0,
+                  width: MediaQuery.sizeOf(context).width,
+                  child: const Padding(
+                    padding: EdgeInsets.only(top: 30.0, left: 20.0),
+                    child: Text(
+                      "© 2024 JATIMTOUR",
+                      style: TextStyle(
+                        fontFamily: "Inter",
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),

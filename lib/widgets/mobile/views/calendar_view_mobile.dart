@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/universal/cards/calendar_card.dart';
 
 class CalendarViewMobile extends StatelessWidget {
-  final months = [
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
-  ];
+  const CalendarViewMobile({super.key});
 
-  CalendarViewMobile({super.key});
+  List<String> _getMonth() {
+    final currentMonths = DateTime.now().month;
+    final remainingMonths = months.keys.toList().sublist(currentMonths - 1);
+    return remainingMonths.map((month) => months[month]!).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +57,17 @@ class CalendarViewMobile extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () async {
+                    final date = await showDatePicker(
+                      context: context,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2101),
+                    );
+                    final dateFormat = intl.DateFormat('yyyy-MM-dd');
+                    Modular.to.pushNamed(
+                      '$eventListRoute?date=${dateFormat.format(date!)}',
+                    );
+                  },
                 ),
               ),
             ],
@@ -79,12 +85,12 @@ class CalendarViewMobile extends StatelessWidget {
         ListView.builder(
           shrinkWrap: true,
           physics: const ScrollPhysics(),
-          itemCount: months.length,
+          itemCount: _getMonth().length,
           itemBuilder: (context, index) {
             return CalendarCard(
-              month: months[index],
+              month: _getMonth()[index],
               image: Image.asset(
-                'assets/images/${months[index].toLowerCase()}.png',
+                'assets/images/${_getMonth()[index].toLowerCase()}.png',
                 errorBuilder: (context, error, stackTrace) => Stack(
                   children: [
                     Image.asset(

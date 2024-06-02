@@ -55,16 +55,6 @@ class ArticleModel {
     return FirebaseFirestore.instance.collection('articles').doc(id).get();
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>>
-      getArticleStreamFromAuthorUsername(
-    String authorUsername,
-  ) {
-    return FirebaseFirestore.instance
-        .collection('articles')
-        .where('authorUsername', isEqualTo: authorUsername)
-        .snapshots();
-  }
-
   Future<QuerySnapshot<Map<String, dynamic>>> getFeaturedArticle() {
     return FirebaseFirestore.instance
         .collection('articles')
@@ -82,6 +72,16 @@ class ArticleModel {
         .orderBy(field, descending: isDescending)
         .limit(limit)
         .get();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>>
+      getArticleStreamFromAuthorUsername(
+    String authorUsername,
+  ) {
+    return FirebaseFirestore.instance
+        .collection('articles')
+        .where('authorUsername', isEqualTo: authorUsername)
+        .snapshots();
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getArticlesStream() {

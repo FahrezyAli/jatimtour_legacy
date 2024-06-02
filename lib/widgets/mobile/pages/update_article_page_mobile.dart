@@ -6,10 +6,9 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/article_model.dart';
-import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
 import 'package:jatimtour/widgets/universal/fields/tags_field.dart';
 import 'package:textfield_tags/textfield_tags.dart';
@@ -69,13 +68,13 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
   }
 
   Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
+    final picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2101),
     );
-    final TimeOfDay? time = await showTimePicker(
+    final time = await showTimePicker(
       // ignore: use_build_context_synchronously
       context: context,
       initialTime: TimeOfDay.now(),
@@ -90,7 +89,7 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
           time.minute,
         );
         _datePublishedController.text =
-            DateFormat.yMd().add_Hm().format(_datePublished);
+            intl.DateFormat.yMd().add_Hm().format(_datePublished);
       });
     }
   }
@@ -172,7 +171,7 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
                 Document.fromJson(jsonDecode(snapshot.data!['content']));
             _datePublished = snapshot.data!['datePublished'].toDate();
             _datePublishedController.text =
-                DateFormat.yMd().add_Hm().format(_datePublished);
+                intl.DateFormat.yMd().add_Hm().format(_datePublished);
             _selectedCity = snapshot.data!['city'];
             _initialTags = List<String>.from(snapshot.data!['tags']);
             return _buildPage(snapshot.data!.data()!);
@@ -186,38 +185,15 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
     return Form(
       child: ListView(
         children: [
-          Builder(
-            builder: (context) {
-              if (_coverImage == null) {
-                return Container(
+          Material(
+            child: InkWell(
+                child: Ink.image(
                   height: 180,
                   width: 360,
-                  color: const Color(0xFFD9D9D9),
-                  child: Center(
-                    child: CircleButton(
-                      text: const Text("Tambah Gambar"),
-                      color: const Color(0xFFD9D9D9),
-                      width: 125.0,
-                      elevation: 0.0,
-                      border: Border.all(color: Colors.black, width: 1.0),
-                      onTap: () => _pickImage(ImageSource.gallery),
-                    ),
-                  ),
-                );
-              } else {
-                return Material(
-                  child: InkWell(
-                      child: Ink.image(
-                        height: 180,
-                        width: 360,
-                        image:
-                            Image.network(articleData['coverImageUrl']).image,
-                        fit: BoxFit.cover,
-                      ),
-                      onTap: () => _pickImage(ImageSource.gallery)),
-                );
-              }
-            },
+                  image: Image.network(articleData['coverImageUrl']).image,
+                  fit: BoxFit.cover,
+                ),
+                onTap: () => _pickImage(ImageSource.gallery)),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10.0, right: 10.0),
