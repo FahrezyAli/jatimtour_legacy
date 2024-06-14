@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
-import 'package:jatimtour/models/user_model.dart';
+import 'package:jatimtour/services/user_services.dart' as user_services;
 import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
 
 class ProfilePageWeb extends StatelessWidget {
@@ -8,7 +7,6 @@ class ProfilePageWeb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userInstance = Modular.get<UserModel>();
     return WebScaffold(
       body: ListView(
         children: [
@@ -24,14 +22,14 @@ class ProfilePageWeb extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(top: 30.0),
                   child: CircleAvatar(
-                    radius: 75.0,
-                    backgroundImage: userInstance.getProfilePicture(),
-                  ),
+                      radius: 75.0,
+                      backgroundImage:
+                          user_services.currentUser!.getProfilePicture()),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: Text(
-                    userInstance.userData!['username'],
+                    user_services.currentUser!.username,
                     style: const TextStyle(
                       fontFamily: "Inter",
                       fontSize: 20.0,
@@ -41,7 +39,7 @@ class ProfilePageWeb extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: Text(
-                    userInstance.authInstance.currentUser!.email!,
+                    user_services.currentUser!.email,
                     style: const TextStyle(
                       fontFamily: "Inter",
                       fontSize: 20.0,

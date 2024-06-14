@@ -3,16 +3,17 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/article_model.dart';
+import 'package:jatimtour/services/article_services.dart' as article_services;
 import 'package:rowbuilder/rowbuilder.dart';
 
 class ArticleCardMobile extends StatelessWidget {
   final String articleId;
-  final Map<String, dynamic> articleData;
+  final ArticleModel article;
   final bool withUpdateAndDelete;
 
   const ArticleCardMobile({
     required this.articleId,
-    required this.articleData,
+    required this.article,
     this.withUpdateAndDelete = false,
     super.key,
   });
@@ -46,7 +47,7 @@ class ArticleCardMobile extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.0),
                     image: DecorationImage(
-                      image: NetworkImage(articleData['coverImageUrl']),
+                      image: NetworkImage(article.coverImageUrl),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -61,36 +62,41 @@ class ArticleCardMobile extends StatelessWidget {
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
-                          child: RichText(
-                            text: TextSpan(
-                              text: articleData['title'],
-                              style: const TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text:
-                                      '\n${articleData['authorUsername']}, ${DateFormat('d MMMM y').format(articleData['datePublished'].toDate())}',
+                          child: FutureBuilder(
+                            future: article.getAuthorUsernameFromAuthorId(),
+                            builder: (context, snapshot) {
+                              return RichText(
+                                text: TextSpan(
+                                  text: article.title,
                                   style: const TextStyle(
                                     fontFamily: 'Inter',
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal,
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                   ),
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          '\n${snapshot.data ?? ''}, ${DateFormat('d MMMM y').format(article.datePublished)}',
+                                      style: const TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: RowBuilder(
-                            itemCount: articleData['tags'].length > 3
+                            itemCount: article.tags.length > 3
                                 ? 3
-                                : articleData['tags'].length,
+                                : article.tags.length,
                             reversed: false,
                             itemBuilder: (context, index) {
                               return Container(
@@ -101,7 +107,7 @@ class ArticleCardMobile extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: Text(
-                                  '#${articleData['tags'][index]}',
+                                  '#${article.tags[index]}',
                                   style: const TextStyle(
                                     fontFamily: 'Inter',
                                     fontSize: 10.0,
@@ -148,9 +154,7 @@ class ArticleCardMobile extends StatelessWidget {
                                   TextButton(
                                     onPressed: () {
                                       Modular.to.pop(context);
-                                      context
-                                          .read<ArticleModel>()
-                                          .deleteArticlesFromId(articleId);
+                                      article_services.deleteArticle(articleId);
                                     },
                                     child: const Text('Hapus'),
                                   ),

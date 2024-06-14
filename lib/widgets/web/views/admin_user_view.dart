@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/models/user_model.dart';
+import 'package:jatimtour/services/user_services.dart' as user_services;
 
 TextStyle _defaultStyle = const TextStyle(fontFamily: 'Inter');
 
@@ -39,7 +40,7 @@ class _AdminUserViewState extends State<AdminUserView> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Modular.get<UserModel>().getSortedUsersStream(
+      stream: user_services.getSortedUsersStream(
         _getFieldFromIndex(_currentSortColumn),
         isDescending: !_isAscending,
       ),
@@ -79,7 +80,7 @@ class _AdminUserViewState extends State<AdminUserView> {
 }
 
 class _DataSource extends DataTableSource {
-  QuerySnapshot<Map<String, dynamic>> data;
+  QuerySnapshot<UserModel> data;
   BuildContext context;
 
   _DataSource(this.data, this.context);
@@ -117,9 +118,9 @@ class _DataSource extends DataTableSource {
               IconButton(
                 icon: const Icon(Icons.save),
                 onPressed: () {
-                  Modular.get<UserModel>().updateUserDataFromUid(
+                  user_services.updateRole(
                     uid,
-                    {'role': roleValue},
+                    role: roleValue,
                   );
                   Modular.to.pop();
                 },
@@ -139,23 +140,23 @@ class _DataSource extends DataTableSource {
 
   @override
   DataRow? getRow(int index) {
-    final user = data.docs[index];
+    final user = data.docs[index].data();
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text(user['email'], style: _defaultStyle)),
-        DataCell(Text(user['username'], style: _defaultStyle)),
-        DataCell(Text(user['fullName'], style: _defaultStyle)),
-        DataCell(Text(user['phoneNumber'], style: _defaultStyle)),
-        DataCell(Text(user['city'], style: _defaultStyle)),
+        DataCell(Text(user.email, style: _defaultStyle)),
+        DataCell(Text(user.username, style: _defaultStyle)),
+        DataCell(Text(user.fullName, style: _defaultStyle)),
+        DataCell(Text(user.phoneNumber, style: _defaultStyle)),
+        DataCell(Text(user.city, style: _defaultStyle)),
         DataCell(
           Row(
             children: [
-              Text(user['role'].toString(), style: _defaultStyle),
+              Text(user.role.toString(), style: _defaultStyle),
               IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () {
-                  int roleValue = user['role'];
+                  int roleValue = user.role;
                   _updateRole(user.id, roleValue);
                 },
               ),

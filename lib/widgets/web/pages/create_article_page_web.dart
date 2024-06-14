@@ -7,7 +7,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/article_model.dart';
+import 'package:jatimtour/services/article_services.dart' as article_services;
 import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/universal/fields/tags_field.dart';
 import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
@@ -48,18 +48,12 @@ class _CreateArticlePageWebState extends State<CreateArticlePageWeb> {
     CroppedFile? croppedImage = await ImageCropper().cropImage(
       sourcePath: imageFile.path,
       aspectRatio: const CropAspectRatio(ratioX: 2.0, ratioY: 1.0),
-      cropStyle: CropStyle.rectangle,
       compressQuality: 100,
       uiSettings: [
         WebUiSettings(
           context: context,
-          presentStyle: CropperPresentStyle.dialog,
-          boundary: const CroppieBoundary(width: 700, height: 350),
-          viewPort:
-              const CroppieViewPort(width: 600, height: 300, type: 'rectangle'),
-          enableExif: true,
-          enableZoom: true,
-          showZoomer: false,
+          presentStyle: WebPresentStyle.dialog,
+          size: const CropperSize(width: 350, height: 350),
         )
       ],
     );
@@ -121,9 +115,9 @@ class _CreateArticlePageWebState extends State<CreateArticlePageWeb> {
     } else if (_datePublished.isBefore(DateTime.now())) {
       _showErrorSnackBar("Tanggal Publikasi tidak valid");
     } else {
-      await ArticleModel().setData(
+      await article_services.createArticle(
         title: _titleController.text,
-        coverImage: _coverImage!,
+        coverImage: await _coverImage!.readAsBytes(),
         datePublished: _datePublished,
         city: _selectedCity!,
         content: jsonEncode(_quillController.document.toDelta().toJson()),
@@ -212,7 +206,7 @@ class _CreateArticlePageWebState extends State<CreateArticlePageWeb> {
                             child: Ink.image(
                               height: 270,
                               width: 540,
-                              image: Image.network(_coverImage!.path).image,
+                              image: NetworkImage(_coverImage!.path),
                               fit: BoxFit.cover,
                             ),
                             onTap: () => _pickImage(ImageSource.gallery),

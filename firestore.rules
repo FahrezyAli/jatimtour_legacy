@@ -2,16 +2,19 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-  	// Only a user can update their profile data, but anyone can view it
 		match /users/{userId} {
   		allow read;
-  		allow write, update, delete: if request.auth.uid == userId;
+  		allow write, update, delete: if userId == request.auth.uid;
 		}
-    match /articles/{article} {
+    match /articles/{articleId} {
     	allow read;
       allow write: if request.resource.data.authorId == request.auth.uid;
       allow update, delete: if resource.data.authorId == request.auth.uid;
-      
+    }
+    match /events/{eventId} {
+    	allow read;
+      allow write: if request.resource.data.authorId == request.auth.uid;
+      allow update, delete: if resource.data.authorId == request.auth.uid;
     }
     match /{document=**} {
       allow read, write, update, delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 2;

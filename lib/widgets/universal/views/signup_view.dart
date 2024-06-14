@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/user_model.dart';
+import 'package:jatimtour/services/user_services.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -19,7 +19,6 @@ class _SignUpViewState extends State<SignUpView> {
   bool _isVisible = false;
 
   Future<void> _signUp() async {
-    final userInstance = Modular.get<UserModel>();
     if (!EmailValidator.validate(_emailController.text)) {
       _showErrorSnackBar("Email is not valid");
     } else if (_passwordController.text.length < 6) {
@@ -27,10 +26,10 @@ class _SignUpViewState extends State<SignUpView> {
     } else if (_passwordController.text != _retypedPasswordController.text) {
       _showErrorSnackBar("Password and Retyped Password do not match");
     } else {
-      await userInstance
-          .signIn(_emailController.text, _passwordController.text)
-          .then((value) => Modular.to.navigate(regisRoute))
-          .catchError(
+      await signIn(
+        email: _emailController.text,
+        password: _passwordController.text,
+      ).then((value) => Modular.to.navigate(regisRoute)).catchError(
         (e) {
           _showErrorSnackBar(e.toString());
         },

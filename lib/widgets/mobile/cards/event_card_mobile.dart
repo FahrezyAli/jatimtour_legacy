@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
+import 'package:jatimtour/models/event_model.dart';
 import 'package:rowbuilder/rowbuilder.dart';
 
 class EventCardMobile extends StatelessWidget {
   final String eventId;
-  final Map<String, dynamic> eventData;
+  final EventModel event;
 
   const EventCardMobile({
     required this.eventId,
-    required this.eventData,
+    required this.event,
     super.key,
   });
 
@@ -43,7 +44,7 @@ class EventCardMobile extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.0),
                     image: DecorationImage(
-                      image: NetworkImage(eventData['coverImageUrl']),
+                      image: NetworkImage(event.coverImageUrl),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -58,45 +59,49 @@ class EventCardMobile extends StatelessWidget {
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
-                          child: RichText(
-                            text: TextSpan(
-                              text: eventData['eventName'],
-                              style: const TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text:
-                                      '\n${eventData['eventOrganizer']}, ${intl.DateFormat('d MMMM y').format(eventData['startDate'].toDate())}',
+                          child: FutureBuilder(
+                            future: event.getAuthorUsernameFromAuthorId(),
+                            builder: (context, snapshot) {
+                              return RichText(
+                                text: TextSpan(
+                                  text: event.eventName,
                                   style: const TextStyle(
                                     fontFamily: 'Inter',
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal,
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                   ),
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          '\n${snapshot.data ?? ''}, ${intl.DateFormat('d MMMM y').format(event.startDate)}',
+                                      style: const TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: '\n${event.city}',
+                                      style: const TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                TextSpan(
-                                  text: '\n${eventData['city']}',
-                                  style: const TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: RowBuilder(
-                            itemCount: eventData['tags'].length > 2
-                                ? 2
-                                : eventData['tags'].length,
+                            itemCount:
+                                event.tags.length > 2 ? 2 : event.tags.length,
                             reversed: false,
                             itemBuilder: (context, index) {
                               return Container(
@@ -107,7 +112,7 @@ class EventCardMobile extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: Text(
-                                  '#${eventData['tags'][index]}',
+                                  '#${event.tags[index]}',
                                   style: const TextStyle(
                                     fontFamily: 'Inter',
                                     fontSize: 10.0,

@@ -1,142 +1,80 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 class UserModel {
-  final authInstance = FirebaseAuth.instance;
-  Map<String, dynamic>? userData;
+  final String id;
+  String email;
+  String username;
+  String fullName;
+  String phoneNumber;
+  String? photoUrl;
+  String city;
+  int role;
 
-  Future<void> signIn(String email, String password) async {
-    try {
-      await authInstance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        throw 'The password provided is too weak.';
-      } else if (e.code == 'email-already-in-use') {
-        throw 'The account already exists for that email.';
-      } else {
-        rethrow;
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
+  UserModel({
+    required this.id,
+    required this.email,
+    required this.username,
+    required this.fullName,
+    required this.phoneNumber,
+    this.photoUrl,
+    required this.city,
+    this.role = 0,
+  });
 
-  Future<void> logIn(String email, String password) async {
-    try {
-      await authInstance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        throw 'No user found for that email.';
-      } else if (e.code == 'wrong-password') {
-        throw 'Wrong password provided for that user.';
-      } else {
-        rethrow;
-      }
-    } catch (e) {
-      rethrow;
-    }
-    final userData = await getUserData();
-    this.userData = userData.data();
-  }
-
-  bool isSignedIn() {
-    return authInstance.currentUser != null;
-  }
-
-  Future<void> signOut() async {
-    await authInstance.signOut();
-    Modular.dispose<UserModel>();
-  }
-
-  Future<void> setUserData({
+  void updateUser({
     required String username,
     required String fullName,
     required String phoneNumber,
     required String city,
-  }) async {
-    final userData = {
-      'email': authInstance.currentUser!.email,
+  }) {
+    this.username = username;
+    this.fullName = fullName;
+    this.phoneNumber = phoneNumber;
+    this.city = city;
+  }
+
+  void updatePhotoUrl(String photoUrl) {
+    this.photoUrl = photoUrl;
+  }
+
+  void updateRole(int role) {
+    this.role = role;
+  }
+
+  factory UserModel.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> data,
+    SnapshotOptions? options,
+  ) {
+    return UserModel(
+      id: data.id,
+      email: data['email'],
+      username: data['username'],
+      fullName: data['fullName'],
+      phoneNumber: data['phoneNumber'],
+      city: data['city'],
+      photoUrl: data['photoUrl'],
+      role: data['role'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'email': email,
       'username': username,
       'fullName': fullName,
       'phoneNumber': phoneNumber,
       'city': city,
-      'role': 0,
+      'photoUrl': photoUrl,
+      'role': role,
     };
-    this.userData = userData;
-    final user = authInstance.currentUser;
-    final userRef =
-        FirebaseFirestore.instance.collection('users').doc(user!.uid);
-    await userRef.set(userData);
   }
 
-  Future<void> setProfilePicture(Future<Uint8List> dataStream) async {
-    final user = authInstance.currentUser;
-    final profilePictureRef = FirebaseStorage.instance
-        .ref()
-        .child('users')
-        .child(user!.uid)
-        .child('profile_picture.jpg');
-    final data = await dataStream;
-    await profilePictureRef.putData(data);
-    await user.updatePhotoURL(await profilePictureRef.getDownloadURL());
-  }
-
-  Future<DocumentSnapshot<Map<String, dynamic>>> getUserData() {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(authInstance.currentUser!.uid)
-        .get();
-  }
-
-  Future<List<String>> getUsedUsername() {
-    return FirebaseFirestore.instance.collection('users').get().then(
-        (value) => value.docs.map((e) => e['username'].toString()).toList());
-  }
-
-  Stream<DocumentSnapshot<Map<String, dynamic>>>? getUserDataStream() {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(authInstance.currentUser!.uid)
-        .snapshots();
-  }
-
-  Stream<QuerySnapshot<Map<String, dynamic>>> getSortedUsersStream(String field,
-      {bool isDescending = false}) {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .orderBy(field, descending: isDescending)
-        .snapshots();
-  }
-
-  ImageProvider<Object> getProfilePicture() {
-    return authInstance.currentUser != null
-        ? authInstance.currentUser!.photoURL != null
-            ? Image.network(authInstance.currentUser!.photoURL!).image
-            : const AssetImage('assets/images/placeholder.png')
-        : const AssetImage('assets/images/placeholder.png');
-  }
-
-  Future<void> updateUserData(Map<String, dynamic> userData) async {
-    this.userData = userData;
-    final user = authInstance.currentUser;
-    final userRef =
-        FirebaseFirestore.instance.collection('users').doc(user!.uid);
-    await userRef.update(userData);
-  }
-
-  Future<void> updateUserDataFromUid(
-      String uid, Map<String, dynamic> userData) async {
-    final userRef = FirebaseFirestore.instance.collection('users').doc(uid);
-    await userRef.update(userData);
+  ImageProvider getProfilePicture() {
+    if (photoUrl != null) {
+      return NetworkImage(photoUrl!);
+    } else {
+      return const AssetImage('assets/images/placeholder.png');
+    }
   }
 }

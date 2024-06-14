@@ -22,6 +22,9 @@
     "singleProjectMode": true,
     "storage": {
       "port": 9199
+    },
+    "hosting": {
+      "port": 5000
     }
   },
   "storage": {
@@ -32,7 +35,7 @@
       "android": {
         "default": {
           "projectId": "jatimtour",
-          "appId": "1:900388906458:android:0376a95c38783d552b4ce3",
+          "appId": "1:900388906458:android:a36a4916c036a1982b4ce3",
           "fileOutput": "android/app/google-services.json"
         }
       },
@@ -40,9 +43,9 @@
         "lib/firebase_options.dart": {
           "projectId": "jatimtour",
           "configurations": {
-            "android": "1:900388906458:android:0376a95c38783d552b4ce3",
-            "ios": "1:900388906458:ios:ecfcf5ff2c5efbb62b4ce3",
-            "web": "1:900388906458:web:9de107fe232f69172b4ce3"
+            "android": "1:900388906458:android:a36a4916c036a1982b4ce3",
+            "ios": "1:900388906458:ios:9b112d051fa5886f2b4ce3",
+            "web": "1:900388906458:web:07143c30bec19d7b2b4ce3"
           }
         }
       }

@@ -5,9 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/firebase_options.dart';
-import 'package:jatimtour/models/article_model.dart';
-import 'package:jatimtour/models/event_model.dart';
-import 'package:jatimtour/models/user_model.dart';
+import 'package:jatimtour/services/user_services.dart' as user_services;
 import 'package:jatimtour/widgets/mobile/pages/article_page_mobile.dart';
 import 'package:jatimtour/widgets/mobile/pages/create_article_page_mobile.dart';
 import 'package:jatimtour/widgets/mobile/pages/event_list_page_mobile.dart';
@@ -41,26 +39,12 @@ Future<void> main() async {
   runApp(ModularApp(module: AppModule(), child: const AppWidget()));
 }
 
-void _autoLogin() {
-  final userInstance = Modular.get<UserModel>();
-  if (userInstance.isSignedIn()) {
-    userInstance.getUserData().then(
-      (userData) {
-        userInstance.userData = userData.data();
-      },
-    );
-    if (!kIsWeb) {
-      Modular.to.navigate(mHomeRoute);
-    }
-  }
-}
-
 class AppWidget extends StatelessWidget {
   const AppWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    _autoLogin();
+    user_services.autoLogin();
     return MaterialApp.router(
       title: 'JatimTour',
       routerConfig: Modular.routerConfig,
@@ -70,11 +54,7 @@ class AppWidget extends StatelessWidget {
 
 class AppModule extends Module {
   @override
-  void binds(i) {
-    i.addSingleton(UserModel.new);
-    i.add(ArticleModel.new);
-    i.add(EventModel.new);
-  }
+  void binds(i) {}
 
   @override
   void routes(r) {
@@ -107,42 +87,65 @@ class AppModule extends Module {
       r.child(profileRoute, child: (context) => const ProfilePageWeb());
       r.child(adminRoute, child: (context) => const AdminPageWeb());
     } else {
-      r.child(rootRoute, child: (context) => const StartPageMobile());
-      r.child(regisRoute, child: (context) => const RegistrationPageMobile());
-      r.child(mHomeRoute, child: (context) => const MainPageMobile());
+      r.child(
+        rootRoute,
+        child: (context) => const StartPageMobile(),
+        transition: TransitionType.fadeIn,
+      );
+      r.child(
+        regisRoute,
+        child: (context) => const RegistrationPageMobile(),
+        transition: TransitionType.fadeIn,
+      );
+      r.module(
+        mHomeRoute,
+        module: MainPageMobileModule(),
+        transition: TransitionType.fadeIn,
+      );
       r.child(
         articleRoute,
         child: (context) => ArticlePageMobile(
           articleId: r.args.queryParams['articleId']!,
         ),
+        transition: TransitionType.fadeIn,
       );
       r.child(
         createArticleRoute,
         child: (context) => const CreateArticlePageMobile(),
+        transition: TransitionType.fadeIn,
       );
       r.child(
         updateArticleRoute,
         child: (context) => UpdateArticlePageMobile(
           articleId: r.args.queryParams['articleId']!,
         ),
+        transition: TransitionType.fadeIn,
       );
       r.child(
         eventRoute,
-        child: (context) =>
-            EventPageMobile(eventId: r.args.queryParams['eventId']!),
+        child: (context) => EventPageMobile(
+          eventId: r.args.queryParams['eventId']!,
+        ),
+        transition: TransitionType.fadeIn,
       );
       r.child(
         eventListRoute,
-        child: (context) =>
-            EventListPageWithDateMobile(date: r.args.queryParams['date']!),
+        child: (context) => EventListPageWithDateMobile(
+          date: r.args.queryParams['date']!,
+        ),
+        transition: TransitionType.fadeIn,
       );
       r.child(
         '$eventListRoute/:month',
-        child: (context) => EventListPageMobile(month: r.args.params['month']),
+        child: (context) => EventListPageMobile(
+          month: r.args.params['month'],
+        ),
+        transition: TransitionType.fadeIn,
       );
       r.child(
         editProfileRoute,
         child: (context) => const ProfileEditPageMobile(),
+        transition: TransitionType.fadeIn,
       );
     }
   }

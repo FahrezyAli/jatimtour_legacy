@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/article_model.dart';
-import 'package:jatimtour/models/user_model.dart';
+import 'package:jatimtour/services/article_services.dart' as article_services;
+import 'package:jatimtour/services/user_services.dart' as user_services;
 import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/web/cards/article_card_web.dart';
 import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
@@ -62,8 +62,8 @@ class YourArticlePageWeb extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
       child: StreamBuilder(
-        stream: Modular.get<ArticleModel>().getArticleStreamFromAuthorUsername(
-          Modular.get<UserModel>().userData!['username'],
+        stream: article_services.getArticleStreamFromAuthorId(
+          user_services.currentUser!.id,
         ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -77,7 +77,7 @@ class YourArticlePageWeb extends StatelessWidget {
               itemBuilder: (context, index) {
                 return ArticleCardWeb(
                   articleId: data[index].id,
-                  articleData: data[index].data(),
+                  article: data[index].data(),
                   withUpdateAndDelete: true,
                 );
               },

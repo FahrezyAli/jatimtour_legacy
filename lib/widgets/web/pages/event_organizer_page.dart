@@ -4,7 +4,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/event_model.dart';
-import 'package:jatimtour/models/user_model.dart';
+import 'package:jatimtour/services/event_services.dart' as event_services;
+import 'package:jatimtour/services/user_services.dart' as user_services;
 import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
 
 TextStyle _defaultStyle = const TextStyle(fontFamily: 'Inter');
@@ -32,7 +33,7 @@ class _EventOrganizerViewState extends State<EventOrganizerView> {
   String _getFieldFromIndex(int index) {
     return <String>[
       'eventName',
-      'eventOrganizer',
+      'eventOrganizerId',
       'city',
       'tags',
       'startDate',
@@ -44,10 +45,9 @@ class _EventOrganizerViewState extends State<EventOrganizerView> {
   Widget build(BuildContext context) {
     return WebScaffold(
       body: StreamBuilder(
-        stream:
-            Modular.get<EventModel>().getSortedEventsStreamWithEventOrganizer(
+        stream: event_services.getSortedEventsStreamWithEventOrganizerId(
           _getFieldFromIndex(_currentSortColumn),
-          eventOrganizer: Modular.get<UserModel>().userData!['username'],
+          eventOrganizerId: user_services.currentUser!.id,
           isDescending: !_isAscending,
         ),
         builder: (context, snapshot) {
@@ -98,30 +98,30 @@ class _EventOrganizerViewState extends State<EventOrganizerView> {
 }
 
 class _DataSource extends DataTableSource {
-  QuerySnapshot<Map<String, dynamic>> data;
+  QuerySnapshot<EventModel> data;
   BuildContext context;
 
   _DataSource(this.data, this.context);
 
   @override
   DataRow? getRow(int index) {
-    final event = data.docs[index];
+    final event = data.docs[index].data();
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text(event['eventName'], style: _defaultStyle)),
-        DataCell(Text(event['eventOrganizer'], style: _defaultStyle)),
-        DataCell(Text(event['city'], style: _defaultStyle)),
-        DataCell(Text(event['tags'].join(', '), style: _defaultStyle)),
+        DataCell(Text(event.eventName, style: _defaultStyle)),
+        DataCell(Text(event.eventOrganizerId, style: _defaultStyle)),
+        DataCell(Text(event.city, style: _defaultStyle)),
+        DataCell(Text(event.tags.join(', '), style: _defaultStyle)),
         DataCell(Text(
           intl.DateFormat.yMd().format(
-            event['startDate'].toDate(),
+            event.startDate,
           ),
           style: _defaultStyle,
         )),
         DataCell(Text(
           intl.DateFormat.yMd().format(
-            event['dateCreated'].toDate(),
+            event.dateCreated,
           ),
           style: _defaultStyle,
         )),
@@ -137,7 +137,7 @@ class _DataSource extends DataTableSource {
               IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  Modular.get<EventModel>().deleteEventsFromId(event.id);
+                  event_services.deleteEvent(event.id);
                 },
               ),
             ],

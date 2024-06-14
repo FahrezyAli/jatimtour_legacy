@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/article_model.dart';
+import 'package:jatimtour/services/article_services.dart' as article_services;
 import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
 import 'package:jatimtour/widgets/universal/fields/tags_field.dart';
 import 'package:textfield_tags/textfield_tags.dart';
@@ -32,7 +33,6 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
   late double _distanceToField;
   final _tagsController = StringTagController();
   late List<String> _initialTags;
-  late Future _futureArticle;
 
   Future _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
@@ -52,7 +52,6 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
     CroppedFile? croppedImage = await ImageCropper().cropImage(
       sourcePath: imageFile.path,
       aspectRatio: const CropAspectRatio(ratioX: 2.0, ratioY: 1.0),
-      cropStyle: CropStyle.rectangle,
       compressQuality: 100,
       uiSettings: [
         AndroidUiSettings(
@@ -115,23 +114,17 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
     } else if (_datePublished.isBefore(DateTime.now())) {
       _showErrorSnackBar("Tanggal Publikasi tidak valid");
     } else {
-      await ArticleModel().updateArticleFromId(widget.articleId, {
-        'title': _titleController.text,
-        'coverImage': _coverImage!,
-        'datePublished': _datePublished,
-        'city': _selectedCity!,
-        'content': jsonEncode(_quillController.document.toDelta().toJson()),
-        'tags': _tagsController.getTags!,
-      });
+      await article_services.updateArticle(
+        widget.articleId,
+        title: _titleController.text,
+        coverImage: await _coverImage!.readAsBytes(),
+        datePublished: _datePublished,
+        city: _selectedCity!,
+        content: jsonEncode(_quillController.document.toDelta().toJson()),
+        tags: _tagsController.getTags!,
+      );
       Modular.to.pop();
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _futureArticle =
-        Modular.get<ArticleModel>().getArticleFromId(widget.articleId);
   }
 
   @override
@@ -159,21 +152,22 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
         )
       ],
       body: FutureBuilder(
-        future: _futureArticle,
+        future: article_services.getArticle(widget.articleId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           } else {
-            _titleController.text = snapshot.data!['title'];
+            final article = snapshot.data!.data()!;
+            _titleController.text = article.title;
             _quillController.document =
-                Document.fromJson(jsonDecode(snapshot.data!['content']));
-            _datePublished = snapshot.data!['datePublished'].toDate();
+                Document.fromJson(jsonDecode(article.content));
+            _datePublished = article.datePublished;
             _datePublishedController.text =
                 intl.DateFormat.yMd().add_Hm().format(_datePublished);
-            _selectedCity = snapshot.data!['city'];
-            _initialTags = List<String>.from(snapshot.data!['tags']);
+            _selectedCity = article.city;
+            _initialTags = List<String>.from(article.tags);
             return _buildPage(snapshot.data!.data()!);
           }
         },
@@ -181,7 +175,7 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
     );
   }
 
-  Widget _buildPage(Map<String, dynamic> articleData) {
+  Widget _buildPage(ArticleModel article) {
     return Form(
       child: ListView(
         children: [
@@ -190,7 +184,7 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
                 child: Ink.image(
                   height: 180,
                   width: 360,
-                  image: Image.network(articleData['coverImageUrl']).image,
+                  image: NetworkImage(article.coverImageUrl),
                   fit: BoxFit.cover,
                 ),
                 onTap: () => _pickImage(ImageSource.gallery)),

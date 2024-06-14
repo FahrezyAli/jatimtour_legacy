@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/article_model.dart';
+import 'package:jatimtour/services/article_services.dart' as article_services;
 import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
 import 'package:rowbuilder/rowbuilder.dart';
 
@@ -19,7 +19,7 @@ class ArticlePageWeb extends StatelessWidget {
   Widget build(BuildContext context) {
     return WebScaffold(
       body: FutureBuilder(
-        future: Modular.get<ArticleModel>().getArticleFromId(articleId),
+        future: article_services.getArticle(articleId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return _buildArticlePage(context, snapshot.data!.data()!);
@@ -33,10 +33,9 @@ class ArticlePageWeb extends StatelessWidget {
 
   Widget _buildArticlePage(
     BuildContext context,
-    Map<String, dynamic> articleData,
+    ArticleModel article,
   ) {
-    _quillController.document =
-        Document.fromJson(jsonDecode(articleData['content']));
+    _quillController.document = Document.fromJson(jsonDecode(article.content));
     _quillController.readOnly = true;
     return CustomScrollView(
       shrinkWrap: true,
@@ -50,13 +49,13 @@ class ArticlePageWeb extends StatelessWidget {
               ),
               SizedBox(
                   width: MediaQuery.sizeOf(context).width,
-                  child: Image.network(articleData['coverImageUrl'])),
+                  child: Image.network(article.coverImageUrl)),
               Align(
                 alignment: Alignment.center,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: Text(
-                    articleData['title'],
+                    article.title,
                     style: const TextStyle(
                       fontFamily: "Inter",
                       fontSize: 24.0,
@@ -70,19 +69,24 @@ class ArticlePageWeb extends StatelessWidget {
                     const EdgeInsets.only(top: 15.0, left: 15.0, right: 10.0),
                 child: Row(
                   children: [
-                    Text(
-                      articleData['authorUsername'],
-                      style: const TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 16.0,
-                      ),
+                    FutureBuilder(
+                      future: article.getAuthorUsernameFromAuthorId(),
+                      builder: (context, snapshot) {
+                        return Text(
+                          snapshot.data ?? '',
+                          style: const TextStyle(
+                            fontFamily: "Inter",
+                            fontSize: 16.0,
+                          ),
+                        );
+                      },
                     ),
                     Expanded(
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: Text(
                           intl.DateFormat('d MMMM y')
-                              .format(articleData['datePublished'].toDate()),
+                              .format(article.datePublished),
                           style: const TextStyle(
                             fontFamily: "Inter",
                             fontSize: 16.0,
@@ -118,7 +122,7 @@ class ArticlePageWeb extends StatelessWidget {
                 padding: const EdgeInsets.only(
                     top: 10.0, left: 15.0, bottom: 10.0, right: 15.0),
                 child: RowBuilder(
-                  itemCount: articleData['tags'].length,
+                  itemCount: article.tags.length,
                   reversed: false,
                   itemBuilder: (context, index) {
                     return Container(
@@ -129,7 +133,7 @@ class ArticlePageWeb extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: Text(
-                        '#${articleData['tags'][index]}',
+                        '#${article.tags[index]}',
                         style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 14.0,

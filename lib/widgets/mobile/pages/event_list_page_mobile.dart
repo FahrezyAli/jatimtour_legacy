@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
-import 'package:jatimtour/models/event_model.dart';
+import 'package:jatimtour/services/event_services.dart' as event_services;
 import 'package:jatimtour/widgets/mobile/cards/event_card_mobile.dart';
 import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
 
@@ -67,7 +66,7 @@ class _EventListPageMobileState extends State<EventListPageMobile> {
             ),
           ),
           FutureBuilder(
-            future: Modular.get<EventModel>().getEventsByMonths(
+            future: event_services.getEventsByMonths(
               field: 'startDate',
               monthNumber: _getMonthNumber()!,
             ),
@@ -86,7 +85,7 @@ class _EventListPageMobileState extends State<EventListPageMobile> {
                     final event = events[index];
                     return EventCardMobile(
                       eventId: event.id,
-                      eventData: event.data(),
+                      event: event.data(),
                     );
                   },
                 );

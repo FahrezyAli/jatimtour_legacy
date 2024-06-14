@@ -8,7 +8,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/article_model.dart';
+import 'package:jatimtour/services/article_services.dart' as article_services;
 import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
 import 'package:jatimtour/widgets/universal/fields/tags_field.dart';
@@ -50,7 +50,6 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
     CroppedFile? croppedImage = await ImageCropper().cropImage(
       sourcePath: imageFile.path,
       aspectRatio: const CropAspectRatio(ratioX: 2.0, ratioY: 1.0),
-      cropStyle: CropStyle.rectangle,
       compressQuality: 100,
       uiSettings: [
         AndroidUiSettings(
@@ -113,9 +112,9 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
     } else if (_datePublished.isBefore(DateTime.now())) {
       _showErrorSnackBar("Tanggal Publikasi tidak valid");
     } else {
-      await ArticleModel().setData(
+      article_services.createArticle(
         title: _titleController.text,
-        coverImage: _coverImage!,
+        coverImage: await _coverImage!.readAsBytes(),
         datePublished: _datePublished,
         city: _selectedCity!,
         content: jsonEncode(_quillController.document.toDelta().toJson()),

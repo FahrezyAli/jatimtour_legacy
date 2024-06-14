@@ -1,12 +1,21 @@
 rules_version = '2';
 
-// Craft rules based on data in your Firestore database
-// allow write: if firestore.get(
-//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
 service firebase.storage {
   match /b/{bucket}/o {
+  	match /users/{userId}/profile_picture.jpg {
+    	allow read;
+      allow write, update, delete: if userId == request.auth.uid;
+    }
+  	match /articles/{articleId}/cover_image.jpg {
+    	allow read;
+      allow write, update, delete: if firestore.get(/databases/(default)/documents/articles/$(articleId)).data.authorId == request.auth.uid;
+    }
+    match /events/{eventId}/cover_image.jpg {
+    	allow read;
+      allow write, update, delete: if firestore.get(/databases/(default)/documents/events/$(eventId)).data.eventOrganizerId == request.auth.uid;
+    }
     match /{allPaths=**} {
-      allow read, write: if false;
+      allow read, write, update, delete: if request.auth != null && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 2;
     }
   }
 }

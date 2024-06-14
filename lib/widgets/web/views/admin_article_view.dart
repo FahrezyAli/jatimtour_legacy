@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/article_model.dart';
+import 'package:jatimtour/services/article_services.dart' as article_services;
 
 TextStyle _defaultStyle = const TextStyle(fontFamily: 'Inter');
 
@@ -30,7 +31,7 @@ class _AdminArticleViewState extends State<AdminArticleView> {
   String _getFieldFromIndex(int index) {
     return <String>[
       'title',
-      'authorUsername',
+      'authorId',
       'city',
       'tags',
       'datePublished',
@@ -42,7 +43,7 @@ class _AdminArticleViewState extends State<AdminArticleView> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Modular.get<ArticleModel>().getSortedArticlesStream(
+      stream: article_services.getSortedArticlesStream(
         _getFieldFromIndex(_currentSortColumn),
         isDescending: !_isAscending,
       ),
@@ -94,40 +95,40 @@ class _AdminArticleViewState extends State<AdminArticleView> {
 }
 
 class _DataSource extends DataTableSource {
-  QuerySnapshot<Map<String, dynamic>> data;
+  QuerySnapshot<ArticleModel> data;
   BuildContext context;
 
   _DataSource(this.data, this.context);
 
   @override
   DataRow? getRow(int index) {
-    final article = data.docs[index];
+    final article = data.docs[index].data();
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text(article['title'], style: _defaultStyle)),
-        DataCell(Text(article['authorUsername'], style: _defaultStyle)),
-        DataCell(Text(article['city'], style: _defaultStyle)),
-        DataCell(Text(article['tags'].join(', '), style: _defaultStyle)),
+        DataCell(Text(article.title, style: _defaultStyle)),
+        DataCell(Text(article.authorId, style: _defaultStyle)),
+        DataCell(Text(article.city, style: _defaultStyle)),
+        DataCell(Text(article.tags.join(', '), style: _defaultStyle)),
         DataCell(Text(
           intl.DateFormat.yMd().format(
-            article['datePublished'].toDate(),
+            article.datePublished,
           ),
           style: _defaultStyle,
         )),
         DataCell(Text(
           intl.DateFormat.yMd().format(
-            article['dateCreated'].toDate(),
+            article.dateCreated,
           ),
           style: _defaultStyle,
         )),
         DataCell(
           Switch(
-            value: article['isFeatured'],
+            value: article.isFeatured,
             onChanged: (value) {
-              Modular.get<ArticleModel>().updateArticleFromId(
+              article_services.updateFeaturedStatus(
                 article.id,
-                {'isFeatured': value},
+                isFeatured: value,
               );
             },
           ),
@@ -145,7 +146,7 @@ class _DataSource extends DataTableSource {
               IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  Modular.get<ArticleModel>().deleteArticlesFromId(article.id);
+                  article_services.deleteArticle(article.id);
                 },
               ),
             ],

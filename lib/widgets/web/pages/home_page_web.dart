@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/article_model.dart';
+import 'package:jatimtour/services/article_services.dart' as article_service;
 import 'package:jatimtour/widgets/universal/carousel/featured_article_carousel.dart';
 import 'package:jatimtour/widgets/universal/carousel/recommendation_carousel.dart';
 import 'package:jatimtour/widgets/universal/views/calendar_home_view.dart';
@@ -133,7 +132,7 @@ class HomePageWeb extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 20.0, bottom: 50.0),
             child: FutureBuilder(
-              future: Modular.get<ArticleModel>().getSortedArticlesWithLimit(
+              future: article_service.getSortedArticlesWithLimit(
                 field: 'datePublished',
                 isDescending: false,
                 limit: 3,
@@ -151,7 +150,7 @@ class HomePageWeb extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return ArticleCardWeb(
                         articleId: data[index].id,
-                        articleData: data[index].data(),
+                        article: data[index].data(),
                       );
                     },
                   );

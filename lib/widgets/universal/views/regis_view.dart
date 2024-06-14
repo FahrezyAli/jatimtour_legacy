@@ -6,9 +6,9 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jatimtour/constants.dart';
+import 'package:jatimtour/services/user_services.dart' as user_services;
 import 'package:jatimtour/widgets/universal/buttons/picture_select_button.dart';
 import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
-import 'package:jatimtour/models/user_model.dart';
 
 class RegistrationView extends StatefulWidget {
   const RegistrationView({super.key});
@@ -44,22 +44,15 @@ class _RegistrationViewState extends State<RegistrationView> {
     CroppedFile? croppedImage = await ImageCropper().cropImage(
       sourcePath: imageFile.path,
       aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
-      cropStyle: CropStyle.circle,
       compressQuality: 100,
       uiSettings: [
         AndroidUiSettings(
-          toolbarTitle: 'Crop',
-          toolbarColor: kPinkColor,
-        ),
+            toolbarTitle: 'Crop',
+            toolbarColor: kPinkColor,
+            cropStyle: CropStyle.circle),
         WebUiSettings(
           context: context,
-          presentStyle: CropperPresentStyle.dialog,
-          boundary: const CroppieBoundary(width: 350, height: 350),
-          viewPort:
-              const CroppieViewPort(width: 300, height: 300, type: 'circle'),
-          enableExif: true,
-          enableZoom: true,
-          showZoomer: false,
+          presentStyle: WebPresentStyle.dialog,
         )
       ],
     );
@@ -70,26 +63,23 @@ class _RegistrationViewState extends State<RegistrationView> {
   }
 
   Future<void> _register() async {
-    final usedUsername = await Modular.get<UserModel>().getUsedUsername();
+    final usedUsername = await user_services.getUsedUsername();
     if (_usernameController.text == "" ||
         _fullNameController.text == "" ||
         _phoneNumberController.text == "" ||
-        _selectedCity == "") {
+        _selectedCity == null) {
       _showErrorSnackBar("Please fill all the fields");
     } else if (!_isAcceptTerms) {
       _showErrorSnackBar("Please accept the terms and conditions");
     } else if (usedUsername.contains(_usernameController.text)) {
       _showErrorSnackBar("Username already used");
     } else {
-      final userInstance = Modular.get<UserModel>();
-      if (_profilePicture != null) {
-        await userInstance.setProfilePicture(_profilePicture!.readAsBytes());
-      }
-      await userInstance.setUserData(
+      await user_services.register(
         username: _usernameController.text,
         fullName: _fullNameController.text,
         phoneNumber: _phoneNumberController.text,
         city: _selectedCity!,
+        profilePicture: await _profilePicture?.readAsBytes(),
       );
       Modular.to.navigate(kIsWeb ? rootRoute : mHomeRoute);
     }
@@ -157,10 +147,10 @@ class _RegistrationViewState extends State<RegistrationView> {
                     radius: 75.0,
                     backgroundImage: _profilePicture != null
                         ? kIsWeb
-                            ? Image.network(_profilePicture!.path).image
+                            ? NetworkImage(_profilePicture!.path)
                             : FileImage(File(_profilePicture!.path))
-                        : const AssetImage('assets/images/placeholder.png')
-                            as ImageProvider<Object>?,
+                                as ImageProvider
+                        : const AssetImage('assets/images/placeholder.png'),
                   ),
                   Positioned.fill(
                     bottom: 5.0,
@@ -405,13 +395,13 @@ class _RegistrationViewState extends State<RegistrationView> {
                         color: kPinkColor,
                         width: 2.0,
                       ),
-                      fillColor: MaterialStateProperty.resolveWith(
+                      fillColor: WidgetStateProperty.resolveWith(
                         ((states) {
-                          const Set<MaterialState> interactiveStates =
-                              <MaterialState>{
-                            MaterialState.pressed,
-                            MaterialState.hovered,
-                            MaterialState.focused,
+                          const Set<WidgetState> interactiveStates =
+                              <WidgetState>{
+                            WidgetState.pressed,
+                            WidgetState.hovered,
+                            WidgetState.focused,
                           };
                           if (states.any(interactiveStates.contains) ||
                               _isAcceptTerms) {

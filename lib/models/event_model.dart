@@ -1,136 +1,62 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/services.dart';
-import 'package:image_cropper/image_cropper.dart';
+import 'package:jatimtour/services/user_services.dart' as user_services;
 
 class EventModel {
-  Future<void> setCoverImage(Future<Uint8List> dataStream, String id) async {
-    final coverImageRef = FirebaseStorage.instance
-        .ref()
-        .child('events')
-        .child(id)
-        .child('cover_image.jpg');
-    final data = await dataStream;
-    await coverImageRef.putData(data);
-    final eventRef = FirebaseFirestore.instance.collection('events').doc(id);
-    await eventRef.update(
-      {
-        'coverImageUrl': await coverImageRef.getDownloadURL(),
-      },
-    );
-  }
+  final String id;
+  final String eventOrganizerId;
+  final String eventName;
+  final DateTime startDate;
+  final String city;
+  final String description;
+  final List<String> tags;
+  final String coverImageUrl;
+  final DateTime dateCreated;
 
-  Future<void> setData({
-    required String eventName,
-    required CroppedFile coverImage,
-    required DateTime startDate,
-    required String city,
-    required String description,
-    required List<String> tags,
-  }) async {
-    final eventRef = FirebaseFirestore.instance.collection('events').doc();
-    final authorRef = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
-    final authorUsername = authorRef['username'];
-    await eventRef.set(
-      {
-        'eventName': eventName,
-        'eventOrganizer': authorUsername,
-        'startDate': startDate,
-        'city': city,
-        'description': description,
-        'tags': tags,
-        'dateCreated': DateTime.now(),
-      },
-    );
-    await setCoverImage(coverImage.readAsBytes(), eventRef.id);
-  }
+  EventModel({
+    required this.id,
+    required this.eventOrganizerId,
+    required this.eventName,
+    required this.startDate,
+    required this.city,
+    required this.description,
+    required this.tags,
+    required this.coverImageUrl,
+    required this.dateCreated,
+  });
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getEventFromId(String id) {
-    return FirebaseFirestore.instance.collection('events').doc(id).get();
-  }
-
-  Future<QuerySnapshot<Map<String, dynamic>>> getSortedEventsWithLimit({
-    required String field,
-    bool isDescending = false,
-    required int limit,
-  }) async {
-    return await FirebaseFirestore.instance
-        .collection('events')
-        .orderBy(field, descending: isDescending)
-        .limit(limit)
-        .get();
-  }
-
-  Future<QuerySnapshot<Map<String, dynamic>>> getEventsByMonths({
-    required String field,
-    required int monthNumber,
-  }) async {
-    final currentYear = DateTime.now().year;
-    final start = DateTime(currentYear, monthNumber, 1);
-    final end = DateTime(currentYear, monthNumber + 1, 1);
-    return await FirebaseFirestore.instance
-        .collection('events')
-        .where(field, isGreaterThanOrEqualTo: start, isLessThan: end)
-        .get();
-  }
-
-  Future<QuerySnapshot<Map<String, dynamic>>> getEventsByDate({
-    required String field,
-    required DateTime date,
-  }) async {
-    final currentYear = DateTime.now().year;
-    final start = DateTime(currentYear, date.month, date.day);
-    final end = DateTime(currentYear, date.month, date.day + 1);
-    return await FirebaseFirestore.instance
-        .collection('events')
-        .where(field, isGreaterThanOrEqualTo: start, isLessThan: end)
-        .get();
-  }
-
-  Stream<QuerySnapshot<Map<String, dynamic>>> getEventStreamFromAuthorUsername(
-    String authorUsername,
+  factory EventModel.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> data,
+    SnapshotOptions? options,
   ) {
-    return FirebaseFirestore.instance
-        .collection('events')
-        .where('authorUsername', isEqualTo: authorUsername)
-        .snapshots();
+    return EventModel(
+      id: data.id,
+      eventOrganizerId: data['eventOrganizerId'],
+      eventName: data['eventName'],
+      startDate: data['startDate'].toDate(),
+      city: data['city'],
+      description: data['description'],
+      tags: List<String>.from(data['tags']),
+      coverImageUrl: data['coverImageUrl'],
+      dateCreated: data['dateCreated'].toDate(),
+    );
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getEventsStream() {
-    return FirebaseFirestore.instance.collection('events').snapshots();
+  Map<String, dynamic> toMap() {
+    return {
+      'eventOrganizerId': eventOrganizerId,
+      'eventName': eventName,
+      'startDate': startDate,
+      'city': city,
+      'description': description,
+      'tags': tags,
+      'coverImageUrl': coverImageUrl,
+      'dateCreated': dateCreated,
+    };
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getSortedEventsStream(
-      String field,
-      {bool isDescending = false}) {
-    return FirebaseFirestore.instance
-        .collection('events')
-        .orderBy(field, descending: isDescending)
-        .snapshots();
-  }
-
-  Stream<QuerySnapshot<Map<String, dynamic>>>
-      getSortedEventsStreamWithEventOrganizer(
-    String field, {
-    required String eventOrganizer,
-    bool isDescending = false,
-  }) {
-    return FirebaseFirestore.instance
-        .collection('events')
-        .where('eventOrganizer', isEqualTo: eventOrganizer)
-        .orderBy(field, descending: isDescending)
-        .snapshots();
-  }
-
-  Future<void> updateEventFromId(String id, Map<String, dynamic> data) async {
-    await FirebaseFirestore.instance.collection('events').doc(id).update(data);
-  }
-
-  Future<void> deleteEventsFromId(String id) async {
-    await FirebaseFirestore.instance.collection('events').doc(id).delete();
+  Future<String> getAuthorUsernameFromAuthorId() {
+    return user_services.getUser(eventOrganizerId).then((user) {
+      return user.data()!.username;
+    });
   }
 }

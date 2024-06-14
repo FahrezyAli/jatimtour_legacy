@@ -6,9 +6,9 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jatimtour/constants.dart';
+import 'package:jatimtour/services/user_services.dart' as user_services;
 import 'package:jatimtour/widgets/universal/buttons/picture_select_button.dart';
 import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
-import 'package:jatimtour/models/user_model.dart';
 
 class ProfileEditView extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -45,22 +45,16 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     CroppedFile? croppedImage = await ImageCropper().cropImage(
       sourcePath: imageFile.path,
       aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
-      cropStyle: CropStyle.circle,
       compressQuality: 100,
       uiSettings: [
         AndroidUiSettings(
-          toolbarTitle: 'Crop',
-          toolbarColor: kPinkColor,
-        ),
+            toolbarTitle: 'Crop',
+            toolbarColor: kPinkColor,
+            cropStyle: CropStyle.circle),
         WebUiSettings(
           context: context,
-          presentStyle: CropperPresentStyle.dialog,
-          boundary: const CroppieBoundary(width: 350, height: 350),
-          viewPort:
-              const CroppieViewPort(width: 300, height: 300, type: 'circle'),
-          enableExif: true,
-          enableZoom: true,
-          showZoomer: false,
+          presentStyle: WebPresentStyle.dialog,
+          size: const CropperSize(width: 350, height: 350),
         )
       ],
     );
@@ -71,22 +65,24 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   }
 
   Future<void> _update() async {
+    final usedUsername = await user_services.getUsedUsername();
+    usedUsername.remove(user_services.currentUser!.username);
     if (_usernameController.text == "" ||
         _fullNameController.text == "" ||
         _phoneNumberController.text == "" ||
         _selectedCity == "") {
       _showErrorSnackBar("Please fill all the fields");
+    } else if (usedUsername.contains(_usernameController.text)) {
+      _showErrorSnackBar("Username already used");
     } else {
-      final userInstance = Modular.get<UserModel>();
-      if (_profilePicture != null) {
-        await userInstance.setProfilePicture(_profilePicture!.readAsBytes());
-      }
-      await userInstance.updateUserData({
-        'username': _usernameController.text,
-        'fullName': _fullNameController.text,
-        'phoneNumber': _phoneNumberController.text,
-        'city': _selectedCity!,
-      });
+      await user_services.updateUser(
+        user_services.currentUser!.id,
+        username: _usernameController.text,
+        fullName: _fullNameController.text,
+        phoneNumber: _phoneNumberController.text,
+        city: _selectedCity!,
+        profilePicture: await _profilePicture?.readAsBytes(),
+      );
       Modular.to.pop();
     }
   }
@@ -152,9 +148,10 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                     radius: 75.0,
                     backgroundImage: _profilePicture != null
                         ? kIsWeb
-                            ? Image.network(_profilePicture!.path).image
+                            ? NetworkImage(_profilePicture!.path)
                             : FileImage(File(_profilePicture!.path))
-                        : Modular.get<UserModel>().getProfilePicture(),
+                                as ImageProvider
+                        : user_services.currentUser!.getProfilePicture(),
                   ),
                   Positioned.fill(
                     bottom: 5.0,

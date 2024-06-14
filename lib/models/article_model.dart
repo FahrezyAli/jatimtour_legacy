@@ -1,110 +1,66 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/services.dart';
-import 'package:image_cropper/image_cropper.dart';
+import 'package:jatimtour/services/user_services.dart' as user_services;
 
 class ArticleModel {
-  Future<void> setCoverImage(Future<Uint8List> dataStream, String id) async {
-    final coverImageRef = FirebaseStorage.instance
-        .ref()
-        .child('articles')
-        .child(id)
-        .child('cover_image.jpg');
-    final data = await dataStream;
-    await coverImageRef.putData(data);
-    final articleRef =
-        FirebaseFirestore.instance.collection('articles').doc(id);
-    await articleRef.update(
-      {
-        'coverImageUrl': await coverImageRef.getDownloadURL(),
-      },
-    );
-  }
+  final String id;
+  final String authorId;
+  final String title;
+  final DateTime datePublished;
+  final String city;
+  final String content;
+  final List<String> tags;
+  final String coverImageUrl;
+  final DateTime dateCreated;
+  final bool isFeatured;
 
-  Future<void> setData({
-    required String title,
-    required CroppedFile coverImage,
-    required DateTime datePublished,
-    required String city,
-    required String content,
-    required List<String> tags,
-  }) async {
-    final articleRef = FirebaseFirestore.instance.collection('articles').doc();
-    final authorRef = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
-    final authorUsername = authorRef['username'];
-    await articleRef.set(
-      {
-        'authorUsername': authorUsername,
-        'title': title,
-        'datePublished': datePublished,
-        'city': city,
-        'content': content,
-        'tags': tags,
-        'dateCreated': DateTime.now(),
-        'isFeatured': false,
-      },
-    );
-    await setCoverImage(coverImage.readAsBytes(), articleRef.id);
-  }
+  ArticleModel({
+    required this.id,
+    required this.authorId,
+    required this.title,
+    required this.datePublished,
+    required this.city,
+    required this.content,
+    required this.tags,
+    required this.coverImageUrl,
+    required this.dateCreated,
+    required this.isFeatured,
+  });
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getArticleFromId(String id) {
-    return FirebaseFirestore.instance.collection('articles').doc(id).get();
-  }
-
-  Future<QuerySnapshot<Map<String, dynamic>>> getFeaturedArticle() {
-    return FirebaseFirestore.instance
-        .collection('articles')
-        .where('isFeatured', isEqualTo: true)
-        .get();
-  }
-
-  Future<QuerySnapshot<Map<String, dynamic>>> getSortedArticlesWithLimit({
-    required String field,
-    bool isDescending = false,
-    required int limit,
-  }) async {
-    return await FirebaseFirestore.instance
-        .collection('articles')
-        .orderBy(field, descending: isDescending)
-        .limit(limit)
-        .get();
-  }
-
-  Stream<QuerySnapshot<Map<String, dynamic>>>
-      getArticleStreamFromAuthorUsername(
-    String authorUsername,
+  factory ArticleModel.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> data,
+    SnapshotOptions? options,
   ) {
-    return FirebaseFirestore.instance
-        .collection('articles')
-        .where('authorUsername', isEqualTo: authorUsername)
-        .snapshots();
+    return ArticleModel(
+      id: data.id,
+      authorId: data['authorId'],
+      title: data['title'],
+      datePublished: data['datePublished'].toDate(),
+      city: data['city'],
+      content: data['content'],
+      tags: List<String>.from(data['tags']),
+      coverImageUrl: data['coverImageUrl'],
+      dateCreated: data['dateCreated'].toDate(),
+      isFeatured: data['isFeatured'],
+    );
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getArticlesStream() {
-    return FirebaseFirestore.instance.collection('articles').snapshots();
+  Map<String, dynamic> toMap() {
+    return {
+      'authorId': authorId,
+      'title': title,
+      'datePublished': datePublished,
+      'city': city,
+      'content': content,
+      'tags': tags,
+      'coverImageUrl': coverImageUrl,
+      'dateCreated': dateCreated,
+      'isFeatured': isFeatured,
+    };
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getSortedArticlesStream(
-      String field,
-      {bool isDescending = false}) {
-    return FirebaseFirestore.instance
-        .collection('articles')
-        .orderBy(field, descending: isDescending)
-        .snapshots();
-  }
-
-  Future<void> updateArticleFromId(String id, Map<String, dynamic> data) async {
-    await FirebaseFirestore.instance
-        .collection('articles')
-        .doc(id)
-        .update(data);
-  }
-
-  Future<void> deleteArticlesFromId(String id) async {
-    await FirebaseFirestore.instance.collection('articles').doc(id).delete();
+  Future<String> getAuthorUsernameFromAuthorId() {
+    return user_services.getUser(authorId).then((user) {
+      return user.data()!.username;
+    });
   }
 }

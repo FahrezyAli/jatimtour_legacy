@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/event_model.dart';
+import 'package:jatimtour/services/event_services.dart' as event_services;
 import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
 import 'package:rowbuilder/rowbuilder.dart';
 
@@ -19,7 +19,7 @@ class EventPageMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return MobileScaffold(
       body: FutureBuilder(
-        future: Modular.get<EventModel>().getEventFromId(eventId),
+        future: event_services.getEvent(eventId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return _buildPage(context, snapshot.data!.data()!);
@@ -33,10 +33,10 @@ class EventPageMobile extends StatelessWidget {
 
   Widget _buildPage(
     BuildContext context,
-    Map<String, dynamic> eventData,
+    EventModel event,
   ) {
     _quillController.document =
-        Document.fromJson(jsonDecode(eventData['description']));
+        Document.fromJson(jsonDecode(event.description));
     _quillController.readOnly = true;
     return CustomScrollView(
       shrinkWrap: true,
@@ -54,7 +54,7 @@ class EventPageMobile extends StatelessWidget {
                 child: Row(
                   children: [
                     Image.network(
-                      eventData['coverImageUrl'],
+                      event.coverImageUrl,
                       height: 150.0,
                       fit: BoxFit.cover,
                     ),
@@ -66,23 +66,28 @@ class EventPageMobile extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              eventData['eventName'],
+                              event.eventName,
                               style: const TextStyle(
                                 fontFamily: "Inter",
                                 fontSize: 16.0,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Text(
-                              eventData['eventOrganizer'],
-                              style: const TextStyle(
-                                fontFamily: "Inter",
-                                fontSize: 16.0,
-                              ),
+                            FutureBuilder(
+                              future: event.getAuthorUsernameFromAuthorId(),
+                              builder: (context, snapshot) {
+                                return Text(
+                                  snapshot.data ?? '',
+                                  style: const TextStyle(
+                                    fontFamily: "Inter",
+                                    fontSize: 16.0,
+                                  ),
+                                );
+                              },
                             ),
                             Text(
                               intl.DateFormat('d MMMM y')
-                                  .format(eventData['startDate'].toDate()),
+                                  .format(event.startDate),
                               style: const TextStyle(
                                 fontFamily: "Inter",
                                 fontSize: 16.0,
@@ -121,7 +126,7 @@ class EventPageMobile extends StatelessWidget {
                 padding: const EdgeInsets.only(
                     top: 10.0, left: 15.0, bottom: 10.0, right: 15.0),
                 child: RowBuilder(
-                  itemCount: eventData['tags'].length,
+                  itemCount: event.tags.length,
                   reversed: false,
                   itemBuilder: (context, index) {
                     return Container(
@@ -132,7 +137,7 @@ class EventPageMobile extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: Text(
-                        '#${eventData['tags'][index]}',
+                        '#${event.tags[index]}',
                         style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 14.0,

@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:jatimtour/models/article_model.dart';
+import 'package:jatimtour/services/article_services.dart' as article_services;
 import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
 
 class FeaturedArticleCarousel extends StatelessWidget {
@@ -11,7 +11,7 @@ class FeaturedArticleCarousel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Modular.get<ArticleModel>().getFeaturedArticle(),
+      future: article_services.getFeaturedArticle(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -27,11 +27,11 @@ class FeaturedArticleCarousel extends StatelessWidget {
               autoPlay: true,
             ),
             itemBuilder: (context, index, realIndex) {
-              final article = articleData.docs[index];
+              final article = articleData.docs[index].data();
               return Stack(children: [
                 Positioned.fill(
                   child: Image.network(
-                    article['coverImageUrl'],
+                    article.coverImageUrl,
                     fit: BoxFit.fill,
                   ),
                 ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:jatimtour/models/event_model.dart';
+import 'package:jatimtour/services/event_services.dart' as event_services;
 import 'package:jatimtour/widgets/mobile/cards/event_card_mobile.dart';
 import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
 
@@ -60,7 +59,7 @@ class _EventListPageWithDateMobileState
             ),
           ),
           FutureBuilder(
-            future: Modular.get<EventModel>().getEventsByDate(
+            future: event_services.getEventsByDate(
                 field: 'startDate', date: dateFormatEn.parse(widget.date)),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -77,7 +76,7 @@ class _EventListPageWithDateMobileState
                     final event = events[index];
                     return EventCardMobile(
                       eventId: event.id,
-                      eventData: event.data(),
+                      event: event.data(),
                     );
                   },
                 );

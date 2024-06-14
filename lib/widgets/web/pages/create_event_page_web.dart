@@ -9,7 +9,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/event_model.dart';
+import 'package:jatimtour/services/event_services.dart' as event_services;
 import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
 import 'package:textfield_tags/textfield_tags.dart';
@@ -52,18 +52,12 @@ class _CreateEventPageWebState extends State<CreateEventPageWeb> {
     CroppedFile? croppedImage = await ImageCropper().cropImage(
       sourcePath: imageFile.path,
       aspectRatio: const CropAspectRatio(ratioX: 2.0, ratioY: 1.0),
-      cropStyle: CropStyle.rectangle,
       compressQuality: 1000,
       uiSettings: [
         WebUiSettings(
           context: context,
-          presentStyle: CropperPresentStyle.dialog,
-          boundary: const CroppieBoundary(width: 350, height: 350),
-          viewPort:
-              const CroppieViewPort(width: 350, height: 350, type: 'rectangle'),
-          enableExif: true,
-          enableZoom: true,
-          showZoomer: false,
+          presentStyle: WebPresentStyle.dialog,
+          size: const CropperSize(width: 350, height: 350),
         )
       ],
     );
@@ -125,9 +119,9 @@ class _CreateEventPageWebState extends State<CreateEventPageWeb> {
     } else if (_startDate.isBefore(DateTime.now())) {
       _showErrorSnackBar("Tanggal Mulai Event tidak valid");
     } else {
-      await EventModel().setData(
+      await event_services.createEvent(
         eventName: _eventNameController.text,
-        coverImage: _coverImage!,
+        coverImage: await _coverImage!.readAsBytes(),
         startDate: _startDate,
         city: _selectedCity!,
         description: jsonEncode(_quillController.document.toDelta().toJson()),
@@ -191,8 +185,9 @@ class _CreateEventPageWebState extends State<CreateEventPageWeb> {
                           height: 180,
                           width: 360,
                           image: kIsWeb
-                              ? Image.network(_coverImage!.path).image
-                              : Image.file(File(_coverImage!.path)).image,
+                              ? NetworkImage(_coverImage!.path)
+                              : FileImage(File(_coverImage!.path))
+                                  as ImageProvider,
                           fit: BoxFit.cover,
                         ),
                         onTap: () => _pickImage(ImageSource.gallery)),

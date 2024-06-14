@@ -1,7 +1,10 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/models/user_model.dart';
+import 'package:jatimtour/services/user_services.dart' as user_services;
 import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
 import 'package:jatimtour/widgets/web/buttons/sign_button_web.dart';
 
@@ -10,10 +13,8 @@ class HomePageDrawerWeb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userInstance = Modular.get<UserModel>();
-    final userRole = userInstance.userData != null
-        ? Modular.get<UserModel>().userData!['role']
-        : 0;
+    final userRole =
+        user_services.isSignedIn() ? user_services.currentUser!.role : 0;
     return Drawer(
       child: ListView(
         children: [
@@ -24,12 +25,13 @@ class HomePageDrawerWeb extends StatelessWidget {
             child: Column(
               children: [
                 CircleAvatar(
-                  radius: 50.0,
-                  backgroundImage: userInstance.getProfilePicture(),
-                ),
+                    radius: 50.0,
+                    backgroundImage: user_services.isSignedIn()
+                        ? user_services.currentUser!.getProfilePicture()
+                        : const AssetImage("assets/images/placeholder.png")),
                 Text(
-                  userInstance.userData != null
-                      ? userInstance.userData!['username']
+                  user_services.currentUser != null
+                      ? user_services.currentUser!.username
                       : "Guest",
                   style: const TextStyle(
                     fontFamily: "Inter",
@@ -66,9 +68,9 @@ class HomePageDrawerWeb extends StatelessWidget {
               style: TextStyle(fontFamily: "Inter"),
             ),
             onTap: () {
-              Modular.to.navigate(userInstance.authInstance.currentUser != null
-                  ? profileRoute
-                  : loginRoute);
+              Modular.to.navigate(
+                user_services.isSignedIn() ? profileRoute : loginRoute,
+              );
             },
           ),
           userRole == 1
@@ -95,9 +97,8 @@ class HomePageDrawerWeb extends StatelessWidget {
               alignment: Alignment.center,
               child: Builder(
                 builder: (context) {
-                  return !userInstance.isSignedIn()
-                      ? const SignButtonWeb()
-                      : CircleButton(
+                  return user_services.isSignedIn()
+                      ? CircleButton(
                           text: const Text(
                             "Log Out",
                             style: TextStyle(
@@ -108,10 +109,11 @@ class HomePageDrawerWeb extends StatelessWidget {
                           ),
                           color: kPinkColor,
                           onTap: () {
-                            userInstance.signOut();
+                            user_services.signOut();
                             Modular.to.pop();
                           },
-                        );
+                        )
+                      : const SignButtonWeb();
                 },
               ),
             ),

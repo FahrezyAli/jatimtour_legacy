@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
 import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
 import 'package:jatimtour/widgets/mobile/views/calendar_view_mobile.dart';
@@ -8,6 +9,44 @@ import 'package:jatimtour/widgets/mobile/views/profile_view_mobile.dart';
 import 'package:jatimtour/widgets/mobile/views/search_view_mobile.dart';
 import 'package:jatimtour/widgets/mobile/views/your_article_view_mobile.dart';
 
+class MainPageMobileModule extends Module {
+  @override
+  void routes(r) {
+    r.child(
+      '/',
+      child: (context) => const MainPageMobile(),
+      transition: TransitionType.fadeIn,
+      children: [
+        ChildRoute(
+          '/0',
+          child: (context) => const HomeViewMobile(),
+          transition: TransitionType.fadeIn,
+        ),
+        ChildRoute(
+          '/1',
+          child: (context) => const CalendarViewMobile(),
+          transition: TransitionType.fadeIn,
+        ),
+        ChildRoute(
+          '/2',
+          child: (context) => const YourArticleViewMobile(),
+          transition: TransitionType.fadeIn,
+        ),
+        ChildRoute(
+          '/3',
+          child: (context) => const SearchViewMobile(),
+          transition: TransitionType.fadeIn,
+        ),
+        ChildRoute(
+          '/4',
+          child: (context) => const ProfileViewMobile(),
+          transition: TransitionType.fadeIn,
+        ),
+      ],
+    );
+  }
+}
+
 class MainPageMobile extends StatefulWidget {
   const MainPageMobile({super.key});
 
@@ -15,46 +54,17 @@ class MainPageMobile extends StatefulWidget {
   State<MainPageMobile> createState() => _MainPageMobileState();
 }
 
-class _MainPageMobileState extends State<MainPageMobile>
-    with RestorationMixin<MainPageMobile> {
-  final _state = RestorableInt(0);
-
-  Color? _getColorFromState(int state) {
-    if (state == 4) return kPinkColor;
-    return null;
-  }
-
-  void _refreshState(int state) {
-    setState(() {
-      _state.value = state;
-      _getColorFromState(state);
-    });
-  }
-
-  @override
-  String get restorationId => 'main_page_state';
-
-  @override
-  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
-    registerForRestoration(_state, 'main_page_state');
-  }
+class _MainPageMobileState extends State<MainPageMobile> {
+  int _state = 0;
 
   @override
   Widget build(BuildContext context) {
     return MobileScaffold(
-      backgroundColor: _getColorFromState(_state.value),
-      body: switch (_state.value) {
-        0 => HomeViewMobile(_refreshState),
-        1 => const CalendarViewMobile(),
-        2 => const YourArticleViewMobile(),
-        3 => const SearchViewMobile(),
-        4 => const ProfileViewMobile(),
-        _ => null,
-      },
+      body: const RouterOutlet(),
       bottomNavigationBar: CurvedNavigationBar(
-        index: _state.value,
+        index: _state,
         backgroundColor: Colors.white,
-        color: Colors.deepPurple,
+        color: kPurpleColor,
         items: const [
           Icon(Icons.home, color: Colors.white),
           Icon(Icons.date_range, color: Colors.white),
@@ -62,10 +72,10 @@ class _MainPageMobileState extends State<MainPageMobile>
           Icon(Icons.search, color: Colors.white),
           Icon(Icons.person, color: Colors.white),
         ],
-        onTap: (state) => setState(() {
-          _state.value = state;
-          _getColorFromState(state);
-        }),
+        onTap: (state) {
+          Modular.to.navigate('$mHomeRoute/$state');
+          setState(() => _state = state);
+        },
       ),
     );
   }

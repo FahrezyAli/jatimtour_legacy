@@ -4,7 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/user_model.dart';
+import 'package:jatimtour/services/user_services.dart' as user_services;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -20,12 +20,14 @@ class _LoginViewState extends State<LoginView> {
   bool _isVisible = false;
 
   void _logIn() async {
-    final userInstance = Modular.get<UserModel>();
     if (!EmailValidator.validate(_emailController.text, true)) {
       _showErrorSnackBar("Email is not valid");
     } else {
-      await userInstance
-          .logIn(_emailController.text, _passwordController.text)
+      user_services
+          .logIn(
+        email: _emailController.text,
+        password: _passwordController.text,
+      )
           .then(
         (value) async {
           Modular.to.navigate(kIsWeb ? rootRoute : mHomeRoute);
