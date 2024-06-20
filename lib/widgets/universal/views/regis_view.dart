@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/services/user_services.dart' as user_services;
-import 'package:jatimtour/widgets/universal/buttons/picture_select_button.dart';
-import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
+
+import '../../../constants.dart';
+import '../../../services/user_services.dart' as user_services;
+import '../buttons/picture_select_button.dart';
+import '../buttons/circle_button.dart';
 
 class RegistrationView extends StatefulWidget {
   const RegistrationView({super.key});
@@ -25,7 +26,7 @@ class _RegistrationViewState extends State<RegistrationView> {
   String? _selectedCity;
   bool _isAcceptTerms = false;
 
-  Future _pickImage(ImageSource source) async {
+  Future<void> _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
     if (pickedImage != null) {
       final croppedImage = await _cropImage(File(pickedImage.path));
@@ -197,8 +198,11 @@ class _RegistrationViewState extends State<RegistrationView> {
                                               PictureSelectButton(
                                                 icon: Icons.camera_alt,
                                                 text: "Camera",
-                                                onTap: () => _pickImage(
-                                                    ImageSource.camera),
+                                                onTap: () async {
+                                                  await _pickImage(
+                                                    ImageSource.camera,
+                                                  );
+                                                },
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
@@ -206,9 +210,11 @@ class _RegistrationViewState extends State<RegistrationView> {
                                                 child: PictureSelectButton(
                                                   icon: Icons.image,
                                                   text: "Gallery",
-                                                  onTap: () => _pickImage(
-                                                    ImageSource.gallery,
-                                                  ),
+                                                  onTap: () async {
+                                                    await _pickImage(
+                                                      ImageSource.gallery,
+                                                    );
+                                                  },
                                                 ),
                                               ),
                                             ],

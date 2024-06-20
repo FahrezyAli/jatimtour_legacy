@@ -7,12 +7,13 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/services/article_services.dart' as article_services;
-import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
-import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
-import 'package:jatimtour/widgets/universal/fields/tags_field.dart';
 import 'package:textfield_tags/textfield_tags.dart';
+
+import '../../../constants.dart';
+import '../../../services/article_services.dart' as article_services;
+import '../../universal/buttons/circle_button.dart';
+import '../../universal/fields/tags_field.dart';
+import 'mobile_scaffold.dart';
 
 class CreateArticlePageMobile extends StatefulWidget {
   const CreateArticlePageMobile({super.key});
@@ -32,7 +33,7 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
   late double _distanceToField;
   final _tagsController = StringTagController();
 
-  Future _pickImage(ImageSource source) async {
+  Future<void> _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
     if (pickedImage != null) {
       final croppedImage = await _cropImage(File(pickedImage.path));
@@ -173,20 +174,25 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
                         width: 125.0,
                         elevation: 0.0,
                         border: Border.all(color: Colors.black, width: 1.0),
-                        onTap: () => _pickImage(ImageSource.gallery),
+                        onTap: () async {
+                          await _pickImage(ImageSource.gallery);
+                        },
                       ),
                     ),
                   );
                 } else {
                   return Material(
                     child: InkWell(
-                        child: Ink.image(
-                          height: 180,
-                          width: 360,
-                          image: Image.file(File(_coverImage!.path)).image,
-                          fit: BoxFit.cover,
-                        ),
-                        onTap: () => _pickImage(ImageSource.gallery)),
+                      child: Ink.image(
+                        height: 180,
+                        width: 360,
+                        image: Image.file(File(_coverImage!.path)).image,
+                        fit: BoxFit.cover,
+                      ),
+                      onTap: () async {
+                        await _pickImage(ImageSource.gallery);
+                      },
+                    ),
                   );
                 }
               },

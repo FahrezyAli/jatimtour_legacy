@@ -2,20 +2,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/event_model.dart';
-import 'package:jatimtour/services/event_services.dart' as event_services;
+
+import '../../../constants.dart';
+import '../../../models/event_model.dart';
+import '../../../services/event_services.dart' as event_services;
 
 TextStyle _defaultStyle = const TextStyle(fontFamily: 'Inter');
 
-class AdminEventView extends StatefulWidget {
-  const AdminEventView({super.key});
+class EventManagerView extends StatefulWidget {
+  final int role;
+
+  const EventManagerView({required this.role, super.key});
 
   @override
-  State<AdminEventView> createState() => _AdminEventViewState();
+  State<EventManagerView> createState() => _EventManagerViewState();
 }
 
-class _AdminEventViewState extends State<AdminEventView> {
+class _EventManagerViewState extends State<EventManagerView> {
   int _currentSortColumn = 0;
   bool _isAscending = true;
 
@@ -84,7 +87,7 @@ class _AdminEventViewState extends State<AdminEventView> {
                 onSort: _sort),
             DataColumn(label: Text("Action", style: _defaultStyle)),
           ],
-          source: _DataSource(events, context),
+          source: _DataSource(events),
         );
       },
     );
@@ -92,34 +95,60 @@ class _AdminEventViewState extends State<AdminEventView> {
 }
 
 class _DataSource extends DataTableSource {
-  QuerySnapshot<EventModel> data;
-  BuildContext context;
+  final QuerySnapshot<EventModel> _data;
 
-  _DataSource(this.data, this.context);
+  _DataSource(this._data);
+
+  DataCell _sizedDataCell(Widget child) {
+    return DataCell(
+      SizedBox(
+        width: 100,
+        child: child,
+      ),
+    );
+  }
 
   @override
   DataRow? getRow(int index) {
-    final event = data.docs[index].data();
+    final event = _data.docs[index].data();
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text(event.eventName, style: _defaultStyle)),
-        DataCell(Text(event.eventOrganizerId, style: _defaultStyle)),
-        DataCell(Text(event.city, style: _defaultStyle)),
-        DataCell(Text(event.tags.join(', '), style: _defaultStyle)),
-        DataCell(Text(
+        _sizedDataCell(Text(
+          event.eventName,
+          style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
+        )),
+        _sizedDataCell(Text(
+          event.eventOrganizerId,
+          style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
+        )),
+        _sizedDataCell(Text(
+          event.city,
+          style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
+        )),
+        _sizedDataCell(Text(
+          event.tags.join(', '),
+          style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
+        )),
+        _sizedDataCell(Text(
           intl.DateFormat.yMd().format(
             event.startDate,
           ),
           style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
         )),
-        DataCell(Text(
+        _sizedDataCell(Text(
           intl.DateFormat.yMd().format(
             event.dateCreated,
           ),
           style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
         )),
-        DataCell(
+        _sizedDataCell(
           Row(
             children: [
               IconButton(
@@ -145,7 +174,7 @@ class _DataSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => data.size;
+  int get rowCount => _data.size;
 
   @override
   int get selectedRowCount => 0;

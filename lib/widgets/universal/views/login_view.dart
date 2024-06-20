@@ -3,8 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/services/user_services.dart' as user_services;
+
+import '../../../constants.dart';
+import '../../../services/user_services.dart' as user_services;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -19,7 +20,7 @@ class _LoginViewState extends State<LoginView> {
 
   bool _isVisible = false;
 
-  void _logIn() async {
+  void _logIn() {
     if (!EmailValidator.validate(_emailController.text, true)) {
       _showErrorSnackBar("Email is not valid");
     } else {
@@ -29,7 +30,7 @@ class _LoginViewState extends State<LoginView> {
         password: _passwordController.text,
       )
           .then(
-        (value) async {
+        (value) {
           Modular.to.navigate(kIsWeb ? rootRoute : mHomeRoute);
         },
       ).catchError(
@@ -147,40 +148,6 @@ class _LoginViewState extends State<LoginView> {
                   keyboardType: TextInputType.visiblePassword,
                   textInputAction: TextInputAction.done,
                   onFieldSubmitted: (value) => _logIn(),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 15.0),
-            child: Material(
-              borderRadius: BorderRadius.circular(20.0),
-              child: InkWell(
-                child: Ink(
-                  height: 40.0,
-                  width: 250.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                    color: Colors.white,
-                  ),
-                  child: Row(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Image.asset('assets/images/google_logo.png'),
-                      ),
-                      const Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Log in with Google",
-                          style: TextStyle(
-                            fontFamily: "Inter",
-                            fontSize: 14.0,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
                 ),
               ),
             ),

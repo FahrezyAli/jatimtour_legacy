@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
-import 'package:jatimtour/widgets/universal/cards/calendar_card.dart';
+
+import '../../../constants.dart';
+import '../../universal/buttons/circle_button.dart';
+import '../../universal/cards/calendar_card.dart';
 
 class CalendarViewMobile extends StatelessWidget {
   const CalendarViewMobile({super.key});
@@ -20,10 +21,6 @@ class CalendarViewMobile extends StatelessWidget {
       color: kBackgroundColor,
       child: ListView(
         children: [
-          Image.asset(
-            'assets/images/leading.png',
-            repeat: ImageRepeat.repeatX,
-          ),
           Padding(
             padding: const EdgeInsets.only(left: 20.0),
             child: Stack(

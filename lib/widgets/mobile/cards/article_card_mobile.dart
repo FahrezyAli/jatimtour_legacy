@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:intl/intl.dart';
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/article_model.dart';
-import 'package:jatimtour/services/article_services.dart' as article_services;
+import 'package:intl/intl.dart' as intl;
 import 'package:rowbuilder/rowbuilder.dart';
+
+import '../../../constants.dart';
+import '../../../models/article_model.dart';
+import '../../../services/article_services.dart' as article_services;
 
 class ArticleCardMobile extends StatelessWidget {
   final String articleId;
@@ -77,7 +78,7 @@ class ArticleCardMobile extends StatelessWidget {
                                   children: [
                                     TextSpan(
                                       text:
-                                          '\n${snapshot.data ?? ''}, ${DateFormat('d MMMM y').format(article.datePublished)}',
+                                          '\n${snapshot.data ?? ''}, ${intl.DateFormat('d MMMM y').format(article.datePublished)}',
                                       style: const TextStyle(
                                         fontFamily: 'Inter',
                                         fontSize: 12.0,

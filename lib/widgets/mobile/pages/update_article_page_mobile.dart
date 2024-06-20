@@ -7,12 +7,13 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/article_model.dart';
-import 'package:jatimtour/services/article_services.dart' as article_services;
-import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
-import 'package:jatimtour/widgets/universal/fields/tags_field.dart';
 import 'package:textfield_tags/textfield_tags.dart';
+
+import '../../../constants.dart';
+import '../../../models/article_model.dart';
+import '../../../services/article_services.dart' as article_services;
+import '../../universal/fields/tags_field.dart';
+import 'mobile_scaffold.dart';
 
 class UpdateArticlePageMobile extends StatefulWidget {
   final String articleId;
@@ -24,6 +25,7 @@ class UpdateArticlePageMobile extends StatefulWidget {
 }
 
 class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
+  late Future _futureArticle;
   CroppedFile? _coverImage;
   final _titleController = TextEditingController();
   final _datePublishedController = TextEditingController();
@@ -34,7 +36,7 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
   final _tagsController = StringTagController();
   late List<String> _initialTags;
 
-  Future _pickImage(ImageSource source) async {
+  Future<void> _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
     if (pickedImage != null) {
       final croppedImage = await _cropImage(File(pickedImage.path));
@@ -128,6 +130,12 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _futureArticle = article_services.getArticle(widget.articleId);
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _distanceToField = MediaQuery.of(context).size.width;
@@ -152,7 +160,7 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
         )
       ],
       body: FutureBuilder(
-        future: article_services.getArticle(widget.articleId),
+        future: _futureArticle,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -181,13 +189,16 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
         children: [
           Material(
             child: InkWell(
-                child: Ink.image(
-                  height: 180,
-                  width: 360,
-                  image: NetworkImage(article.coverImageUrl),
-                  fit: BoxFit.cover,
-                ),
-                onTap: () => _pickImage(ImageSource.gallery)),
+              child: Ink.image(
+                height: 180,
+                width: 360,
+                image: NetworkImage(article.coverImageUrl),
+                fit: BoxFit.cover,
+              ),
+              onTap: () async {
+                await _pickImage(ImageSource.gallery);
+              },
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10.0, right: 10.0),

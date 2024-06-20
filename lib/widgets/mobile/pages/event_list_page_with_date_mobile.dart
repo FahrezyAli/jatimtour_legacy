@@ -1,24 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:jatimtour/services/event_services.dart' as event_services;
-import 'package:jatimtour/widgets/mobile/cards/event_card_mobile.dart';
-import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
 
-class EventListPageWithDateMobile extends StatefulWidget {
+import '../../../services/event_services.dart' as event_services;
+import '../cards/event_card_mobile.dart';
+import 'mobile_scaffold.dart';
+
+class EventListPageWithDateMobile extends StatelessWidget {
   final String date;
   const EventListPageWithDateMobile({required this.date, super.key});
-
-  @override
-  State<EventListPageWithDateMobile> createState() =>
-      _EventListPageWithDateMobileState();
-}
-
-class _EventListPageWithDateMobileState
-    extends State<EventListPageWithDateMobile> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +17,11 @@ class _EventListPageWithDateMobileState
     return MobileScaffold(
       body: ListView(
         children: [
-          Image.asset(
-            'assets/images/leading.png',
-            repeat: ImageRepeat.repeatX,
-          ),
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: Center(
               child: Text(
-                dateFormatId.format(dateFormatEn.parse(widget.date)),
+                dateFormatId.format(dateFormatEn.parse(date)),
                 style: const TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 40,
@@ -60,7 +45,8 @@ class _EventListPageWithDateMobileState
           ),
           FutureBuilder(
             future: event_services.getEventsByDate(
-                field: 'startDate', date: dateFormatEn.parse(widget.date)),
+              date: dateFormatEn.parse(date),
+            ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());

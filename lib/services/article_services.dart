@@ -2,8 +2,9 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:jatimtour/models/article_model.dart';
-import 'package:jatimtour/services/user_services.dart' as user_services;
+
+import '../models/article_model.dart';
+import 'user_services.dart' as user_services;
 
 final _storageInstance = FirebaseStorage.instance.ref().child('articles');
 final _firestoreInstance =
@@ -52,6 +53,10 @@ Future<DocumentSnapshot<ArticleModel>> getArticle(String id) {
   return _firestoreInstance.doc(id).get();
 }
 
+Stream<QuerySnapshot<ArticleModel>> getArticlesStream() {
+  return _firestoreInstance.snapshots();
+}
+
 Future<QuerySnapshot<ArticleModel>> getFeaturedArticle() {
   return _firestoreInstance.where('isFeatured', isEqualTo: true).get();
 }
@@ -71,10 +76,6 @@ Stream<QuerySnapshot<ArticleModel>> getArticleStreamFromAuthorId(
   String authorId,
 ) {
   return _firestoreInstance.where('authorId', isEqualTo: authorId).snapshots();
-}
-
-Stream<QuerySnapshot<ArticleModel>> getArticlesStream() {
-  return _firestoreInstance.snapshots();
 }
 
 Stream<QuerySnapshot<ArticleModel>> getSortedArticlesStream(

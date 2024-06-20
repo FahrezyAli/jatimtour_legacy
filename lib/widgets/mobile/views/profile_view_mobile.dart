@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/services/user_services.dart' as user_services;
-import 'package:jatimtour/widgets/mobile/buttons/box_button_mobile.dart';
+
+import '../../../constants.dart';
+import '../../../services/user_services.dart' as user_services;
+import '../buttons/box_button_mobile.dart';
 
 class ProfileViewMobile extends StatefulWidget {
   const ProfileViewMobile({super.key});
@@ -18,10 +19,6 @@ class _ProfileViewMobileState extends State<ProfileViewMobile> {
       color: kPinkColor,
       child: Column(
         children: [
-          Image.asset(
-            'assets/images/leading.png',
-            repeat: ImageRepeat.repeatX,
-          ),
           Expanded(
             child: Stack(
               children: [

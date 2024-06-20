@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/services/article_services.dart' as article_service;
-import 'package:jatimtour/widgets/universal/carousel/featured_article_carousel.dart';
-import 'package:jatimtour/widgets/universal/carousel/recommendation_carousel.dart';
-import 'package:jatimtour/widgets/universal/views/calendar_home_view.dart';
-import 'package:jatimtour/widgets/web/buttons/box_button_web.dart';
-import 'package:jatimtour/widgets/web/cards/article_card_web.dart';
-import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
 import 'package:rowbuilder/rowbuilder.dart';
+
+import '../../../constants.dart';
+import '../../../services/article_services.dart' as article_service;
+import '../../universal/carousel/featured_article_carousel.dart';
+import '../../universal/carousel/recommendation_carousel.dart';
+import '../../universal/views/calendar_home_view.dart';
+import '../buttons/box_button_web.dart';
+import '../cards/article_card_web.dart';
+import 'web_scaffold.dart';
 
 class HomePageWeb extends StatelessWidget {
   const HomePageWeb({super.key});
@@ -15,15 +16,11 @@ class HomePageWeb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WebScaffold(
+      horizontalPadding: 0.0,
       backgroundColor: const Color(0xFFE1E1E1),
       body: ListView(
         padding: EdgeInsets.zero,
         children: [
-          Image.asset(
-            'assets/images/leading.png',
-            height: 10.0,
-            repeat: ImageRepeat.repeatX,
-          ),
           const FeaturedArticleCarousel(),
           Image.asset(
             'assets/images/border1.png',
@@ -144,15 +141,18 @@ class HomePageWeb extends StatelessWidget {
                   );
                 } else {
                   final data = snapshot.data!.docs;
-                  return RowBuilder(
-                    itemCount: data.length,
-                    reversed: false,
-                    itemBuilder: (context, index) {
-                      return ArticleCardWeb(
-                        articleId: data[index].id,
-                        article: data[index].data(),
-                      );
-                    },
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 150.0),
+                    child: RowBuilder(
+                      itemCount: data.length,
+                      reversed: false,
+                      itemBuilder: (context, index) {
+                        return ArticleCardWeb(
+                          articleId: data[index].id,
+                          article: data[index].data(),
+                        );
+                      },
+                    ),
                   );
                 }
               },

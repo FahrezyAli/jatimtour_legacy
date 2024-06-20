@@ -1,13 +1,14 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
-import 'package:jatimtour/widgets/mobile/views/calendar_view_mobile.dart';
-import 'package:jatimtour/widgets/mobile/views/home_view_mobile.dart';
-import 'package:jatimtour/widgets/mobile/views/profile_view_mobile.dart';
-import 'package:jatimtour/widgets/mobile/views/search_view_mobile.dart';
-import 'package:jatimtour/widgets/mobile/views/your_article_view_mobile.dart';
+
+import '../../../constants.dart';
+import '../views/calendar_view_mobile.dart';
+import '../views/home_view_mobile.dart';
+import '../views/profile_view_mobile.dart';
+import '../views/search_view_mobile.dart';
+import '../views/your_articles_view_mobile.dart';
+import 'mobile_scaffold.dart';
 
 class MainPageMobileModule extends Module {
   @override
@@ -29,7 +30,7 @@ class MainPageMobileModule extends Module {
         ),
         ChildRoute(
           '/2',
-          child: (context) => const YourArticleViewMobile(),
+          child: (context) => const YourArticlesViewMobile(),
           transition: TransitionType.fadeIn,
         ),
         ChildRoute(

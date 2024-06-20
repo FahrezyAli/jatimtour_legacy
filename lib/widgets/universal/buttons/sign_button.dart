@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/constants.dart';
 import 'package:universal_html/html.dart' as html;
+
+import '../../../constants.dart';
 
 class SignButton extends StatefulWidget {
   final int state;

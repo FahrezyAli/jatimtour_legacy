@@ -5,15 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/services/user_services.dart' as user_services;
-import 'package:jatimtour/widgets/universal/buttons/picture_select_button.dart';
-import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
+
+import '../../../constants.dart';
+import '../../../services/user_services.dart' as user_services;
+import '../buttons/picture_select_button.dart';
+import '../buttons/circle_button.dart';
 
 class ProfileEditView extends StatefulWidget {
-  final Map<String, dynamic> data;
-
-  const ProfileEditView({required this.data, super.key});
+  const ProfileEditView({super.key});
 
   @override
   State<ProfileEditView> createState() => _ProfileEditViewState();
@@ -26,7 +25,9 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   final _phoneNumberController = TextEditingController();
   String? _selectedCity;
 
-  Future _pickImage(ImageSource source) async {
+  final _user = user_services.currentUser!;
+
+  Future<void> _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
     if (pickedImage != null) {
       final croppedImage = await _cropImage(File(pickedImage.path));
@@ -106,10 +107,10 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   void initState() {
     super.initState();
 
-    _usernameController.text = widget.data['username'];
-    _fullNameController.text = widget.data['fullName'];
-    _phoneNumberController.text = widget.data['phoneNumber'];
-    _selectedCity = widget.data['city'];
+    _usernameController.text = _user.username;
+    _fullNameController.text = _user.fullName;
+    _phoneNumberController.text = _user.phoneNumber;
+    _selectedCity = _user.city;
   }
 
   @override
@@ -198,8 +199,11 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                               PictureSelectButton(
                                                 icon: Icons.camera_alt,
                                                 text: "Camera",
-                                                onTap: () => _pickImage(
-                                                    ImageSource.camera),
+                                                onTap: () async {
+                                                  await _pickImage(
+                                                    ImageSource.camera,
+                                                  );
+                                                },
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
@@ -207,9 +211,11 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                                 child: PictureSelectButton(
                                                   icon: Icons.image,
                                                   text: "Gallery",
-                                                  onTap: () => _pickImage(
-                                                    ImageSource.gallery,
-                                                  ),
+                                                  onTap: () async {
+                                                    await _pickImage(
+                                                      ImageSource.gallery,
+                                                    );
+                                                  },
                                                 ),
                                               ),
                                             ],
@@ -253,7 +259,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                     controller: _usernameController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
-                      hintText: "username",
+                      hintText: "_username",
                       hintStyle: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 14.0,

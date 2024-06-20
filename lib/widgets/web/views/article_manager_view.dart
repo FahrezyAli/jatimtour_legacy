@@ -2,20 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/article_model.dart';
-import 'package:jatimtour/services/article_services.dart' as article_services;
+
+import '../../../constants.dart';
+import '../../../models/article_model.dart';
+import '../../../services/article_services.dart' as article_services;
 
 TextStyle _defaultStyle = const TextStyle(fontFamily: 'Inter');
 
-class AdminArticleView extends StatefulWidget {
-  const AdminArticleView({super.key});
+class ArticleManagerView extends StatefulWidget {
+  const ArticleManagerView({super.key});
 
   @override
-  State<AdminArticleView> createState() => _AdminArticleViewState();
+  State<ArticleManagerView> createState() => _ArticleManagerViewState();
 }
 
-class _AdminArticleViewState extends State<AdminArticleView> {
+class _ArticleManagerViewState extends State<ArticleManagerView> {
   int _currentSortColumn = 0;
   bool _isAscending = true;
 
@@ -55,6 +56,7 @@ class _AdminArticleViewState extends State<AdminArticleView> {
         }
         final articles = snapshot.data!;
         return PaginatedDataTable(
+          columnSpacing: 35.0,
           header: Text("Articles", style: _defaultStyle),
           actions: [
             IconButton(
@@ -71,7 +73,7 @@ class _AdminArticleViewState extends State<AdminArticleView> {
             DataColumn(
                 label: Text("Judul", style: _defaultStyle), onSort: _sort),
             DataColumn(
-                label: Text("Author", style: _defaultStyle), onSort: _sort),
+                label: Text("Id Author", style: _defaultStyle), onSort: _sort),
             DataColumn(
                 label: Text("Kota", style: _defaultStyle), onSort: _sort),
             DataColumn(
@@ -87,7 +89,7 @@ class _AdminArticleViewState extends State<AdminArticleView> {
                 onSort: _sort),
             DataColumn(label: Text("Action", style: _defaultStyle)),
           ],
-          source: _DataSource(articles, context),
+          source: _DataSource(articles),
         );
       },
     );
@@ -95,34 +97,60 @@ class _AdminArticleViewState extends State<AdminArticleView> {
 }
 
 class _DataSource extends DataTableSource {
-  QuerySnapshot<ArticleModel> data;
-  BuildContext context;
+  final QuerySnapshot<ArticleModel> _data;
 
-  _DataSource(this.data, this.context);
+  _DataSource(this._data);
+
+  DataCell _sizedDataCell(Widget child) {
+    return DataCell(
+      SizedBox(
+        width: 100,
+        child: child,
+      ),
+    );
+  }
 
   @override
   DataRow? getRow(int index) {
-    final article = data.docs[index].data();
+    final article = _data.docs[index].data();
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text(article.title, style: _defaultStyle)),
-        DataCell(Text(article.authorId, style: _defaultStyle)),
-        DataCell(Text(article.city, style: _defaultStyle)),
-        DataCell(Text(article.tags.join(', '), style: _defaultStyle)),
-        DataCell(Text(
+        _sizedDataCell(Text(
+          article.title,
+          style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
+        )),
+        _sizedDataCell(Text(
+          article.authorId,
+          style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
+        )),
+        _sizedDataCell(Text(
+          article.city,
+          style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
+        )),
+        _sizedDataCell(Text(
+          article.tags.join(', '),
+          style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
+        )),
+        _sizedDataCell(Text(
           intl.DateFormat.yMd().format(
             article.datePublished,
           ),
           style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
         )),
-        DataCell(Text(
+        _sizedDataCell(Text(
           intl.DateFormat.yMd().format(
             article.dateCreated,
           ),
           style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
         )),
-        DataCell(
+        _sizedDataCell(
           Switch(
             value: article.isFeatured,
             onChanged: (value) {
@@ -133,7 +161,7 @@ class _DataSource extends DataTableSource {
             },
           ),
         ),
-        DataCell(
+        _sizedDataCell(
           Row(
             children: [
               IconButton(
@@ -160,7 +188,7 @@ class _DataSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => data.size;
+  int get rowCount => _data.size;
 
   @override
   int get selectedRowCount => 0;

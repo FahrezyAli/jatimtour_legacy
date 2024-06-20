@@ -1,19 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:jatimtour/models/user_model.dart';
-import 'package:jatimtour/services/user_services.dart' as user_services;
+
+import '../../../models/user_model.dart';
+import '../../../services/user_services.dart' as user_services;
 
 TextStyle _defaultStyle = const TextStyle(fontFamily: 'Inter');
 
-class AdminUserView extends StatefulWidget {
-  const AdminUserView({super.key});
+class UserManagerView extends StatefulWidget {
+  const UserManagerView({super.key});
 
   @override
-  State<AdminUserView> createState() => _AdminUserViewState();
+  State<UserManagerView> createState() => _UserManagerViewState();
 }
 
-class _AdminUserViewState extends State<AdminUserView> {
+class _UserManagerViewState extends State<UserManagerView> {
   int _currentSortColumn = 0;
   bool _isAscending = true;
 
@@ -51,6 +52,7 @@ class _AdminUserViewState extends State<AdminUserView> {
           );
         } else {
           return PaginatedDataTable(
+            columnSpacing: 35.0,
             header: Text("Users", style: _defaultStyle),
             rowsPerPage: 9,
             sortColumnIndex: _currentSortColumn,
@@ -80,19 +82,28 @@ class _AdminUserViewState extends State<AdminUserView> {
 }
 
 class _DataSource extends DataTableSource {
-  QuerySnapshot<UserModel> data;
-  BuildContext context;
+  final QuerySnapshot<UserModel> _data;
+  final BuildContext _context;
 
-  _DataSource(this.data, this.context);
+  _DataSource(this._data, this._context);
+
+  DataCell _sizedDataCell(Widget child) {
+    return DataCell(
+      SizedBox(
+        width: 100,
+        child: child,
+      ),
+    );
+  }
 
   void _updateRole(String uid, int roleValue) {
     showDialog(
-      context: context,
+      context: _context,
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) => AlertDialog(
             title: const Text("Edit Role"),
-            content: DropdownButton<int>(
+            content: DropdownButtonFormField<int>(
               value: roleValue,
               items: const [
                 DropdownMenuItem(
@@ -138,26 +149,66 @@ class _DataSource extends DataTableSource {
     );
   }
 
+  void _showErrorSnackBar(String error) {
+    ScaffoldMessenger.of(_context).showSnackBar(
+      SnackBar(
+        content: Text(
+          error,
+          style: const TextStyle(
+            fontFamily: "Inter",
+            fontSize: 12.0,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   DataRow? getRow(int index) {
-    final user = data.docs[index].data();
+    final user = _data.docs[index].data();
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text(user.email, style: _defaultStyle)),
-        DataCell(Text(user.username, style: _defaultStyle)),
-        DataCell(Text(user.fullName, style: _defaultStyle)),
-        DataCell(Text(user.phoneNumber, style: _defaultStyle)),
-        DataCell(Text(user.city, style: _defaultStyle)),
-        DataCell(
+        _sizedDataCell(Text(
+          user.email,
+          style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
+        )),
+        _sizedDataCell(Text(
+          user.username,
+          style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
+        )),
+        _sizedDataCell(Text(
+          user.fullName,
+          style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
+        )),
+        _sizedDataCell(Text(
+          user.phoneNumber,
+          style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
+        )),
+        _sizedDataCell(Text(
+          user.city,
+          style: _defaultStyle,
+          overflow: TextOverflow.ellipsis,
+        )),
+        _sizedDataCell(
           Row(
             children: [
               Text(user.role.toString(), style: _defaultStyle),
               IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () {
-                  int roleValue = user.role;
-                  _updateRole(user.id, roleValue);
+                  if (user.id == user_services.currentUser!.id) {
+                    _showErrorSnackBar(
+                      "You cannot change your own role! Change it directly from Firebase Project or ask another admin",
+                    );
+                  } else {
+                    _updateRole(user.id, user.role);
+                  }
                 },
               ),
             ],
@@ -171,7 +222,7 @@ class _DataSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => data.size;
+  int get rowCount => _data.size;
 
   @override
   int get selectedRowCount => 0;

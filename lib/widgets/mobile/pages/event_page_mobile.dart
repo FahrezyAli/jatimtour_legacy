@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/event_model.dart';
-import 'package:jatimtour/services/event_services.dart' as event_services;
-import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
 import 'package:rowbuilder/rowbuilder.dart';
+
+import '../../../constants.dart';
+import '../../../models/event_model.dart';
+import '../../../services/event_services.dart' as event_services;
+import 'mobile_scaffold.dart';
 
 class EventPageMobile extends StatelessWidget {
   final String eventId;
@@ -44,10 +45,6 @@ class EventPageMobile extends StatelessWidget {
         SliverToBoxAdapter(
           child: Column(
             children: [
-              Image.asset(
-                'assets/images/leading.png',
-                repeat: ImageRepeat.repeatX,
-              ),
               Padding(
                 padding:
                     const EdgeInsets.only(top: 20.0, left: 15.0, right: 15.0),

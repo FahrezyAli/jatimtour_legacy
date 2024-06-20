@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/article_model.dart';
-import 'package:jatimtour/services/article_services.dart' as article_services;
 import 'package:rowbuilder/rowbuilder.dart';
+
+import '../../../constants.dart';
+import '../../../models/article_model.dart';
+import '../../../services/article_services.dart' as article_services;
 
 class ArticleCardWeb extends StatelessWidget {
   final String articleId;
@@ -22,16 +23,16 @@ class ArticleCardWeb extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: const Color(0xFFE1E1E1),
-      child: InkWell(
-        onTap: () {
-          Modular.to.pushNamed('$articleRoute?articleId=$articleId');
-        },
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 10.0,
-            left: 20.0,
-            right: 20.0,
-          ),
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 10.0,
+          left: 20.0,
+          right: 20.0,
+        ),
+        child: InkWell(
+          onTap: () {
+            Modular.to.pushNamed('$articleRoute?articleId=$articleId');
+          },
           child: Ink(
             height: 300.0,
             decoration: BoxDecoration(

@@ -5,11 +5,12 @@ class BoxButtonMobile extends StatelessWidget {
   final Color color;
   final void Function()? onTap;
 
-  const BoxButtonMobile(
-      {required this.text,
-      required this.color,
-      required this.onTap,
-      super.key});
+  const BoxButtonMobile({
+    required this.text,
+    required this.color,
+    required this.onTap,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

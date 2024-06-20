@@ -1,13 +1,14 @@
 import 'package:columnbuilder/columnbuilder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/services/article_services.dart' as article_services;
-import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
-import 'package:jatimtour/widgets/mobile/cards/article_card_mobile.dart';
-import 'package:jatimtour/widgets/universal/carousel/featured_article_carousel.dart';
-import 'package:jatimtour/widgets/universal/carousel/recommendation_carousel.dart';
-import 'package:jatimtour/widgets/universal/views/calendar_home_view.dart';
+
+import '../../../constants.dart';
+import '../../../services/article_services.dart' as article_services;
+import '../../universal/buttons/circle_button.dart';
+import '../../universal/carousel/featured_article_carousel.dart';
+import '../../universal/carousel/recommendation_carousel.dart';
+import '../../universal/views/calendar_home_view.dart';
+import '../cards/article_card_mobile.dart';
 
 class HomeViewMobile extends StatelessWidget {
   const HomeViewMobile({super.key});
@@ -18,10 +19,6 @@ class HomeViewMobile extends StatelessWidget {
       color: kBackgroundColor,
       child: ListView(
         children: [
-          Image.asset(
-            'assets/images/leading.png',
-            repeat: ImageRepeat.repeatX,
-          ),
           const FeaturedArticleCarousel(),
           Image.asset(
             'assets/images/border1.png',
@@ -163,7 +160,7 @@ class HomeViewMobile extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
               onTap: () {
-                Modular.to.navigate('$mHomeRoute/1');
+                Modular.to.navigate('$mHomeRoute/3');
               },
             ),
           ),

@@ -13,20 +13,26 @@ const signupRoute = '/signup';
 const regisRoute = '/regis';
 
 const calendarRoute = '/calendar';
+const yourCalendarRoute = '/your-calendar';
 const eventRoute = '/event';
 const eventListRoute = '/event-list';
 const createEventRoute = '/create-event';
-const eventAdminRoute = '/event-admin';
+
+const searchRoute = '/search';
 
 const articleRoute = '/article';
-const yourArticleRoute = '/your-article';
+const yourArticlesRoute = '/your-articles';
+const yourArticleDraftsRoute = '/your-article-drafts';
 const createArticleRoute = '/create-article';
 const updateArticleRoute = '/update-article';
 
 const profileRoute = '/profile';
 const editProfileRoute = "$profileRoute/edit";
+const changePasswordRoute = "$editProfileRoute/change-password";
 
-const adminRoute = '/admin';
+const userManagerRoute = '/user-manager';
+const articleManagerRoute = '/article-manager';
+const eventManagerRoute = '/event-manager';
 
 const months = {
   "january": "Januari",

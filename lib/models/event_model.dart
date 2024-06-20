@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:jatimtour/services/user_services.dart' as user_services;
+
+import '../services/user_services.dart' as user_services;
 
 class EventModel {
   final String id;

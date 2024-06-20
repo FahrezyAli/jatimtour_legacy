@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/event_model.dart';
 import 'package:rowbuilder/rowbuilder.dart';
+
+import '../../../constants.dart';
+import '../../../models/event_model.dart';
 
 class EventCardMobile extends StatelessWidget {
   final String eventId;

@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/services/user_services.dart';
+
+import '../../../constants.dart';
+import '../../../services/user_services.dart' as user_services;
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -17,6 +20,14 @@ class _SignUpViewState extends State<SignUpView> {
   final _passwordController = TextEditingController();
   final _retypedPasswordController = TextEditingController();
   bool _isVisible = false;
+  Timer timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+    user_services.checkEmailVerified((verified) {
+      if (verified) {
+        Modular.to.navigate(regisRoute);
+        timer.cancel();
+      }
+    });
+  });
 
   Future<void> _signUp() async {
     if (!EmailValidator.validate(_emailController.text)) {
@@ -26,22 +37,31 @@ class _SignUpViewState extends State<SignUpView> {
     } else if (_passwordController.text != _retypedPasswordController.text) {
       _showErrorSnackBar("Password and Retyped Password do not match");
     } else {
-      await signIn(
+      await user_services
+          .signIn(
         email: _emailController.text,
         password: _passwordController.text,
-      ).then((value) => Modular.to.navigate(regisRoute)).catchError(
+      )
+          .catchError(
         (e) {
-          _showErrorSnackBar(e.toString());
+          _showErrorSnackBar(
+            e.toString(),
+          );
         },
+      );
+      await user_services.sendVerificationEmail();
+      _showErrorSnackBar(
+        "An email has been sent to your email address, check you email to continue",
+        pretext: false,
       );
     }
   }
 
-  void _showErrorSnackBar(String error) {
+  void _showErrorSnackBar(String error, {bool pretext = true}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          "Sign Up Error: $error",
+          pretext ? "Sign Up Error: $error" : error,
           style: const TextStyle(
             fontFamily: "Inter",
             fontSize: 12.0,
@@ -180,40 +200,6 @@ class _SignUpViewState extends State<SignUpView> {
                   onFieldSubmitted: (value) async {
                     await _signUp();
                   },
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 15.0),
-            child: Material(
-              borderRadius: BorderRadius.circular(20.0),
-              child: InkWell(
-                child: Ink(
-                  height: 40.0,
-                  width: 250.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                    color: Colors.white,
-                  ),
-                  child: Row(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Image.asset('assets/images/google_logo.png'),
-                      ),
-                      const Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Log in with Google",
-                          style: TextStyle(
-                            fontFamily: "Inter",
-                            fontSize: 14.0,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
                 ),
               ),
             ),

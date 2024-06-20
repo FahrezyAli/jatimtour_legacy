@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
-import 'package:jatimtour/widgets/universal/cards/calendar_card.dart';
-import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
+
+import '../../../constants.dart';
+import '../../universal/buttons/circle_button.dart';
+import '../../universal/cards/calendar_card.dart';
+import 'web_scaffold.dart';
 
 class CalendarPageWeb extends StatelessWidget {
   final months = [
@@ -24,11 +25,6 @@ class CalendarPageWeb extends StatelessWidget {
     return WebScaffold(
       body: ListView(
         children: [
-          Image.asset(
-            'assets/images/leading.png',
-            height: 10.0,
-            repeat: ImageRepeat.repeatX,
-          ),
           Padding(
             padding: const EdgeInsets.only(left: 30.0),
             child: Stack(

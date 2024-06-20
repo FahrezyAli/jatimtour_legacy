@@ -2,8 +2,9 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:jatimtour/models/event_model.dart';
-import 'package:jatimtour/services/user_services.dart' as user_services;
+
+import '../models/event_model.dart';
+import 'user_services.dart' as user_services;
 
 final _storageInstance = FirebaseStorage.instance.ref().child('events');
 final _firestoreInstance =
@@ -63,27 +64,31 @@ Future<QuerySnapshot<EventModel>> getSortedEventsWithLimit({
 }
 
 Future<QuerySnapshot<EventModel>> getEventsByMonths({
-  required String field,
   required int monthNumber,
 }) {
   final currentYear = DateTime.now().year;
   final start = DateTime(currentYear, monthNumber, 1);
   final end = DateTime(currentYear, monthNumber + 1, 1);
   return _firestoreInstance
-      .where(field, isGreaterThanOrEqualTo: start, isLessThan: end)
+      .where('startDate', isGreaterThanOrEqualTo: start, isLessThan: end)
       .get();
 }
 
 Future<QuerySnapshot<EventModel>> getEventsByDate({
-  required String field,
   required DateTime date,
 }) {
   final currentYear = DateTime.now().year;
   final start = DateTime(currentYear, date.month, date.day);
   final end = DateTime(currentYear, date.month, date.day + 1);
   return _firestoreInstance
-      .where(field, isGreaterThanOrEqualTo: start, isLessThan: end)
+      .where('startDate', isGreaterThanOrEqualTo: start, isLessThan: end)
       .get();
+}
+
+Future<QuerySnapshot<EventModel>> getEventsByLocation({
+  required String location,
+}) {
+  return _firestoreInstance.where('city', isEqualTo: location).get();
 }
 
 Stream<QuerySnapshot<EventModel>> getEventStreamFromAuthorId(

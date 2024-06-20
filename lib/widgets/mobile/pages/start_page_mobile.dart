@@ -1,11 +1,12 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/widgets/universal/buttons/sign_button.dart';
-import 'package:jatimtour/widgets/universal/views/welcome_view.dart';
-import 'package:jatimtour/widgets/universal/carousel/welcome_text_carousel.dart';
-import 'package:jatimtour/widgets/universal/views/login_view.dart';
-import 'package:jatimtour/widgets/universal/views/signup_view.dart';
+
+import '../../../constants.dart';
+import '../../universal/buttons/sign_button.dart';
+import '../../universal/carousel/welcome_text_carousel.dart';
+import '../../universal/views/login_view.dart';
+import '../../universal/views/signup_view.dart';
+import '../../universal/views/welcome_view.dart';
 
 class StartPageMobile extends StatefulWidget {
   const StartPageMobile({super.key});
@@ -36,18 +37,11 @@ class _StartPageMobileState extends State<StartPageMobile> {
             padding: EdgeInsets.only(top: 30.0),
             child: WelcomeView(),
           ),
-          Builder(
-            builder: (context) {
-              if (_state == 0) {
-                return Container(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  child: const WelcomeTextCarousel(),
-                );
-              } else {
-                return const SizedBox.shrink();
-              }
-            },
-          ),
+          if (_state == 0)
+            Container(
+              padding: const EdgeInsets.only(top: 30.0),
+              child: const WelcomeTextCarousel(),
+            ),
           Container(
             padding: const EdgeInsets.only(top: 35.0),
             child: SignButton(

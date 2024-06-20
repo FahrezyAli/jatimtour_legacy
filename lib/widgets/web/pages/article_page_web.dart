@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/article_model.dart';
-import 'package:jatimtour/services/article_services.dart' as article_services;
-import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
 import 'package:rowbuilder/rowbuilder.dart';
+
+import '../../../constants.dart';
+import '../../../models/article_model.dart';
+import '../../../services/article_services.dart' as article_services;
+import 'web_scaffold.dart';
 
 class ArticlePageWeb extends StatelessWidget {
   final String articleId;
@@ -43,10 +44,6 @@ class ArticlePageWeb extends StatelessWidget {
         SliverToBoxAdapter(
           child: Column(
             children: [
-              Image.asset(
-                'assets/images/leading.png',
-                repeat: ImageRepeat.repeatX,
-              ),
               SizedBox(
                   width: MediaQuery.sizeOf(context).width,
                   child: Image.network(article.coverImageUrl)),

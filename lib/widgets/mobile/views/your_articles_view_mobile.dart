@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/services/article_services.dart' as article_services;
-import 'package:jatimtour/services/user_services.dart' as user_services;
-import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
-import 'package:jatimtour/widgets/mobile/cards/article_card_mobile.dart';
 
-class YourArticleViewMobile extends StatelessWidget {
-  const YourArticleViewMobile({super.key});
+import '../../../constants.dart';
+import '../../../services/article_services.dart' as article_services;
+import '../../../services/user_services.dart' as user_services;
+import '../../universal/buttons/circle_button.dart';
+import '../cards/article_card_mobile.dart';
+
+class YourArticlesViewMobile extends StatelessWidget {
+  const YourArticlesViewMobile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +16,6 @@ class YourArticleViewMobile extends StatelessWidget {
       color: kBackgroundColor,
       child: Column(
         children: [
-          Image.asset(
-            'assets/images/leading.png',
-            repeat: ImageRepeat.repeatX,
-          ),
           Expanded(
             child: DefaultTabController(
               length: 2,
@@ -42,7 +39,7 @@ class YourArticleViewMobile extends StatelessWidget {
                   ),
                   Expanded(
                       child: TabBarView(
-                          children: [_publishedPage(context), Container()])),
+                          children: [_publishedPage(), Container()])),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 30.0),
                     child: Align(
@@ -69,7 +66,7 @@ class YourArticleViewMobile extends StatelessWidget {
     );
   }
 
-  Widget _publishedPage(BuildContext context) {
+  Widget _publishedPage() {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
       child: StreamBuilder(

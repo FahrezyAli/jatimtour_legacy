@@ -1,10 +1,13 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/models/user_model.dart';
+
+import '../constants.dart';
+import '../models/user_model.dart';
 
 final _authInstance = FirebaseAuth.instance;
 final _storageInstance = FirebaseStorage.instance.ref().child('users');
@@ -94,11 +97,41 @@ Future<void> register({
   await userRef.set(currentUser!);
 }
 
+Future<void> sendVerificationEmail() async {
+  _authInstance.currentUser!.sendEmailVerification();
+}
+
+void checkEmailVerified(void Function(bool isVerified) callback) async {
+  if (_authInstance.currentUser == null) return;
+  await _authInstance.currentUser!.reload();
+  callback(_authInstance.currentUser!.emailVerified);
+}
+
+Future<void> changePassword(
+    {required String oldPassword, required String newPassword}) async {
+  try {
+    await _authInstance.signInWithEmailAndPassword(
+      email: _authInstance.currentUser!.email!,
+      password: oldPassword,
+    );
+    await _authInstance.currentUser!.updatePassword(newPassword);
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'wrong-password') {
+      throw 'Wrong password provided for that user.';
+    } else {
+      rethrow;
+    }
+  } catch (e) {
+    rethrow;
+  }
+}
+
 bool isSignedIn() {
   return currentUser != null;
 }
 
 Future<void> signOut() async {
+  currentUser = null;
   await _authInstance.signOut();
 }
 
@@ -107,10 +140,17 @@ Future<void> autoLogin() async {
     await getUser(_authInstance.currentUser!.uid).then((user) {
       currentUser = user.data();
     });
-    if (!kIsWeb) {
+    if (currentUser != null && !kIsWeb) {
       Modular.to.navigate('$mHomeRoute/0');
     }
   }
+}
+
+Future<bool> waitAutoLoginFinish() async {
+  while (currentUser == null) {
+    await Future.delayed(const Duration(milliseconds: 100));
+  }
+  return true;
 }
 
 Future<DocumentSnapshot<UserModel>> getUser(String id) {
@@ -164,6 +204,17 @@ Future<void> updateUser(
     phoneNumber: phoneNumber,
     city: city,
   );
+}
+
+Future<void> updateProfilePicture(String id,
+    {required Uint8List profilePicture}) async {
+  final userRef = _firestoreInstance.doc(currentUser!.id);
+  final profilePictureRef =
+      _storageInstance.child(currentUser!.id).child('profile_picture.jpg');
+  await profilePictureRef.putData(profilePicture);
+  final photoUrl = await profilePictureRef.getDownloadURL();
+  await userRef.update({'photoUrl': photoUrl});
+  currentUser!.updatePhotoUrl(photoUrl);
 }
 
 Future<void> updateRole(String id, {required int role}) async {

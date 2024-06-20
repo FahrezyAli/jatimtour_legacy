@@ -8,11 +8,12 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/services/event_services.dart' as event_services;
-import 'package:jatimtour/widgets/universal/buttons/circle_button.dart';
-import 'package:jatimtour/widgets/web/pages/web_scaffold.dart';
 import 'package:textfield_tags/textfield_tags.dart';
+
+import '../../../constants.dart';
+import '../../../services/event_services.dart' as event_services;
+import '../../universal/buttons/circle_button.dart';
+import 'web_scaffold.dart';
 
 class CreateEventPageWeb extends StatefulWidget {
   const CreateEventPageWeb({super.key});
@@ -34,7 +35,7 @@ class _CreateEventPageWebState extends State<CreateEventPageWeb> {
   final TextEditingController _startDateController = TextEditingController();
   final StringTagController _tagsController = StringTagController();
 
-  Future _pickImage(ImageSource source) async {
+  Future<void> _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
     if (pickedImage != null) {
       final croppedImage = await _cropImage(File(pickedImage.path));
@@ -175,22 +176,27 @@ class _CreateEventPageWebState extends State<CreateEventPageWeb> {
                         width: 125.0,
                         elevation: 0.0,
                         border: Border.all(color: Colors.black, width: 1.0),
-                        onTap: () => _pickImage(ImageSource.gallery),
+                        onTap: () async {
+                          await _pickImage(ImageSource.gallery);
+                        },
                       ),
                     ),
                   )
                 : Material(
                     child: InkWell(
-                        child: Ink.image(
-                          height: 180,
-                          width: 360,
-                          image: kIsWeb
-                              ? NetworkImage(_coverImage!.path)
-                              : FileImage(File(_coverImage!.path))
-                                  as ImageProvider,
-                          fit: BoxFit.cover,
-                        ),
-                        onTap: () => _pickImage(ImageSource.gallery)),
+                      child: Ink.image(
+                        height: 180,
+                        width: 360,
+                        image: kIsWeb
+                            ? NetworkImage(_coverImage!.path)
+                            : FileImage(File(_coverImage!.path))
+                                as ImageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                      onTap: () async {
+                        await _pickImage(ImageSource.gallery);
+                      },
+                    ),
                   ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10.0),

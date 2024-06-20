@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/constants.dart';
-import 'package:jatimtour/services/user_services.dart' as user_services;
-import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
-import 'package:jatimtour/widgets/universal/views/profile_edit_view.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+
+import '../../../constants.dart';
+import '../../universal/buttons/circle_button.dart';
+import '../../universal/views/profile_edit_view.dart';
+import 'mobile_scaffold.dart';
 
 class ProfileEditPageMobile extends StatelessWidget {
   const ProfileEditPageMobile({super.key});
@@ -13,11 +15,27 @@ class ProfileEditPageMobile extends StatelessWidget {
       backgroundColor: kBackgroundColor,
       body: ListView(
         children: [
-          Image.asset(
-            'assets/images/leading.png',
-            repeat: ImageRepeat.repeatX,
+          const ProfileEditView(),
+          Padding(
+            padding: const EdgeInsets.only(top: 30.0),
+            child: UnconstrainedBox(
+              child: CircleButton(
+                text: const Text(
+                  "Ubah Password",
+                  style: TextStyle(
+                    fontFamily: "Inter",
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                color: kPinkColor,
+                height: 25.0,
+                width: 115.0,
+                onTap: () => Modular.to.pushNamed(changePasswordRoute),
+              ),
+            ),
           ),
-          ProfileEditView(data: user_services.currentUser!.toMap()),
         ],
       ),
     );

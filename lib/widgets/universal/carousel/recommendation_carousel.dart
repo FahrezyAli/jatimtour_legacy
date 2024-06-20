@@ -1,16 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
-class RecommendationCarousel extends StatefulWidget {
+import '../../../constants.dart';
+
+class RecommendationCarousel extends StatelessWidget {
   const RecommendationCarousel({super.key});
-
-  @override
-  State<RecommendationCarousel> createState() => _RecommendationCarouselState();
-}
-
-class _RecommendationCarouselState extends State<RecommendationCarousel> {
-  final _controller = CarouselController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +14,7 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
       children: [
         CarouselSlider.builder(
           itemCount: 3,
-          carouselController: _controller,
+          carouselController: CarouselController(),
           itemBuilder: (BuildContext context, int index, int realIndex) =>
               RecommendationCard(
             index: index,
@@ -40,6 +36,7 @@ class RecommendationCard extends StatelessWidget {
   final int index;
   final bool isCenter;
   final image = ["situbondo", "kuda_lumping", "konser"];
+  final city = ["Situbondo", "Banyuwangi", "Surabaya"];
 
   RecommendationCard({
     this.index = 0,
@@ -55,9 +52,14 @@ class RecommendationCard extends StatelessWidget {
         onTap: () {},
         child: Stack(
           children: [
-            Ink.image(
-              fit: BoxFit.cover,
-              image: AssetImage("assets/images/${image[index]}.png"),
+            InkWell(
+              child: Ink.image(
+                fit: BoxFit.cover,
+                image: AssetImage("assets/images/${image[index]}.png"),
+              ),
+              onTap: () {
+                Modular.to.pushNamed("$eventListRoute?location=${city[index]}");
+              },
             ),
           ],
         ),

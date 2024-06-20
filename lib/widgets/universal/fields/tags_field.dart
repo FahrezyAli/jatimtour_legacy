@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/constants.dart';
 import 'package:textfield_tags/textfield_tags.dart';
+
+import '../../../constants.dart';
 
 class TagsField extends StatelessWidget {
   final StringTagController tagsController;

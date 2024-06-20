@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/services/event_services.dart' as event_services;
-import 'package:jatimtour/widgets/mobile/cards/event_card_mobile.dart';
-import 'package:jatimtour/widgets/mobile/pages/mobile_scaffold.dart';
 
-class EventListPageMobile extends StatefulWidget {
+import '../../../services/event_services.dart' as event_services;
+import '../cards/event_card_mobile.dart';
+import 'mobile_scaffold.dart';
+
+class EventListPageMobile extends StatelessWidget {
   final String month;
   const EventListPageMobile({required this.month, super.key});
 
-  @override
-  State<EventListPageMobile> createState() => _EventListPageMobileState();
-}
-
-class _EventListPageMobileState extends State<EventListPageMobile> {
   int? _getMonthNumber() {
     final monthNumber = {
       'Januari': 1,
@@ -27,7 +23,7 @@ class _EventListPageMobileState extends State<EventListPageMobile> {
       'November': 11,
       'Desember': 12,
     };
-    return monthNumber[widget.month];
+    return monthNumber[month];
   }
 
   @override
@@ -35,15 +31,11 @@ class _EventListPageMobileState extends State<EventListPageMobile> {
     return MobileScaffold(
       body: ListView(
         children: [
-          Image.asset(
-            'assets/images/leading.png',
-            repeat: ImageRepeat.repeatX,
-          ),
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: Center(
               child: Text(
-                widget.month,
+                month,
                 style: const TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 40,
@@ -67,7 +59,6 @@ class _EventListPageMobileState extends State<EventListPageMobile> {
           ),
           FutureBuilder(
             future: event_services.getEventsByMonths(
-              field: 'startDate',
               monthNumber: _getMonthNumber()!,
             ),
             builder: (context, snapshot) {

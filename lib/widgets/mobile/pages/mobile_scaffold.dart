@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jatimtour/constants.dart';
+
+import '../../../constants.dart';
 
 class MobileScaffold extends StatelessWidget {
   final Color? backgroundColor;
