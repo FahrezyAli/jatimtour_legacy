@@ -165,7 +165,7 @@ class AppModule extends Module {
         transition: TransitionType.fadeIn,
       );
       r.child(
-        eventListRoute,
+        eventListRouteWithLocation,
         child: (context) => EventListPageWithLocationMobile(
           location: r.args.queryParams['location']!,
         ),

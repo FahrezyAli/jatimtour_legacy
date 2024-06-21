@@ -12,6 +12,8 @@ final _firestoreInstance =
           fromFirestore: ArticleModel.fromFirestore,
           toFirestore: (article, _) => article.toMap(),
         );
+final _publishedInstance = _firestoreInstance.where('datePublished',
+    isLessThanOrEqualTo: DateTime.now());
 
 Future<void> createArticle({
   required String title,
@@ -54,11 +56,11 @@ Future<DocumentSnapshot<ArticleModel>> getArticle(String id) {
 }
 
 Stream<QuerySnapshot<ArticleModel>> getArticlesStream() {
-  return _firestoreInstance.snapshots();
+  return _publishedInstance.snapshots();
 }
 
 Future<QuerySnapshot<ArticleModel>> getFeaturedArticle() {
-  return _firestoreInstance.where('isFeatured', isEqualTo: true).get();
+  return _publishedInstance.where('isFeatured', isEqualTo: true).get();
 }
 
 Future<QuerySnapshot<ArticleModel>> getSortedArticlesWithLimit({
@@ -66,23 +68,31 @@ Future<QuerySnapshot<ArticleModel>> getSortedArticlesWithLimit({
   bool isDescending = false,
   required int limit,
 }) {
-  return _firestoreInstance
+  return _publishedInstance
       .orderBy(field, descending: isDescending)
       .limit(limit)
       .get();
 }
 
-Stream<QuerySnapshot<ArticleModel>> getArticleStreamFromAuthorId(
+Stream<QuerySnapshot<ArticleModel>> getDraftsArticleStreamFromAuthorId(
+    String authorId) {
+  return _firestoreInstance
+      .where('authorId', isEqualTo: authorId)
+      .where('datePublished', isGreaterThan: DateTime.now())
+      .snapshots();
+}
+
+Stream<QuerySnapshot<ArticleModel>> getPublishedArticlesStreamFromAuthorId(
   String authorId,
 ) {
-  return _firestoreInstance.where('authorId', isEqualTo: authorId).snapshots();
+  return _publishedInstance.where('authorId', isEqualTo: authorId).snapshots();
 }
 
 Stream<QuerySnapshot<ArticleModel>> getSortedArticlesStream(
   String field, {
   bool isDescending = false,
 }) {
-  return _firestoreInstance
+  return _publishedInstance
       .orderBy(field, descending: isDescending)
       .snapshots();
 }

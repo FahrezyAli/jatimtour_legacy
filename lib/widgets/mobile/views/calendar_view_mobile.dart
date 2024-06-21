@@ -63,9 +63,11 @@ class CalendarViewMobile extends StatelessWidget {
                         lastDate: DateTime(2101),
                       );
                       final dateFormat = intl.DateFormat('yyyy-MM-dd');
-                      Modular.to.pushNamed(
-                        '$eventListRoute?date=${dateFormat.format(date!)}',
-                      );
+                      if (date != null) {
+                        Modular.to.pushNamed(
+                          '$eventListRoute?date=${dateFormat.format(date)}',
+                        );
+                      }
                     },
                   ),
                 ),
@@ -74,11 +76,10 @@ class CalendarViewMobile extends StatelessWidget {
           ),
           SizedBox(
             width: MediaQuery.sizeOf(context).width,
-            child: Positioned.fill(
-              child: Image.asset(
-                'assets/images/border1.png',
-                repeat: ImageRepeat.repeatX,
-              ),
+            child: Image.asset(
+              'assets/images/border1.png',
+              repeat: ImageRepeat.repeatX,
+              width: MediaQuery.sizeOf(context).width,
             ),
           ),
           ListView.builder(

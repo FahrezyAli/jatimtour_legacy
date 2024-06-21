@@ -10,6 +10,7 @@ class UserModel {
   String? photoUrl;
   String city;
   int role;
+  List<String> followedEventsId;
 
   UserModel({
     required this.id,
@@ -20,6 +21,7 @@ class UserModel {
     this.photoUrl,
     required this.city,
     this.role = 0,
+    required this.followedEventsId,
   });
 
   void updateUser({
@@ -42,6 +44,10 @@ class UserModel {
     this.role = role;
   }
 
+  void updateFollowedEvents(String followedEventId) {
+    followedEventsId.add(followedEventId);
+  }
+
   factory UserModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> data,
     SnapshotOptions? options,
@@ -55,6 +61,7 @@ class UserModel {
       city: data['city'],
       photoUrl: data['photoUrl'],
       role: data['role'],
+      followedEventsId: data['followedEventsId'].cast<String>(),
     );
   }
 
@@ -67,6 +74,7 @@ class UserModel {
       'city': city,
       'photoUrl': photoUrl,
       'role': role,
+      'followedEventsId': followedEventsId,
     };
   }
 

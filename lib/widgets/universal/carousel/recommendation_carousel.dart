@@ -58,7 +58,8 @@ class RecommendationCard extends StatelessWidget {
                 image: AssetImage("assets/images/${image[index]}.png"),
               ),
               onTap: () {
-                Modular.to.pushNamed("$eventListRoute?location=${city[index]}");
+                Modular.to.pushNamed(
+                    "$eventListRouteWithLocation?location=${city[index]}");
               },
             ),
           ],

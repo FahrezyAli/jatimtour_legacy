@@ -60,7 +60,7 @@ class YourCalendarViewWeb extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
       child: StreamBuilder(
-        stream: article_services.getArticleStreamFromAuthorId(
+        stream: article_services.getPublishedArticlesStreamFromAuthorId(
           user_services.currentUser!.id,
         ),
         builder: (context, snapshot) {

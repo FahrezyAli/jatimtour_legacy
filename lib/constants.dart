@@ -16,6 +16,7 @@ const calendarRoute = '/calendar';
 const yourCalendarRoute = '/your-calendar';
 const eventRoute = '/event';
 const eventListRoute = '/event-list';
+const eventListRouteWithLocation = '/event-list-location';
 const createEventRoute = '/create-event';
 
 const searchRoute = '/search';

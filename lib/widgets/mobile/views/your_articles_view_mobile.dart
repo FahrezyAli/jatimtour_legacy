@@ -25,13 +25,13 @@ class YourArticlesViewMobile extends StatelessWidget {
                     tabs: [
                       Tab(
                         child: Text(
-                          "Published",
+                          "Drafts",
                           style: TextStyle(fontFamily: "Inter", fontSize: 15.0),
                         ),
                       ),
                       Tab(
                         child: Text(
-                          "Drafts",
+                          "Published",
                           style: TextStyle(fontFamily: "Inter", fontSize: 15.0),
                         ),
                       ),
@@ -39,7 +39,7 @@ class YourArticlesViewMobile extends StatelessWidget {
                   ),
                   Expanded(
                       child: TabBarView(
-                          children: [_publishedPage(), Container()])),
+                          children: [_draftsPage(), _publishedPage()])),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 30.0),
                     child: Align(
@@ -66,29 +66,72 @@ class YourArticlesViewMobile extends StatelessWidget {
     );
   }
 
-  Widget _publishedPage() {
+  Widget _draftsPage() {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
       child: StreamBuilder(
-        stream: article_services
-            .getArticleStreamFromAuthorId(user_services.currentUser!.id),
+        stream: article_services.getDraftsArticleStreamFromAuthorId(
+          user_services.currentUser!.id,
+        ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           } else {
-            final data = snapshot.data!.docs;
-            return ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return ArticleCardMobile(
-                  articleId: data[index].id,
-                  article: data[index].data(),
-                  withUpdateAndDelete: true,
-                );
-              },
+            if (snapshot.data == null) {
+              return const Center(
+                child: Text("Belum ada artikel yang disimpan"),
+              );
+            } else {
+              final data = snapshot.data!.docs;
+              return ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  return ArticleCardMobile(
+                    articleId: data[index].id,
+                    article: data[index].data(),
+                    withUpdateAndDelete: true,
+                  );
+                },
+              );
+            }
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _publishedPage() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
+      child: StreamBuilder(
+        stream: article_services.getPublishedArticlesStreamFromAuthorId(
+          user_services.currentUser!.id,
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
+          } else {
+            if (snapshot.data == null) {
+              return const Center(
+                child: Text("Belum ada artikel yang dipublikasikan"),
+              );
+            } else {
+              final data = snapshot.data!.docs;
+              return ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  return ArticleCardMobile(
+                    articleId: data[index].id,
+                    article: data[index].data(),
+                    withUpdateAndDelete: true,
+                  );
+                },
+              );
+            }
           }
         },
       ),

@@ -120,7 +120,6 @@ class _SearchViewMobileState extends State<SearchViewMobile> {
           return ArticleCardMobile(
             articleId: queriedData![index].id,
             article: queriedData![index],
-            withUpdateAndDelete: true,
           );
         },
       ),

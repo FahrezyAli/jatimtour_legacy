@@ -69,14 +69,6 @@ Future<void> register({
 }) async {
   final user = _authInstance.currentUser;
   final userRef = _firestoreInstance.doc(user!.uid);
-  final userData = <String, dynamic>{
-    'email': _authInstance.currentUser!.email,
-    'username': username,
-    'fullName': fullName,
-    'phoneNumber': phoneNumber,
-    'city': city,
-    'role': 0,
-  };
   currentUser = UserModel(
     id: user.uid,
     email: user.email!,
@@ -85,13 +77,13 @@ Future<void> register({
     phoneNumber: phoneNumber,
     city: city,
     role: 0,
+    followedEventsId: [],
   );
   final profilePictureRef =
       _storageInstance.child(user.uid).child('profile_picture.jpg');
   if (profilePicture != null) {
     await profilePictureRef.putData(profilePicture);
     final photoUrl = await profilePictureRef.getDownloadURL();
-    userData['photoUrl'] = photoUrl;
     currentUser!.updatePhotoUrl(photoUrl);
   }
   await userRef.set(currentUser!);
@@ -157,10 +149,6 @@ Future<DocumentSnapshot<UserModel>> getUser(String id) {
   return _firestoreInstance.doc(id).get();
 }
 
-Stream<DocumentSnapshot<UserModel>>? getUserStream(id) {
-  return _firestoreInstance.doc(id).snapshots();
-}
-
 Future<List<String>> getUsedUsername() {
   return _firestoreInstance.get().then(
       (value) => value.docs.map((e) => e.data().username.toString()).toList());
@@ -221,4 +209,15 @@ Future<void> updateRole(String id, {required int role}) async {
   final userRef = _firestoreInstance.doc(id);
   await userRef.update({'role': role});
   currentUser!.updateRole(role);
+}
+
+Future<void> updateFollowedEvents(
+  String id, {
+  required String followedEventId,
+}) async {
+  final userRef = _firestoreInstance.doc(id);
+  await userRef.update({
+    'followedEventsId': FieldValue.arrayUnion([followedEventId]),
+  });
+  currentUser!.updateFollowedEvents(followedEventId);
 }
