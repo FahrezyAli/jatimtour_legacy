@@ -18,6 +18,7 @@ const eventRoute = '/event';
 const eventListRoute = '/event-list';
 const eventListRouteWithLocation = '/event-list-location';
 const createEventRoute = '/create-event';
+const updateEventRoute = '/update-event';
 
 const searchRoute = '/search';
 

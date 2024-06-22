@@ -34,7 +34,6 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
   final _quillController = QuillController.basic();
   late double _distanceToField;
   final _tagsController = StringTagController();
-  late List<String> _initialTags;
 
   void _fetchArticle() {
     getArticle(widget.articleId).then((data) {
@@ -47,7 +46,6 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
         _datePublishedController.text =
             intl.DateFormat.yMd().add_Hm().format(_datePublished);
         _selectedCity = _article!.city;
-        _initialTags = List<String>.from(_article!.tags);
       });
     });
   }
@@ -292,7 +290,7 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
             child: TagsField(
               tagsController: _tagsController,
               distanceToField: _distanceToField,
-              initialTags: _initialTags,
+              initialTags: article.tags,
               validator: (String tags) {
                 if (_tagsController.getTags!.contains(tags)) {
                   _showErrorSnackBar("Tag sudah ada");

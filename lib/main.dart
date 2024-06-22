@@ -31,6 +31,8 @@ import 'widgets/web/pages/profile_page_web.dart';
 import 'widgets/web/pages/regis_page_web.dart';
 import 'widgets/web/pages/search_page_web.dart';
 import 'widgets/web/pages/start_page_web.dart';
+import 'widgets/web/pages/update_article_page_web.dart';
+import 'widgets/web/pages/update_event_page_web.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -90,6 +92,13 @@ class AppModule extends Module {
         transition: TransitionType.fadeIn,
       );
       r.child(
+        updateArticleRoute,
+        child: (context) => UpdateArticlePageWeb(
+          articleId: r.args.queryParams['articleId']!,
+        ),
+        transition: TransitionType.fadeIn,
+      );
+      r.child(
         searchRoute,
         child: (context) => const SearchPageWeb(),
         transition: TransitionType.fadeIn,
@@ -130,6 +139,13 @@ class AppModule extends Module {
       r.child(
         createEventRoute,
         child: (context) => const CreateEventPageWeb(),
+        transition: TransitionType.fadeIn,
+      );
+      r.child(
+        updateEventRoute,
+        child: (context) => UpdateEventPageWeb(
+          eventId: r.args.queryParams['eventId']!,
+        ),
         transition: TransitionType.fadeIn,
       );
       r.module(

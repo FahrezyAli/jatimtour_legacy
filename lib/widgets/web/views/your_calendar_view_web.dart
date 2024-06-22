@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants.dart';
 import '../../../services/article_services.dart';
 import '../../../services/user_services.dart';
-import '../../universal/buttons/circle_button.dart';
 import '../cards/list_article_card_web.dart';
 
 class YourCalendarViewWeb extends StatelessWidget {
@@ -19,56 +17,15 @@ class YourCalendarViewWeb extends StatelessWidget {
           child: Ink(
             width: double.infinity,
             height: 50,
-            child: Row(
-              children: [
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 20.0),
-                    child: Text(
-                      'Your Calendar',
-                      style: TextStyle(fontSize: 20.0, fontFamily: "Inter,"),
-                    ),
-                  ),
+            child: const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: 20.0),
+                child: Text(
+                  'Your Calendar',
+                  style: TextStyle(fontSize: 20.0, fontFamily: "Inter,"),
                 ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: CircleButton(
-                        text: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.add,
-                              color: Colors.white,
-                              size: 15.0,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.0),
-                              child: Text(
-                                "Add",
-                                style: TextStyle(
-                                  fontFamily: "Inter",
-                                  fontSize: 13.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        color: kPinkColor,
-                        height: 30.0,
-                        width: 75.0,
-                        radius: 5.0,
-                        onTap: () {},
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),

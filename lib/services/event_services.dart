@@ -121,8 +121,27 @@ Stream<QuerySnapshot<EventModel>> getSortedEventsStreamWithEventOrganizerId(
       .snapshots();
 }
 
-Future<void> updateEvent(String id, Map<String, dynamic> data) async {
-  await _firestoreInstance.doc(id).update(data);
+Future<void> updateEvent(
+  String id, {
+  required String eventName,
+  Uint8List? coverImage,
+  required DateTime startDate,
+  required String city,
+  required String description,
+  required List<String> tags,
+}) async {
+  final eventRef = _firestoreInstance.doc(id);
+  final eventData = {
+    eventName: eventName,
+    startDate: startDate,
+    city: city,
+    description: description,
+    tags: tags,
+  };
+  await eventRef.update(eventData);
+  if (coverImage != null) {
+    await _setCoverImage(id, coverImage);
+  }
 }
 
 Future<void> deleteEvent(String id) async {

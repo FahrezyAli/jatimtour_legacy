@@ -167,7 +167,9 @@ class _DataSource extends DataTableSource {
               IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () {
-                  Modular.to.navigate('/admin/event/edit', arguments: event);
+                  Modular.to.pushNamed(
+                    '$updateEventRoute?eventId=${event.id}',
+                  );
                 },
               ),
               IconButton(
