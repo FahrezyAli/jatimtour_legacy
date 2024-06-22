@@ -13,8 +13,8 @@ service cloud.firestore {
     }
     match /events/{eventId} {
     	allow read;
-      allow write: if request.resource.data.authorId == request.auth.uid;
-      allow update, delete: if resource.data.authorId == request.auth.uid;
+      allow write: if request.resource.data.eventOrganizerId == request.auth.uid;
+      allow update, delete: if resource.data.eventOrganizerId == request.auth.uid;
     }
     match /{document=**} {
       allow read, write, update, delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 2;
