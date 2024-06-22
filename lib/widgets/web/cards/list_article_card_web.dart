@@ -7,12 +7,12 @@ import '../../../constants.dart';
 import '../../../models/article_model.dart';
 import '../../../services/article_services.dart';
 
-class ArticleCardWeb extends StatelessWidget {
+class ListArticleCardWeb extends StatelessWidget {
   final String articleId;
   final ArticleModel article;
   final bool withUpdateAndDelete;
 
-  const ArticleCardWeb({
+  const ListArticleCardWeb({
     required this.articleId,
     required this.article,
     this.withUpdateAndDelete = false,
@@ -34,16 +34,16 @@ class ArticleCardWeb extends StatelessWidget {
             Modular.to.pushNamed('$articleRoute?articleId=$articleId');
           },
           child: Ink(
-            height: 300.0,
+            height: 100.0,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(15.0),
             ),
-            child: Column(
+            child: Row(
               children: [
                 Ink(
-                  height: 180.0,
-                  width: 360.0,
+                  height: 100.0,
+                  width: 200.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.0),
                     image: DecorationImage(
@@ -54,7 +54,7 @@ class ArticleCardWeb extends StatelessWidget {
                 ),
                 Expanded(
                   child: Ink(
-                    width: 360.0,
+                    height: 100,
                     padding: const EdgeInsets.only(top: 15.0, left: 20.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15.0),

@@ -5,14 +5,15 @@ import 'package:intl/intl.dart' as intl;
 
 import '../../../constants.dart';
 import '../../../models/event_model.dart';
-import '../../../services/event_services.dart' as event_services;
+import '../../../models/user_model.dart';
+import '../../../services/event_services.dart';
 
 TextStyle _defaultStyle = const TextStyle(fontFamily: 'Inter');
 
 class EventManagerView extends StatefulWidget {
-  final int role;
+  final UserModel user;
 
-  const EventManagerView({required this.role, super.key});
+  const EventManagerView({required this.user, super.key});
 
   @override
   State<EventManagerView> createState() => _EventManagerViewState();
@@ -42,13 +43,25 @@ class _EventManagerViewState extends State<EventManagerView> {
     ][index];
   }
 
+  Stream<QuerySnapshot<EventModel>> getStreamBasedOnRole() {
+    if (widget.user.role == 1) {
+      return getSortedEventsStreamWithEventOrganizerId(
+        _getFieldFromIndex(_currentSortColumn),
+        eventOrganizerId: widget.user.id,
+        isDescending: !_isAscending,
+      );
+    } else {
+      return getSortedEventsStream(
+        _getFieldFromIndex(_currentSortColumn),
+        isDescending: !_isAscending,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: event_services.getSortedEventsStream(
-        _getFieldFromIndex(_currentSortColumn),
-        isDescending: !_isAscending,
-      ),
+      stream: getStreamBasedOnRole(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -160,7 +173,7 @@ class _DataSource extends DataTableSource {
               IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  event_services.deleteEvent(event.id);
+                  deleteEvent(event.id);
                 },
               ),
             ],

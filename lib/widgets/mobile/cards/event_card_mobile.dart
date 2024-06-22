@@ -26,7 +26,9 @@ class EventCardMobile extends StatelessWidget {
       ),
       child: Material(
         color: kBackgroundColor,
-        borderRadius: BorderRadius.circular(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
         child: InkWell(
           onTap: () {
             Modular.to.pushNamed('$eventRoute?eventId=$eventId');

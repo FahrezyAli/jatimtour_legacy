@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../constants.dart';
-import '../../../services/user_services.dart' as user_services;
+import '../../../services/user_services.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -21,7 +21,7 @@ class _SignUpViewState extends State<SignUpView> {
   final _retypedPasswordController = TextEditingController();
   bool _isVisible = false;
   Timer timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-    user_services.checkEmailVerified((verified) {
+    checkEmailVerified((verified) {
       if (verified) {
         Modular.to.navigate(regisRoute);
         timer.cancel();
@@ -37,19 +37,17 @@ class _SignUpViewState extends State<SignUpView> {
     } else if (_passwordController.text != _retypedPasswordController.text) {
       _showErrorSnackBar("Password and Retyped Password do not match");
     } else {
-      await user_services
-          .signIn(
+      await signIn(
         email: _emailController.text,
         password: _passwordController.text,
-      )
-          .catchError(
+      ).catchError(
         (e) {
           _showErrorSnackBar(
             e.toString(),
           );
         },
       );
-      await user_services.sendVerificationEmail();
+      await sendVerificationEmail();
       _showErrorSnackBar(
         "An email has been sent to your email address, check you email to continue",
         pretext: false,
@@ -96,6 +94,7 @@ class _SignUpViewState extends State<SignUpView> {
     _emailController.dispose();
     _passwordController.dispose();
     _retypedPasswordController.dispose();
+    timer.cancel();
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
+import '../../../services/image_services.dart';
 import '../../universal/views/regis_view.dart';
 
 class RegistrationPageMobile extends StatelessWidget {
@@ -19,8 +20,8 @@ class RegistrationPageMobile extends StatelessWidget {
             height: 30.0,
             width: MediaQuery.sizeOf(context).width,
             child: Positioned.fill(
-              child: Image.asset(
-                'assets/images/header.png',
+              child: Image(
+                image: getLocalImage('assets/images/header.png'),
                 repeat: ImageRepeat.repeatX,
               ),
             ),

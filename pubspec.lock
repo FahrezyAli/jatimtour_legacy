@@ -181,10 +181,10 @@ packages:
     dependency: transitive
     description:
       name: dart_quill_delta
-      sha256: d22447015105b0958544eb514d69fa3b5335b7c991405f018777d7911b67c02f
+      sha256: "9374eded555be05e7ec99be4482dda0b72a8a5b291a84244a54f32692117d974"
       url: "https://pub.dev"
     source: hosted
-    version: "9.4.3"
+    version: "9.4.6"
   dev:
     dependency: "direct main"
     description:
@@ -229,10 +229,10 @@ packages:
     dependency: "direct main"
     description:
       name: email_validator
-      sha256: e9a90f27ab2b915a27d7f9c2a7ddda5dd752d6942616ee83529b686fc086221b
+      sha256: b19aa5d92fdd76fbc65112060c94d45ba855105a28bb6e462de7ff03b12fa1fb
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.17"
+    version: "3.0.0"
   equatable:
     dependency: transitive
     description:
@@ -503,10 +503,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_quill
-      sha256: "8d9c81ff68d90686c06b5543bed1461be392f9c470e6d54f6dcba44215f731cd"
+      sha256: "8101c805242016c46671a1950887b3bda3c1c98d2078f99567c587c33b393343"
       url: "https://pub.dev"
     source: hosted
-    version: "9.4.3"
+    version: "9.4.6"
   flutter_test:
     dependency: "direct dev"
     description: flutter

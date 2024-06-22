@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../models/article_model.dart';
-import 'user_services.dart' as user_services;
+import 'user_services.dart';
 
 final _storageInstance = FirebaseStorage.instance.ref().child('articles');
 final _firestoreInstance =
@@ -26,7 +26,7 @@ Future<void> createArticle({
   final articleRef = _firestoreInstance.doc();
   final newArticle = ArticleModel(
     id: articleRef.id,
-    authorId: user_services.currentUser!.id,
+    authorId: currentUser!.id,
     title: title,
     datePublished: datePublished,
     city: city,
@@ -74,25 +74,26 @@ Future<QuerySnapshot<ArticleModel>> getSortedArticlesWithLimit({
       .get();
 }
 
-Stream<QuerySnapshot<ArticleModel>> getDraftsArticleStreamFromAuthorId(
-    String authorId) {
-  return _firestoreInstance
-      .where('authorId', isEqualTo: authorId)
-      .where('datePublished', isGreaterThan: DateTime.now())
-      .snapshots();
-}
-
 Stream<QuerySnapshot<ArticleModel>> getPublishedArticlesStreamFromAuthorId(
   String authorId,
 ) {
   return _publishedInstance.where('authorId', isEqualTo: authorId).snapshots();
 }
 
+Stream<QuerySnapshot<ArticleModel>> getDraftsArticleStreamFromAuthorId(
+  String authorId,
+) {
+  return _firestoreInstance
+      .where('authorId', isEqualTo: authorId)
+      .where('datePublished', isGreaterThan: DateTime.now())
+      .snapshots();
+}
+
 Stream<QuerySnapshot<ArticleModel>> getSortedArticlesStream(
   String field, {
   bool isDescending = false,
 }) {
-  return _publishedInstance
+  return _firestoreInstance
       .orderBy(field, descending: isDescending)
       .snapshots();
 }
@@ -100,7 +101,7 @@ Stream<QuerySnapshot<ArticleModel>> getSortedArticlesStream(
 Future<void> updateArticle(
   String id, {
   required String title,
-  required Uint8List coverImage,
+  Uint8List? coverImage,
   required DateTime datePublished,
   required String city,
   required String content,
@@ -115,7 +116,9 @@ Future<void> updateArticle(
     'tags': tags,
   };
   await articleRef.update(articleData);
-  await _setCoverImage(id, coverImage);
+  if (coverImage != null) {
+    await _setCoverImage(id, coverImage);
+  }
 }
 
 Future<void> updateFeaturedStatus(String id, {required bool isFeatured}) async {

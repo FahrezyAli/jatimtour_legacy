@@ -7,7 +7,7 @@ class SignButton extends StatefulWidget {
   final int state;
   final Function(int state)? onStateChange;
 
-  const SignButton({this.state = 0, required this.onStateChange, super.key});
+  const SignButton({required this.state, required this.onStateChange, super.key});
 
   @override
   State<SignButton> createState() => _SignButtonState();

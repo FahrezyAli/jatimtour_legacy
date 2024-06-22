@@ -1,88 +1,107 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../constants.dart';
-import '../../../services/article_services.dart' as article_services;
-import '../../../services/user_services.dart' as user_services;
+import '../../../services/article_services.dart';
+import '../../../services/user_services.dart';
 import '../../universal/buttons/circle_button.dart';
-import '../cards/article_card_web.dart';
+import '../cards/list_article_card_web.dart';
 
 class YourCalendarViewWeb extends StatelessWidget {
   const YourCalendarViewWeb({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Column(
-        children: [
-          const TabBar(
-            tabs: [
-              Tab(
-                child: Text(
-                  "Published",
-                  style: TextStyle(fontFamily: "Inter", fontSize: 15.0),
+    return Column(
+      children: [
+        Material(
+          color: Colors.white,
+          elevation: 5.0,
+          child: Ink(
+            width: double.infinity,
+            height: 50,
+            child: Row(
+              children: [
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 20.0),
+                    child: Text(
+                      'Your Calendar',
+                      style: TextStyle(fontSize: 20.0, fontFamily: "Inter,"),
+                    ),
+                  ),
                 ),
-              ),
-              Tab(
-                child: Text(
-                  "Drafts",
-                  style: TextStyle(fontFamily: "Inter", fontSize: 15.0),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: CircleButton(
+                        text: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 15.0,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 5.0),
+                              child: Text(
+                                "Add",
+                                style: TextStyle(
+                                  fontFamily: "Inter",
+                                  fontSize: 13.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        color: kPinkColor,
+                        height: 30.0,
+                        width: 75.0,
+                        radius: 5.0,
+                        onTap: () {},
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Expanded(
-              child:
-                  TabBarView(children: [_publishedPage(context), Container()])),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 30.0),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: CircleButton(
-                text: const Text(
-                  "Buat Artikel",
-                  style: TextStyle(fontFamily: "Inter", color: Colors.white),
-                ),
-                color: kPurpleColor,
-                onTap: () {
-                  Modular.to.pushNamed(createArticleRoute);
-                },
-              ),
+              ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _publishedPage(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
-      child: StreamBuilder(
-        stream: article_services.getPublishedArticlesStreamFromAuthorId(
-          user_services.currentUser!.id,
         ),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            final data = snapshot.data!.docs;
-            return ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return ArticleCardWeb(
-                  articleId: data[index].id,
-                  article: data[index].data(),
-                  withUpdateAndDelete: true,
-                );
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
+            child: StreamBuilder(
+              stream: getDraftsArticleStreamFromAuthorId(
+                currentUser!.id,
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  final data = snapshot.data!.docs;
+                  return ListView.builder(
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                      return ListArticleCardWeb(
+                        articleId: data[index].id,
+                        article: data[index].data(),
+                        withUpdateAndDelete: true,
+                      );
+                    },
+                  );
+                }
               },
-            );
-          }
-        },
-      ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

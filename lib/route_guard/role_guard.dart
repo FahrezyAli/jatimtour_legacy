@@ -1,6 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../services/user_services.dart' as user_services;
+import '../services/user_services.dart';
 
 class RoleGuard extends RouteGuard {
   final int role;
@@ -9,7 +9,7 @@ class RoleGuard extends RouteGuard {
 
   @override
   Future<bool> canActivate(String path, ModularRoute route) {
-    if (user_services.currentUser!.role >= role) {
+    if (currentUser!.role >= role) {
       return Future.value(true);
     } else {
       return Future.value(false);

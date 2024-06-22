@@ -7,7 +7,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../constants.dart';
-import '../../../services/user_services.dart' as user_services;
+import '../../../services/image_services.dart';
+import '../../../services/user_services.dart';
 import '../buttons/picture_select_button.dart';
 import '../buttons/circle_button.dart';
 
@@ -64,7 +65,7 @@ class _RegistrationViewState extends State<RegistrationView> {
   }
 
   Future<void> _register() async {
-    final usedUsername = await user_services.getUsedUsername();
+    final usedUsername = await getUsedUsername();
     if (_usernameController.text == "" ||
         _fullNameController.text == "" ||
         _phoneNumberController.text == "" ||
@@ -75,7 +76,7 @@ class _RegistrationViewState extends State<RegistrationView> {
     } else if (usedUsername.contains(_usernameController.text)) {
       _showErrorSnackBar("Username already used");
     } else {
-      await user_services.register(
+      await register(
         username: _usernameController.text,
         fullName: _fullNameController.text,
         phoneNumber: _phoneNumberController.text,
@@ -151,7 +152,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                             ? NetworkImage(_profilePicture!.path)
                             : FileImage(File(_profilePicture!.path))
                                 as ImageProvider
-                        : const AssetImage('assets/images/placeholder.png'),
+                        : getLocalImage('assets/images/placeholder.png'),
                   ),
                   Positioned.fill(
                     bottom: 5.0,

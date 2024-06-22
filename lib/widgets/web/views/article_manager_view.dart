@@ -5,7 +5,7 @@ import 'package:intl/intl.dart' as intl;
 
 import '../../../constants.dart';
 import '../../../models/article_model.dart';
-import '../../../services/article_services.dart' as article_services;
+import '../../../services/article_services.dart';
 
 TextStyle _defaultStyle = const TextStyle(fontFamily: 'Inter');
 
@@ -44,7 +44,7 @@ class _ArticleManagerViewState extends State<ArticleManagerView> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: article_services.getSortedArticlesStream(
+      stream: getSortedArticlesStream(
         _getFieldFromIndex(_currentSortColumn),
         isDescending: !_isAscending,
       ),
@@ -154,7 +154,7 @@ class _DataSource extends DataTableSource {
           Switch(
             value: article.isFeatured,
             onChanged: (value) {
-              article_services.updateFeaturedStatus(
+              updateFeaturedStatus(
                 article.id,
                 isFeatured: value,
               );
@@ -174,7 +174,7 @@ class _DataSource extends DataTableSource {
               IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  article_services.deleteArticle(article.id);
+                  deleteArticle(article.id);
                 },
               ),
             ],

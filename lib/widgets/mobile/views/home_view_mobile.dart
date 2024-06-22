@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../constants.dart';
-import '../../../services/article_services.dart' as article_services;
+import '../../../services/article_services.dart';
+import '../../../services/image_services.dart';
 import '../../universal/buttons/circle_button.dart';
 import '../../universal/carousel/featured_article_carousel.dart';
 import '../../universal/carousel/recommendation_carousel.dart';
@@ -20,8 +21,8 @@ class HomeViewMobile extends StatelessWidget {
       child: ListView(
         children: [
           const FeaturedArticleCarousel(),
-          Image.asset(
-            'assets/images/border1.png',
+          Image(
+            image: getLocalImage('assets/images/border1.png'),
             repeat: ImageRepeat.repeatX,
           ),
           const Padding(
@@ -41,8 +42,8 @@ class HomeViewMobile extends StatelessWidget {
             padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
             child: RecommendationCarousel(),
           ),
-          Image.asset(
-            'assets/images/border2.png',
+          Image(
+            image: getLocalImage('assets/images/border2.png'),
             repeat: ImageRepeat.repeatX,
           ),
           Padding(
@@ -92,8 +93,8 @@ class HomeViewMobile extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 15),
-            child: Image.asset(
-              'assets/images/border3.png',
+            child: Image(
+              image: getLocalImage('assets/images/border3.png'),
               repeat: ImageRepeat.repeatX,
             ),
           ),
@@ -124,7 +125,7 @@ class HomeViewMobile extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
             child: FutureBuilder(
-              future: article_services.getSortedArticlesWithLimit(
+              future: getSortedArticlesWithLimit(
                 field: 'datePublished',
                 isDescending: true,
                 limit: 3,

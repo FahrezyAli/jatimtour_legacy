@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../services/user_services.dart' as user_services;
+import '../services/user_services.dart';
 
 class ArticleModel {
   final String id;
@@ -60,7 +60,7 @@ class ArticleModel {
   }
 
   Future<String> getAuthorUsernameFromAuthorId() {
-    return user_services.getUser(authorId).then(
+    return getUser(authorId).then(
       (user) {
         if (user.exists) {
           return user.data()!.username;

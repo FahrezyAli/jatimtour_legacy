@@ -3,6 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart' as intl;
 
 import '../../../constants.dart';
+import '../../../services/image_services.dart';
 import '../../universal/buttons/circle_button.dart';
 import '../../universal/cards/calendar_card.dart';
 
@@ -39,7 +40,9 @@ class CalendarViewMobile extends StatelessWidget {
                   child: SizedBox(
                     height: 40.0,
                     width: 40.0,
-                    child: Image.asset('assets/images/eol_cal.png'),
+                    child: Image(
+                      image: getLocalImage('assets/images/eol_cal.png'),
+                    ),
                   ),
                 ),
                 Positioned(
@@ -76,8 +79,8 @@ class CalendarViewMobile extends StatelessWidget {
           ),
           SizedBox(
             width: MediaQuery.sizeOf(context).width,
-            child: Image.asset(
-              'assets/images/border1.png',
+            child: Image(
+              image: getLocalImage('assets/images/border1.png'),
               repeat: ImageRepeat.repeatX,
               width: MediaQuery.sizeOf(context).width,
             ),
@@ -89,12 +92,16 @@ class CalendarViewMobile extends StatelessWidget {
             itemBuilder: (context, index) {
               return CalendarCard(
                 month: _getMonth()[index],
-                image: Image.asset(
-                  'assets/images/${_getMonth()[index].toLowerCase()}.png',
+                image: Image(
+                  image: getLocalImage(
+                    'assets/images/${_getMonth()[index].toLowerCase()}.png',
+                  ),
                   errorBuilder: (context, error, stackTrace) => Stack(
                     children: [
-                      Image.asset(
-                        'assets/images/placeholder_months.png',
+                      Image(
+                        image: getLocalImage(
+                          'assets/images/placeholder_months.png',
+                        ),
                         color: _placeholderColor(index),
                       ),
                       const Positioned.fill(

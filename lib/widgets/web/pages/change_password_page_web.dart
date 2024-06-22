@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import '../../../services/image_services.dart';
 import '../../universal/carousel/welcome_text_carousel.dart';
-import '../../universal/views/regis_view.dart';
+import '../../universal/views/change_password_view.dart';
 import '../../universal/views/welcome_view.dart';
 
-class RegistrationPageWeb extends StatelessWidget {
-  const RegistrationPageWeb({super.key});
+class ChangePasswordPageWeb extends StatelessWidget {
+  const ChangePasswordPageWeb({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class RegistrationPageWeb extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.only(top: 20.0),
                 width: MediaQuery.sizeOf(context).width * 0.5,
-                child: const RegistrationView(),
+                child: const ChangePasswordView(),
               ),
             ],
           ),

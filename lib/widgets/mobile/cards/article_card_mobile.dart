@@ -5,7 +5,7 @@ import 'package:rowbuilder/rowbuilder.dart';
 
 import '../../../constants.dart';
 import '../../../models/article_model.dart';
-import '../../../services/article_services.dart' as article_services;
+import '../../../services/article_services.dart';
 
 class ArticleCardMobile extends StatelessWidget {
   final String articleId;
@@ -155,7 +155,7 @@ class ArticleCardMobile extends StatelessWidget {
                                   TextButton(
                                     onPressed: () {
                                       Modular.to.pop(context);
-                                      article_services.deleteArticle(articleId);
+                                      deleteArticle(articleId);
                                     },
                                     child: const Text('Hapus'),
                                   ),

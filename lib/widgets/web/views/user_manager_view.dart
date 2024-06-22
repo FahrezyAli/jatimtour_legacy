@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../models/user_model.dart';
-import '../../../services/user_services.dart' as user_services;
+import '../../../services/user_services.dart';
 
 TextStyle _defaultStyle = const TextStyle(fontFamily: 'Inter');
 
@@ -41,7 +41,7 @@ class _UserManagerViewState extends State<UserManagerView> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: user_services.getSortedUsersStream(
+      stream: getSortedUsersStream(
         _getFieldFromIndex(_currentSortColumn),
         isDescending: !_isAscending,
       ),
@@ -129,7 +129,7 @@ class _DataSource extends DataTableSource {
               IconButton(
                 icon: const Icon(Icons.save),
                 onPressed: () {
-                  user_services.updateRole(
+                  updateRole(
                     uid,
                     role: roleValue,
                   );
@@ -202,7 +202,7 @@ class _DataSource extends DataTableSource {
               IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () {
-                  if (user.id == user_services.currentUser!.id) {
+                  if (user.id == currentUser!.id) {
                     _showErrorSnackBar(
                       "You cannot change your own role! Change it directly from Firebase Project or ask another admin",
                     );

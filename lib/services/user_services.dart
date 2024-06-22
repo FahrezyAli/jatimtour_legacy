@@ -94,9 +94,10 @@ Future<void> sendVerificationEmail() async {
 }
 
 void checkEmailVerified(void Function(bool isVerified) callback) async {
-  if (_authInstance.currentUser == null) return;
-  await _authInstance.currentUser!.reload();
-  callback(_authInstance.currentUser!.emailVerified);
+  if (_authInstance.currentUser != null) {
+    await _authInstance.currentUser!.reload();
+    callback(_authInstance.currentUser!.emailVerified);
+  }
 }
 
 Future<void> changePassword(

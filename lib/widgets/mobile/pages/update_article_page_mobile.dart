@@ -11,7 +11,7 @@ import 'package:textfield_tags/textfield_tags.dart';
 
 import '../../../constants.dart';
 import '../../../models/article_model.dart';
-import '../../../services/article_services.dart' as article_services;
+import '../../../services/article_services.dart';
 import '../../universal/fields/tags_field.dart';
 import 'mobile_scaffold.dart';
 
@@ -25,7 +25,7 @@ class UpdateArticlePageMobile extends StatefulWidget {
 }
 
 class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
-  late Future _futureArticle;
+  ArticleModel? _article;
   CroppedFile? _coverImage;
   final _titleController = TextEditingController();
   final _datePublishedController = TextEditingController();
@@ -35,6 +35,22 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
   late double _distanceToField;
   final _tagsController = StringTagController();
   late List<String> _initialTags;
+
+  void _fetchArticle() {
+    getArticle(widget.articleId).then((data) {
+      setState(() {
+        _article = data.data()!;
+        _titleController.text = _article!.title;
+        _quillController.document =
+            Document.fromJson(jsonDecode(_article!.content));
+        _datePublished = _article!.datePublished;
+        _datePublishedController.text =
+            intl.DateFormat.yMd().add_Hm().format(_datePublished);
+        _selectedCity = _article!.city;
+        _initialTags = List<String>.from(_article!.tags);
+      });
+    });
+  }
 
   Future<void> _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
@@ -69,7 +85,7 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
   }
 
   Future<void> _selectDate() async {
-    final picked = await showDatePicker(
+    final date = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
@@ -80,12 +96,12 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
       context: context,
       initialTime: TimeOfDay.now(),
     );
-    if (picked != null && time != null) {
+    if (date != null && time != null) {
       setState(() {
         _datePublished = DateTime(
-          picked.year,
-          picked.month,
-          picked.day,
+          date.year,
+          date.month,
+          date.day,
           time.hour,
           time.minute,
         );
@@ -116,10 +132,10 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
     } else if (_datePublished.isBefore(DateTime.now())) {
       _showErrorSnackBar("Tanggal Publikasi tidak valid");
     } else {
-      await article_services.updateArticle(
+      await updateArticle(
         widget.articleId,
         title: _titleController.text,
-        coverImage: await _coverImage!.readAsBytes(),
+        coverImage: await _coverImage?.readAsBytes(),
         datePublished: _datePublished,
         city: _selectedCity!,
         content: jsonEncode(_quillController.document.toDelta().toJson()),
@@ -127,12 +143,6 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
       );
       Modular.to.pop();
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _futureArticle = article_services.getArticle(widget.articleId);
   }
 
   @override
@@ -159,24 +169,15 @@ class _UpdateArticlePageMobileState extends State<UpdateArticlePageMobile> {
           icon: const Icon(Icons.save),
         )
       ],
-      body: FutureBuilder(
-        future: _futureArticle,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      body: Builder(
+        builder: (context) {
+          if (_article == null) {
+            _fetchArticle();
             return const Center(
               child: CircularProgressIndicator(),
             );
           } else {
-            final article = snapshot.data!.data()!;
-            _titleController.text = article.title;
-            _quillController.document =
-                Document.fromJson(jsonDecode(article.content));
-            _datePublished = article.datePublished;
-            _datePublishedController.text =
-                intl.DateFormat.yMd().add_Hm().format(_datePublished);
-            _selectedCity = article.city;
-            _initialTags = List<String>.from(article.tags);
-            return _buildPage(snapshot.data!.data()!);
+            return _buildPage(_article!);
           }
         },
       ),

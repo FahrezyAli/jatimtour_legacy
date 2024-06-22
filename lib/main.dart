@@ -8,7 +8,7 @@ import 'package:url_strategy/url_strategy.dart';
 import 'constants.dart';
 import 'firebase_options.dart';
 import 'route_guard/profile_guard.dart';
-import 'services/user_services.dart' as user_services;
+import 'services/user_services.dart';
 import 'widgets/mobile/pages/article_page_mobile.dart';
 import 'widgets/mobile/pages/change_password_page_mobile.dart';
 import 'widgets/mobile/pages/create_article_page_mobile.dart';
@@ -23,11 +23,13 @@ import 'widgets/mobile/pages/start_page_mobile.dart';
 import 'widgets/mobile/pages/update_article_page_mobile.dart';
 import 'widgets/web/pages/article_page_web.dart';
 import 'widgets/web/pages/calendar_page_web.dart';
+import 'widgets/web/pages/change_password_page_web.dart';
 import 'widgets/web/pages/create_article_page_web.dart';
 import 'widgets/web/pages/create_event_page_web.dart';
 import 'widgets/web/pages/home_page_web.dart';
 import 'widgets/web/pages/profile_page_web.dart';
 import 'widgets/web/pages/regis_page_web.dart';
+import 'widgets/web/pages/search_page_web.dart';
 import 'widgets/web/pages/start_page_web.dart';
 
 Future<void> main() async {
@@ -45,7 +47,7 @@ class AppWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    user_services.autoLogin();
+    autoLogin();
     return MaterialApp.router(
       title: 'JatimTour',
       routerConfig: Modular.routerConfig,
@@ -88,13 +90,41 @@ class AppModule extends Module {
         transition: TransitionType.fadeIn,
       );
       r.child(
+        searchRoute,
+        child: (context) => const SearchPageWeb(),
+        transition: TransitionType.fadeIn,
+      );
+      r.child(
         calendarRoute,
-        child: (context) => CalendarPageWeb(),
+        child: (context) => const CalendarPageWeb(),
+        transition: TransitionType.fadeIn,
+      );
+      r.child(
+        eventRoute,
+        child: (context) => EventPageMobile(
+          eventId: r.args.queryParams['eventId']!,
+        ),
         transition: TransitionType.fadeIn,
       );
       r.child(
         '$eventListRoute/:month',
-        child: (context) => EventListPageMobile(month: r.args.params['month']),
+        child: (context) => EventListPageMobile(
+          month: r.args.params['month'],
+        ),
+        transition: TransitionType.fadeIn,
+      );
+      r.child(
+        eventListRoute,
+        child: (context) => EventListPageWithDateMobile(
+          date: r.args.queryParams['date']!,
+        ),
+        transition: TransitionType.fadeIn,
+      );
+      r.child(
+        eventListRouteWithLocation,
+        child: (context) => EventListPageWithLocationMobile(
+          location: r.args.queryParams['location']!,
+        ),
         transition: TransitionType.fadeIn,
       );
       r.child(
@@ -107,6 +137,11 @@ class AppModule extends Module {
         module: ProfilePageWebModule(),
         transition: TransitionType.fadeIn,
         guards: [ProfileGuard()],
+      );
+      r.child(
+        changePasswordRoute,
+        child: (context) => const ChangePasswordPageWeb(),
+        transition: TransitionType.fadeIn,
       );
     } else {
       r.child(
@@ -150,17 +185,18 @@ class AppModule extends Module {
         ),
         transition: TransitionType.fadeIn,
       );
-      r.child(
-        eventListRoute,
-        child: (context) => EventListPageWithDateMobile(
-          date: r.args.queryParams['date']!,
-        ),
-        transition: TransitionType.fadeIn,
-      );
+
       r.child(
         '$eventListRoute/:month',
         child: (context) => EventListPageMobile(
           month: r.args.params['month'],
+        ),
+        transition: TransitionType.fadeIn,
+      );
+      r.child(
+        eventListRoute,
+        child: (context) => EventListPageWithDateMobile(
+          date: r.args.queryParams['date']!,
         ),
         transition: TransitionType.fadeIn,
       );

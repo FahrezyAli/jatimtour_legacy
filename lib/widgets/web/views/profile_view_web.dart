@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../constants.dart';
-import '../../../services/user_services.dart' as user_services;
+import '../../../services/user_services.dart';
 import '../../universal/buttons/circle_button.dart';
 
 class ProfileViewWeb extends StatefulWidget {
@@ -22,7 +23,7 @@ class _ProfileViewWebState extends State<ProfileViewWeb> {
   final _phoneNumberController = TextEditingController();
   String? _selectedCity;
 
-  final _user = user_services.currentUser!;
+  final _user = currentUser!;
   bool _editable = false;
 
   Future<void> _pickImage(ImageSource source) async {
@@ -58,7 +59,7 @@ class _ProfileViewWebState extends State<ProfileViewWeb> {
   }
 
   String _getRole() {
-    switch (user_services.currentUser!.role) {
+    switch (currentUser!.role) {
       case 0:
         return "User";
       case 1:
@@ -70,10 +71,46 @@ class _ProfileViewWebState extends State<ProfileViewWeb> {
     }
   }
 
+  Future<void> _update() async {
+    final usedUsername = await getUsedUsername();
+    usedUsername.remove(currentUser!.username);
+    if (_usernameController.text == "" ||
+        _fullNameController.text == "" ||
+        _phoneNumberController.text == "" ||
+        _selectedCity == "") {
+      _showErrorSnackBar("Please fill all the fields");
+    } else if (usedUsername.contains(_usernameController.text)) {
+      _showErrorSnackBar("Username already used");
+    } else {
+      await updateUser(
+        currentUser!.id,
+        username: _usernameController.text,
+        fullName: _fullNameController.text,
+        phoneNumber: _phoneNumberController.text,
+        city: _selectedCity!,
+        profilePicture: await _profilePicture?.readAsBytes(),
+      );
+    }
+  }
+
+  void _showErrorSnackBar(String error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          error,
+          style: const TextStyle(
+            fontFamily: "Inter",
+            fontSize: 12.0,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-
     _usernameController.text = _user.username;
     _fullNameController.text = _user.fullName;
     _phoneNumberController.text = _user.phoneNumber;
@@ -148,6 +185,9 @@ class _ProfileViewWebState extends State<ProfileViewWeb> {
                         onTap: () {
                           setState(
                             () {
+                              if (_editable) {
+                                _update();
+                              }
                               _editable = !_editable;
                             },
                           );
@@ -276,7 +316,7 @@ class _ProfileViewWebState extends State<ProfileViewWeb> {
                             ImageSource.gallery,
                           );
                           if (_profilePicture != null) {
-                            await user_services.updateProfilePicture(
+                            await updateProfilePicture(
                               _user.id,
                               profilePicture:
                                   await _profilePicture!.readAsBytes(),
@@ -285,6 +325,26 @@ class _ProfileViewWebState extends State<ProfileViewWeb> {
                           }
                         },
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: CircleButton(
+                          text: const Text(
+                            "Ubah Password",
+                            style: TextStyle(
+                              fontFamily: "Inter",
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          color: kPinkColor,
+                          height: 25.0,
+                          width: 115.0,
+                          onTap: () {
+                            Modular.to.pushNamed(changePasswordRoute);
+                          },
+                        ),
+                      )
                     ],
                   ),
                 ),

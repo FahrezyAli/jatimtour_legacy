@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../services/image_services.dart';
+
 class WelcomeView extends StatelessWidget {
   const WelcomeView({super.key});
 
@@ -11,8 +13,8 @@ class WelcomeView extends StatelessWidget {
           height: 150.0,
           width: 150.0,
           child: Center(
-            child: Image.asset(
-              'assets/images/logo.png',
+            child: Image(
+              image: getLocalImage('assets/images/logo.png'),
               fit: BoxFit.cover,
             ),
           ),

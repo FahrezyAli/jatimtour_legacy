@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
+import '../../../services/image_services.dart';
 import '../../universal/buttons/sign_button.dart';
 import '../../universal/carousel/welcome_text_carousel.dart';
 import '../../universal/views/login_view.dart';
@@ -32,8 +33,8 @@ class _StartPageWebState extends State<StartPageWeb> {
       backgroundColor: kBackgroundColor,
       body: Column(
         children: [
-          Image.asset(
-            'assets/images/header.png',
+          Image(
+            image: getLocalImage('assets/images/header.png'),
             height: 40.0,
             width: MediaQuery.sizeOf(context).width,
             repeat: ImageRepeat.repeatX,

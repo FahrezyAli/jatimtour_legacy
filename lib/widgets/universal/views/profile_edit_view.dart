@@ -7,7 +7,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../constants.dart';
-import '../../../services/user_services.dart' as user_services;
+import '../../../services/user_services.dart';
 import '../buttons/picture_select_button.dart';
 import '../buttons/circle_button.dart';
 
@@ -25,7 +25,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   final _phoneNumberController = TextEditingController();
   String? _selectedCity;
 
-  final _user = user_services.currentUser!;
+  final _user = currentUser!;
 
   Future<void> _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
@@ -66,8 +66,8 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   }
 
   Future<void> _update() async {
-    final usedUsername = await user_services.getUsedUsername();
-    usedUsername.remove(user_services.currentUser!.username);
+    final usedUsername = await getUsedUsername();
+    usedUsername.remove(currentUser!.username);
     if (_usernameController.text == "" ||
         _fullNameController.text == "" ||
         _phoneNumberController.text == "" ||
@@ -76,8 +76,8 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     } else if (usedUsername.contains(_usernameController.text)) {
       _showErrorSnackBar("Username already used");
     } else {
-      await user_services.updateUser(
-        user_services.currentUser!.id,
+      await updateUser(
+        currentUser!.id,
         username: _usernameController.text,
         fullName: _fullNameController.text,
         phoneNumber: _phoneNumberController.text,
@@ -152,7 +152,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                             ? NetworkImage(_profilePicture!.path)
                             : FileImage(File(_profilePicture!.path))
                                 as ImageProvider
-                        : user_services.currentUser!.getProfilePicture(),
+                        : currentUser!.getProfilePicture(),
                   ),
                   Positioned.fill(
                     bottom: 5.0,

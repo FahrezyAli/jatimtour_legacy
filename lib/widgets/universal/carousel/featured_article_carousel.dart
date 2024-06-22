@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../../services/article_services.dart' as article_services;
+import '../../../services/article_services.dart';
 import '../buttons/circle_button.dart';
 
 class FeaturedArticleCarousel extends StatefulWidget {
@@ -20,7 +20,7 @@ class _FeaturedArticleCarouselState extends State<FeaturedArticleCarousel> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: article_services.getFeaturedArticle(),
+      future: getFeaturedArticle(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(

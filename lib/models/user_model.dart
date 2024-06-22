@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../services/image_services.dart';
+
 class UserModel {
   final String id;
   String email;
@@ -82,7 +84,7 @@ class UserModel {
     if (photoUrl != null) {
       return NetworkImage(photoUrl!);
     } else {
-      return const AssetImage('assets/images/placeholder.png');
+      return getLocalImage('assets/images/placeholder.png');
     }
   }
 }

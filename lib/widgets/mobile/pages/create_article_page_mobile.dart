@@ -10,7 +10,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:textfield_tags/textfield_tags.dart';
 
 import '../../../constants.dart';
-import '../../../services/article_services.dart' as article_services;
+import '../../../services/article_services.dart';
 import '../../universal/buttons/circle_button.dart';
 import '../../universal/fields/tags_field.dart';
 import 'mobile_scaffold.dart';
@@ -113,7 +113,7 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
     } else if (_datePublished.isBefore(DateTime.now())) {
       _showErrorSnackBar("Tanggal Publikasi tidak valid");
     } else {
-      article_services.createArticle(
+      createArticle(
         title: _titleController.text,
         coverImage: await _coverImage!.readAsBytes(),
         datePublished: _datePublished,
@@ -316,16 +316,14 @@ class _CreateArticlePageMobileState extends State<CreateArticlePageMobile> {
                 ),
               ),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-                child: QuillEditor.basic(
-                  configurations: QuillEditorConfigurations(
-                    scrollable: false,
-                    controller: _quillController,
-                    sharedConfigurations: const QuillSharedConfigurations(
-                      locale: Locale('id'),
-                    ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+              child: QuillEditor.basic(
+                configurations: QuillEditorConfigurations(
+                  scrollable: false,
+                  controller: _quillController,
+                  sharedConfigurations: const QuillSharedConfigurations(
+                    locale: Locale('id'),
                   ),
                 ),
               ),

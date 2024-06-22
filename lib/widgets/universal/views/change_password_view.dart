@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../constants.dart';
-import '../../../services/user_services.dart' as user_services;
+import '../../../services/user_services.dart';
 import '../buttons/circle_button.dart';
 
 class ChangePasswordView extends StatefulWidget {
@@ -31,17 +31,18 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         _retypeNewPasswordController.text) {
       _showErrorSnackBar("New password doesn't match");
     } else {
-      await user_services
-          .changePassword(
+      await changePassword(
         oldPassword: _oldPasswordController.text,
         newPassword: _newPasswordController.text,
+      )
+          .then(
+        (value) => Modular.to.pop(),
       )
           .catchError(
         (e) {
           _showErrorSnackBar(e.toString());
         },
       );
-      Modular.to.pop();
     }
   }
 

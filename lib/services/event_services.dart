@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../models/event_model.dart';
-import 'user_services.dart' as user_services;
+import 'user_services.dart';
 
 final _storageInstance = FirebaseStorage.instance.ref().child('events');
 final _firestoreInstance =
@@ -24,7 +24,7 @@ Future<void> createEvent({
   final eventRef = _firestoreInstance.doc();
   final newEvent = EventModel(
     id: eventRef.id,
-    eventOrganizerId: user_services.currentUser!.id,
+    eventOrganizerId: currentUser!.id,
     eventName: eventName,
     startDate: startDate,
     city: city,

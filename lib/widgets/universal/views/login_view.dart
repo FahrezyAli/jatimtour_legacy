@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../constants.dart';
-import '../../../services/user_services.dart' as user_services;
+import '../../../services/user_services.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -24,12 +24,10 @@ class _LoginViewState extends State<LoginView> {
     if (!EmailValidator.validate(_emailController.text, true)) {
       _showErrorSnackBar("Email is not valid");
     } else {
-      user_services
-          .logIn(
+      logIn(
         email: _emailController.text,
         password: _passwordController.text,
-      )
-          .then(
+      ).then(
         (value) {
           Modular.to.navigate(kIsWeb ? rootRoute : mHomeRoute);
         },

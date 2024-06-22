@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
 import '../../../models/article_model.dart';
-import '../../../services/article_services.dart' as article_services;
+import '../../../services/article_services.dart';
 import '../cards/article_card_mobile.dart';
 
 class SearchViewMobile extends StatefulWidget {
@@ -76,7 +76,7 @@ class _SearchViewMobileState extends State<SearchViewMobile> {
           ),
           Expanded(
             child: StreamBuilder(
-              stream: article_services.getArticlesStream(),
+              stream: getArticlesStream(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());

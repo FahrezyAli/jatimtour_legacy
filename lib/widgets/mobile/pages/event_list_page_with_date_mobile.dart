@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../../../services/event_services.dart' as event_services;
+import '../../../services/event_services.dart';
 import '../cards/event_card_mobile.dart';
 import 'mobile_scaffold.dart';
 
@@ -44,7 +44,7 @@ class EventListPageWithDateMobile extends StatelessWidget {
             ),
           ),
           FutureBuilder(
-            future: event_services.getEventsByDate(
+            future: getEventsByDate(
               date: dateFormatEn.parse(date),
             ),
             builder: (context, snapshot) {

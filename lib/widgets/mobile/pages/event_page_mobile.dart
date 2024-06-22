@@ -7,7 +7,7 @@ import 'package:rowbuilder/rowbuilder.dart';
 
 import '../../../constants.dart';
 import '../../../models/event_model.dart';
-import '../../../services/event_services.dart' as event_services;
+import '../../../services/event_services.dart';
 import 'mobile_scaffold.dart';
 
 class EventPageMobile extends StatelessWidget {
@@ -20,7 +20,7 @@ class EventPageMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return MobileScaffold(
       body: FutureBuilder(
-        future: event_services.getEvent(eventId),
+        future: getEvent(eventId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return _buildPage(context, snapshot.data!.data()!);

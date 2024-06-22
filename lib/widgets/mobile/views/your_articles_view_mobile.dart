@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../constants.dart';
-import '../../../services/article_services.dart' as article_services;
-import '../../../services/user_services.dart' as user_services;
+import '../../../services/article_services.dart';
+import '../../../services/user_services.dart';
 import '../../universal/buttons/circle_button.dart';
 import '../cards/article_card_mobile.dart';
 
@@ -70,8 +70,8 @@ class YourArticlesViewMobile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
       child: StreamBuilder(
-        stream: article_services.getDraftsArticleStreamFromAuthorId(
-          user_services.currentUser!.id,
+        stream: getDraftsArticleStreamFromAuthorId(
+          currentUser!.id,
         ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -106,8 +106,8 @@ class YourArticlesViewMobile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
       child: StreamBuilder(
-        stream: article_services.getPublishedArticlesStreamFromAuthorId(
-          user_services.currentUser!.id,
+        stream: getPublishedArticlesStreamFromAuthorId(
+          currentUser!.id,
         ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

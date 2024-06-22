@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
+import '../../../services/image_services.dart';
 import '../../universal/buttons/sign_button.dart';
 import '../../universal/carousel/welcome_text_carousel.dart';
 import '../../universal/views/login_view.dart';
@@ -28,8 +29,8 @@ class _StartPageMobileState extends State<StartPageMobile> {
       ),
       body: ListView(
         children: [
-          Image.asset(
-            'assets/images/header.png',
+          Image(
+            image: getLocalImage('assets/images/header.png'),
             height: 30.0,
             repeat: ImageRepeat.repeatX,
           ),
@@ -45,6 +46,7 @@ class _StartPageMobileState extends State<StartPageMobile> {
           Container(
             padding: const EdgeInsets.only(top: 35.0),
             child: SignButton(
+              state: _state,
               onStateChange: (int state) => setState(
                 () {
                   _state = state;

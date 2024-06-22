@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../constants.dart';
+import '../../../services/image_services.dart';
 
 class RecommendationCarousel extends StatelessWidget {
   const RecommendationCarousel({super.key});
@@ -55,11 +56,12 @@ class RecommendationCard extends StatelessWidget {
             InkWell(
               child: Ink.image(
                 fit: BoxFit.cover,
-                image: AssetImage("assets/images/${image[index]}.png"),
+                image: getLocalImage("assets/images/${image[index]}.png"),
               ),
               onTap: () {
                 Modular.to.pushNamed(
-                    "$eventListRouteWithLocation?location=${city[index]}");
+                  "$eventListRouteWithLocation?location=${city[index]}",
+                );
               },
             ),
           ],

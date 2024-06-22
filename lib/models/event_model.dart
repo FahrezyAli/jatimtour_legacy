@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../services/user_services.dart' as user_services;
+import '../services/user_services.dart';
 
 class EventModel {
   final String id;
@@ -56,7 +56,7 @@ class EventModel {
   }
 
   Future<String> getAuthorUsernameFromAuthorId() {
-    return user_services.getUser(eventOrganizerId).then((user) {
+    return getUser(eventOrganizerId).then((user) {
       return user.data()!.username;
     });
   }

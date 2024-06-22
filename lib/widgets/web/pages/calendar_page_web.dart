@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:intl/intl.dart' as intl;
 
 import '../../../constants.dart';
+import '../../../services/image_services.dart';
 import '../../universal/buttons/circle_button.dart';
-import '../../universal/cards/calendar_card.dart';
+import '../cards/calendar_card_web.dart';
 import 'web_scaffold.dart';
 
 class CalendarPageWeb extends StatelessWidget {
-  final months = [
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
-  ];
+  const CalendarPageWeb({super.key});
 
-  CalendarPageWeb({super.key});
+  List<String> _getMonth() {
+    final currentMonths = DateTime.now().month;
+    final remainingMonths = months.keys.toList().sublist(currentMonths - 1);
+    return remainingMonths.map((month) => months[month]!).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,69 +23,76 @@ class CalendarPageWeb extends StatelessWidget {
       body: ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 30.0),
-            child: Stack(
+            padding: const EdgeInsets.only(left: 20.0, top: 20.0),
+            child: Row(
               children: [
                 const Text(
-                  "Libatkan Dirimu\nDalam Kemeriahan\nBulan Ini!",
+                  "Libatkan Dirimu Dalam Kemeriahan Bulan Ini!",
                   style: TextStyle(
                     fontFamily: "Inter",
-                    fontSize: 60,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Positioned(
-                  bottom: 20.0,
-                  left: 275.0,
-                  child: SizedBox(
-                    height: 40.0,
-                    width: 40.0,
-                    child: Image.asset('assets/images/eol_cal.png'),
-                  ),
+                SizedBox(
+                  height: 40.0,
+                  width: 40.0,
+                  child:
+                      Image(image: getLocalImage('assets/images/eol_cal.png')),
                 ),
-                Positioned(
-                  bottom: 20.0,
-                  left: 500.0,
-                  child: CircleButton(
-                    color: kPurpleColor,
-                    text: const Text(
-                      "CeK Tanggal",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: "Inter",
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w500,
-                      ),
+                CircleButton(
+                  color: kPurpleColor,
+                  text: const Text(
+                    "CeK Tanggal",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: "Inter",
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w500,
                     ),
-                    onTap: () {},
                   ),
+                  onTap: () async {
+                    final date = await showDatePicker(
+                      context: context,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2101),
+                    );
+                    final dateFormat = intl.DateFormat('yyyy-MM-dd');
+                    if (date != null) {
+                      Modular.to.pushNamed(
+                        '$eventListRoute?date=${dateFormat.format(date)}',
+                      );
+                    }
+                  },
                 ),
               ],
             ),
           ),
-          SizedBox(
-            width: MediaQuery.sizeOf(context).width,
-            child: Positioned.fill(
-              child: Image.asset(
-                'assets/images/border1.png',
-                repeat: ImageRepeat.repeatX,
-              ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Image(
+              image: getLocalImage('assets/images/border1.png'),
+              height: 20.0,
+              repeat: ImageRepeat.repeatX,
             ),
           ),
           ListView.builder(
             shrinkWrap: true,
             physics: const ScrollPhysics(),
-            itemCount: months.length,
+            itemCount: _getMonth().length,
             itemBuilder: (context, index) {
-              return CalendarCard(
-                month: months[index],
-                image: Image.asset(
-                  'assets/images/${months[index].toLowerCase()}.png',
-                  fit: BoxFit.cover,
+              return CalendarCardWeb(
+                month: _getMonth()[index],
+                image: Image(
+                  image: getLocalImage(
+                    'assets/images/${_getMonth()[index].toLowerCase()}.png',
+                  ),
                   errorBuilder: (context, error, stackTrace) => Stack(
                     children: [
-                      Image.asset(
-                        'assets/images/placeholder_months.png',
+                      Image(
+                        image: getLocalImage(
+                          'assets/images/placeholder_months.png',
+                        ),
                         color: _placeholderColor(index),
                       ),
                       const Positioned.fill(
@@ -116,15 +120,15 @@ class CalendarPageWeb extends StatelessWidget {
       ),
     );
   }
-}
 
-Color _placeholderColor(index) {
-  final colors = [
-    kPurpleColor,
-    kPinkColor,
-    kYellowColor,
-    const Color(0xFF00BBF9),
-    const Color(0xFF00F5D4),
-  ];
-  return colors[index % 5];
+  Color _placeholderColor(index) {
+    final colors = [
+      kPurpleColor,
+      kPinkColor,
+      kYellowColor,
+      const Color(0xFF00BBF9),
+      const Color(0xFF00F5D4),
+    ];
+    return colors[index % 5];
+  }
 }

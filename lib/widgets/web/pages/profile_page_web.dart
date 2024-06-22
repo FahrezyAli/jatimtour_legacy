@@ -3,7 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../constants.dart';
 import '../../../route_guard/role_guard.dart';
-import '../../../services/user_services.dart' as user_services;
+import '../../../services/user_services.dart';
 import '../views/article_manager_view.dart';
 import '../views/event_manager_view.dart';
 import '../views/profile_view_web.dart';
@@ -55,8 +55,9 @@ class ProfilePageWebModule extends Module {
         ),
         ChildRoute(
           eventManagerRoute,
-          child: (context) =>
-              EventManagerView(role: user_services.currentUser!.role),
+          child: (context) => EventManagerView(
+            user: currentUser!,
+          ),
           transition: TransitionType.fadeIn,
           guards: [RoleGuard(role: 1)],
         ),
@@ -80,7 +81,7 @@ class _ProfilePageWebState extends State<ProfilePageWeb> {
   }
 
   String _getRole() {
-    switch (user_services.currentUser!.role) {
+    switch (currentUser!.role) {
       case 0:
         return "User";
       case 1:
@@ -112,15 +113,15 @@ class _ProfilePageWebState extends State<ProfilePageWeb> {
               ),
               child: CircleAvatar(
                 radius: 25.0,
-                backgroundImage: user_services.currentUser!.getProfilePicture(),
+                backgroundImage: currentUser!.getProfilePicture(),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0),
-              child: user_services.currentUser!.role != 0
+              child: currentUser!.role != 0
                   ? RichText(
                       text: TextSpan(
-                        text: "${user_services.currentUser!.username}\n",
+                        text: "${currentUser!.username}\n",
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 20.0,
@@ -139,7 +140,7 @@ class _ProfilePageWebState extends State<ProfilePageWeb> {
                       ),
                     )
                   : Text(
-                      user_services.currentUser!.username,
+                      currentUser!.username,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20.0,
@@ -156,7 +157,6 @@ class _ProfilePageWebState extends State<ProfilePageWeb> {
   @override
   Widget build(BuildContext context) {
     return WebScaffold(
-      horizontalPadding: 0.0,
       body: Row(
         children: [
           Material(
@@ -218,7 +218,7 @@ class _ProfilePageWebState extends State<ProfilePageWeb> {
                         color: Colors.white,
                       ),
                       title: const Text(
-                        "Your Events",
+                        "Your Calendar",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 15.0,
@@ -233,7 +233,7 @@ class _ProfilePageWebState extends State<ProfilePageWeb> {
                         });
                       },
                     ),
-                    user_services.currentUser!.role == 2
+                    currentUser!.role == 2
                         ? ListTile(
                             leading: const Icon(
                               Icons.manage_accounts,
@@ -258,7 +258,7 @@ class _ProfilePageWebState extends State<ProfilePageWeb> {
                             },
                           )
                         : const SizedBox.shrink(),
-                    user_services.currentUser!.role == 2
+                    currentUser!.role == 2
                         ? ListTile(
                             leading: const Icon(
                               Icons.description,
@@ -283,7 +283,7 @@ class _ProfilePageWebState extends State<ProfilePageWeb> {
                             },
                           )
                         : const SizedBox.shrink(),
-                    user_services.currentUser!.role >= 1
+                    currentUser!.role >= 1
                         ? ListTile(
                             leading: const Icon(
                               Icons.event,
@@ -323,7 +323,7 @@ class _ProfilePageWebState extends State<ProfilePageWeb> {
                       ),
                       tileColor: kPinkColor,
                       onTap: () async {
-                        await user_services.signOut();
+                        await signOut();
                         Modular.to.navigate(rootRoute);
                       },
                     ),

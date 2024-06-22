@@ -7,7 +7,7 @@ import 'package:rowbuilder/rowbuilder.dart';
 
 import '../../../constants.dart';
 import '../../../models/article_model.dart';
-import '../../../services/article_services.dart' as article_services;
+import '../../../services/article_services.dart';
 import 'mobile_scaffold.dart';
 
 class ArticlePageMobile extends StatelessWidget {
@@ -20,7 +20,7 @@ class ArticlePageMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return MobileScaffold(
       body: FutureBuilder(
-        future: article_services.getArticle(articleId),
+        future: getArticle(articleId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return _buildPage(context, snapshot.data!.data()!);

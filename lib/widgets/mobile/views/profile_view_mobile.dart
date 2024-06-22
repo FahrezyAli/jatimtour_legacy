@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../constants.dart';
-import '../../../services/user_services.dart' as user_services;
+import '../../../services/user_services.dart';
 import '../buttons/box_button_mobile.dart';
 
 class ProfileViewMobile extends StatefulWidget {
@@ -40,8 +40,7 @@ class _ProfileViewMobileState extends State<ProfileViewMobile> {
                       padding: const EdgeInsets.only(top: 30.0),
                       child: CircleAvatar(
                         radius: 75.0,
-                        backgroundImage:
-                            user_services.currentUser!.getProfilePicture(),
+                        backgroundImage: currentUser!.getProfilePicture(),
                       ),
                     ),
                     Padding(
@@ -49,14 +48,14 @@ class _ProfileViewMobileState extends State<ProfileViewMobile> {
                       child: Column(
                         children: [
                           Text(
-                            user_services.currentUser!.username,
+                            currentUser!.username,
                             style: const TextStyle(
                               fontFamily: "Inter",
                               fontSize: 20.0,
                             ),
                           ),
                           Text(
-                            user_services.currentUser!.email,
+                            currentUser!.email,
                             style: const TextStyle(
                               fontFamily: "Inter",
                               fontSize: 15.0,
@@ -97,7 +96,7 @@ class _ProfileViewMobileState extends State<ProfileViewMobile> {
                             ),
                             color: kPurpleColor,
                             onTap: () async {
-                              await user_services.signOut();
+                              await signOut();
                               Modular.to.navigate('/');
                             },
                           ),

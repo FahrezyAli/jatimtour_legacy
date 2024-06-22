@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../services/event_services.dart' as event_services;
+import '../../../services/event_services.dart';
 import '../cards/event_card_mobile.dart';
 import 'mobile_scaffold.dart';
 
@@ -40,7 +40,7 @@ class EventListPageWithLocationMobile extends StatelessWidget {
             ),
           ),
           FutureBuilder(
-            future: event_services.getEventsByLocation(location: location),
+            future: getEventsByLocation(location: location),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rowbuilder/rowbuilder.dart';
 
 import '../../../constants.dart';
-import '../../../services/article_services.dart' as article_service;
+import '../../../services/article_services.dart';
+import '../../../services/image_services.dart';
 import '../../universal/carousel/featured_article_carousel.dart';
 import '../../universal/carousel/recommendation_carousel.dart';
 import '../../universal/views/calendar_home_view.dart';
@@ -16,14 +17,13 @@ class HomePageWeb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WebScaffold(
-      horizontalPadding: 0.0,
       backgroundColor: const Color(0xFFE1E1E1),
       body: ListView(
         padding: EdgeInsets.zero,
         children: [
           const FeaturedArticleCarousel(),
-          Image.asset(
-            'assets/images/border1.png',
+          Image(
+            image: getLocalImage('assets/images/border1.png'),
             height: 40.0,
             repeat: ImageRepeat.repeatX,
           ),
@@ -42,8 +42,8 @@ class HomePageWeb extends StatelessWidget {
             padding: EdgeInsets.only(top: 20, bottom: 100.0),
             child: RecommendationCarousel(),
           ),
-          Image.asset(
-            'assets/images/border2.png',
+          Image(
+            image: getLocalImage('assets/images/border2.png'),
             height: 40.0,
             repeat: ImageRepeat.repeatX,
           ),
@@ -99,8 +99,8 @@ class HomePageWeb extends StatelessWidget {
               ],
             ),
           ),
-          Image.asset(
-            'assets/images/border3.png',
+          Image(
+            image: getLocalImage('assets/images/border3.png'),
             height: 40.0,
             repeat: ImageRepeat.repeatX,
           ),
@@ -129,7 +129,7 @@ class HomePageWeb extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 20.0, bottom: 50.0),
             child: FutureBuilder(
-              future: article_service.getSortedArticlesWithLimit(
+              future: getSortedArticlesWithLimit(
                 field: 'datePublished',
                 isDescending: false,
                 limit: 3,
@@ -175,8 +175,8 @@ class HomePageWeb extends StatelessWidget {
               ),
             ),
           ),
-          Image.asset(
-            'assets/images/border4.png',
+          Image(
+            image: getLocalImage('assets/images/border4.png'),
             height: 40.0,
             repeat: ImageRepeat.repeatX,
           ),

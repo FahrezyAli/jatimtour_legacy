@@ -10,7 +10,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:textfield_tags/textfield_tags.dart';
 
 import '../../../constants.dart';
-import '../../../services/article_services.dart' as article_services;
+import '../../../services/article_services.dart';
 import '../../universal/buttons/circle_button.dart';
 import '../../universal/fields/tags_field.dart';
 import 'web_scaffold.dart';
@@ -117,7 +117,7 @@ class _CreateArticlePageWebState extends State<CreateArticlePageWeb> {
     } else if (_datePublished.isBefore(DateTime.now())) {
       _showErrorSnackBar("Tanggal Publikasi tidak valid");
     } else {
-      await article_services.createArticle(
+      await createArticle(
         title: _titleController.text,
         coverImage: await _coverImage!.readAsBytes(),
         datePublished: _datePublished,
@@ -155,192 +155,208 @@ class _CreateArticlePageWebState extends State<CreateArticlePageWeb> {
   @override
   Widget build(BuildContext context) {
     return WebScaffold(
+      showFlexible: false,
       actions: [
         IconButton(
           onPressed: () => _saveArticle(),
           icon: const Icon(Icons.save),
         )
       ],
-      body: ListView(
+      body: Row(
         children: [
-          _coverImage == null
-              ? Container(
-                  height: 270,
-                  width: 540,
-                  color: const Color(0xFFD9D9D9),
-                  child: Center(
-                    child: CircleButton(
-                      text: const Text("Tambah Gambar"),
-                      color: const Color(0xFFD9D9D9),
-                      width: 200.0,
-                      elevation: 0.0,
-                      border: Border.all(color: Colors.black, width: 1.0),
-                      onTap: () async {
-                        await _pickImage(ImageSource.gallery);
-                      },
-                    ),
-                  ),
-                )
-              : Material(
-                  child: InkWell(
-                    child: Ink.image(
-                      height: 270,
-                      width: 540,
-                      image: NetworkImage(_coverImage!.path),
-                      fit: BoxFit.cover,
-                    ),
-                    onTap: () async {
-                      await _pickImage(ImageSource.gallery);
-                    },
-                  ),
-                ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 20),
-            child: TextFormField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                hintText: "Judul Artikel",
-                hintStyle: TextStyle(
-                  fontFamily: "Inter",
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              textInputAction: TextInputAction.next,
-              style: const TextStyle(
-                fontFamily: "Inter",
-                fontSize: 20.0,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0, top: 5.0, right: 10.0),
-            child: Row(
-              children: [
-                const Text(
-                  "Tanggal Publikasi: ",
-                  style: TextStyle(
-                    fontFamily: "Inter",
-                    fontSize: 16.0,
-                  ),
-                ),
-                Expanded(
-                  child: TextFormField(
-                    controller: _datePublishedController,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      suffixIcon: IconButton(
-                        onPressed: () => _selectDate(),
-                        icon: const Icon(Icons.calendar_today),
+          SizedBox(
+            width: MediaQuery.sizeOf(context).width / 2,
+            child: Form(
+              child: Column(
+                children: [
+                  _coverImage == null
+                      ? Container(
+                          height: 270,
+                          width: 540,
+                          color: const Color(0xFFD9D9D9),
+                          child: Center(
+                            child: CircleButton(
+                              text: const Text("Tambah Gambar"),
+                              color: const Color(0xFFD9D9D9),
+                              width: 200.0,
+                              elevation: 0.0,
+                              border:
+                                  Border.all(color: Colors.black, width: 1.0),
+                              onTap: () async {
+                                await _pickImage(ImageSource.gallery);
+                              },
+                            ),
+                          ),
+                        )
+                      : Material(
+                          child: InkWell(
+                            child: Ink.image(
+                              height: 270,
+                              width: 540,
+                              image: NetworkImage(_coverImage!.path),
+                              fit: BoxFit.cover,
+                            ),
+                            onTap: () async {
+                              await _pickImage(ImageSource.gallery);
+                            },
+                          ),
+                        ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10.0, right: 10.0, top: 20),
+                    child: TextFormField(
+                      controller: _titleController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Judul Artikel",
+                        hintStyle: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      textInputAction: TextInputAction.next,
+                      style: const TextStyle(
+                        fontFamily: "Inter",
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    textInputAction: TextInputAction.next,
-                    style: const TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 16.0,
-                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0, top: 5.0, right: 10.0),
-            child: Row(
-              children: [
-                const Text(
-                  "Kota: ",
-                  style: TextStyle(
-                    fontFamily: "Inter",
-                    fontSize: 16.0,
-                  ),
-                ),
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    value: _selectedCity,
-                    isDense: false,
-                    iconSize: 0.0,
-                    decoration: const InputDecoration.collapsed(hintText: ''),
-                    onChanged: (String? value) {
-                      setState(
-                        () {
-                          _selectedCity = value!;
-                        },
-                      );
-                    },
-                    items: cityList.map<DropdownMenuItem<String>>(
-                      (String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 10.0, top: 5.0, right: 10.0),
+                    child: Row(
+                      children: [
+                        const Text(
+                          "Tanggal Publikasi: ",
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _datePublishedController,
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              suffixIcon: IconButton(
+                                onPressed: () => _selectDate(),
+                                icon: const Icon(Icons.calendar_today),
+                              ),
+                            ),
+                            textInputAction: TextInputAction.next,
                             style: const TextStyle(
                               fontFamily: "Inter",
                               fontSize: 16.0,
                             ),
                           ),
-                        );
-                      },
-                    ).toList(),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 10.0, top: 5.0, right: 10.0),
+                    child: Row(
+                      children: [
+                        const Text(
+                          "Kota: ",
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            value: _selectedCity,
+                            isDense: false,
+                            iconSize: 0.0,
+                            decoration:
+                                const InputDecoration.collapsed(hintText: ''),
+                            onChanged: (String? value) {
+                              setState(
+                                () {
+                                  _selectedCity = value!;
+                                },
+                              );
+                            },
+                            items: cityList.map<DropdownMenuItem<String>>(
+                              (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: const TextStyle(
+                                      fontFamily: "Inter",
+                                      fontSize: 16.0,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 10.0, top: 5.0, right: 10.0),
+                    child: Row(
+                      children: [
+                        const Text(
+                          "Tags: ",
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        Expanded(
+                          child: TagsField(
+                            tagsController: _tagsController,
+                            distanceToField: _distanceToField,
+                            validator: (String tags) {
+                              if (_tagsController.getTags!.contains(tags)) {
+                                _showErrorSnackBar("Tag sudah ada");
+                                return "";
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0, top: 5.0, right: 10.0),
-            child: Row(
+          const VerticalDivider(),
+          Expanded(
+            child: Column(
               children: [
-                const Text(
-                  "Tags: ",
-                  style: TextStyle(
-                    fontFamily: "Inter",
-                    fontSize: 16.0,
+                QuillToolbar.simple(
+                  configurations: QuillSimpleToolbarConfigurations(
+                    controller: _quillController,
+                    sharedConfigurations: const QuillSharedConfigurations(
+                      locale: Locale('id'),
+                    ),
                   ),
                 ),
                 Expanded(
-                  child: TagsField(
-                    tagsController: _tagsController,
-                    distanceToField: _distanceToField,
-                    validator: (String tags) {
-                      if (_tagsController.getTags!.contains(tags)) {
-                        _showErrorSnackBar("Tag sudah ada");
-                        return "";
-                      }
-                      return null;
-                    },
+                  child: QuillEditor.basic(
+                    configurations: QuillEditorConfigurations(
+                      scrollable: true,
+                      controller: _quillController,
+                      sharedConfigurations: const QuillSharedConfigurations(
+                        locale: Locale('id'),
+                      ),
+                    ),
                   ),
-                ),
+                )
               ],
-            ),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: QuillToolbar.simple(
-              configurations: QuillSimpleToolbarConfigurations(
-                controller: _quillController,
-                sharedConfigurations: const QuillSharedConfigurations(
-                  locale: Locale('id'),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(10.0),
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.5,
-            ),
-            child: QuillEditor.basic(
-              configurations: QuillEditorConfigurations(
-                scrollable: false,
-                controller: _quillController,
-                sharedConfigurations: const QuillSharedConfigurations(
-                  locale: Locale('id'),
-                ),
-              ),
             ),
           ),
         ],

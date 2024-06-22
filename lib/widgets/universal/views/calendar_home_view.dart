@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../services/image_services.dart';
+
 class CalendarHomeView extends StatelessWidget {
   const CalendarHomeView({super.key});
 
@@ -17,8 +19,8 @@ class CalendarHomeView extends StatelessWidget {
             SizedBox(
               height: size,
               width: size,
-              child: Image.asset(
-                'assets/images/january.png',
+              child: Image(
+                image: getLocalImage('assets/images/january.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -31,8 +33,8 @@ class CalendarHomeView extends StatelessWidget {
               SizedBox(
                 height: size,
                 width: size,
-                child: Image.asset(
-                  'assets/images/february.png',
+                child: Image(
+                  image: getLocalImage('assets/images/february.png'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -46,8 +48,8 @@ class CalendarHomeView extends StatelessWidget {
               SizedBox(
                 height: size,
                 width: size,
-                child: Image.asset(
-                  'assets/images/maret.png',
+                child: Image(
+                  image: getLocalImage('assets/images/maret.png'),
                   fit: BoxFit.cover,
                 ),
               ),

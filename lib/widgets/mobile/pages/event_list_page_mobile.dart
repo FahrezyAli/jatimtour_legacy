@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../services/event_services.dart' as event_services;
+import '../../../services/event_services.dart';
 import '../cards/event_card_mobile.dart';
 import 'mobile_scaffold.dart';
 
@@ -58,7 +58,7 @@ class EventListPageMobile extends StatelessWidget {
             ),
           ),
           FutureBuilder(
-            future: event_services.getEventsByMonths(
+            future: getEventsByMonths(
               monthNumber: _getMonthNumber()!,
             ),
             builder: (context, snapshot) {
