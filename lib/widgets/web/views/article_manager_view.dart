@@ -54,7 +54,6 @@ class _ArticleManagerViewState extends State<ArticleManagerView> {
             child: CircularProgressIndicator(),
           );
         }
-        final articles = snapshot.data!;
         return PaginatedDataTable(
           columnSpacing: 35.0,
           header: Text("Articles", style: _defaultStyle),
@@ -89,7 +88,7 @@ class _ArticleManagerViewState extends State<ArticleManagerView> {
                 onSort: _sort),
             DataColumn(label: Text("Action", style: _defaultStyle)),
           ],
-          source: _DataSource(articles),
+          source: _DataSource(snapshot.data),
         );
       },
     );
@@ -97,7 +96,7 @@ class _ArticleManagerViewState extends State<ArticleManagerView> {
 }
 
 class _DataSource extends DataTableSource {
-  final QuerySnapshot<ArticleModel> _data;
+  final QuerySnapshot<ArticleModel>? _data;
 
   _DataSource(this._data);
 
@@ -112,84 +111,88 @@ class _DataSource extends DataTableSource {
 
   @override
   DataRow? getRow(int index) {
-    final article = _data.docs[index].data();
-    return DataRow.byIndex(
-      index: index,
-      cells: [
-        _sizedDataCell(Text(
-          article.title,
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(Text(
-          article.authorId,
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(Text(
-          article.city,
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(Text(
-          article.tags.join(', '),
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(Text(
-          intl.DateFormat.yMd().format(
-            article.datePublished,
+    if (_data != null) {
+      final article = _data.docs[index].data();
+      return DataRow.byIndex(
+        index: index,
+        cells: [
+          _sizedDataCell(Text(
+            article.title,
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(Text(
+            article.authorId,
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(Text(
+            article.city,
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(Text(
+            article.tags.join(', '),
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(Text(
+            intl.DateFormat.yMd().format(
+              article.datePublished,
+            ),
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(Text(
+            intl.DateFormat.yMd().format(
+              article.dateCreated,
+            ),
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(
+            Switch(
+              value: article.isFeatured,
+              onChanged: (value) {
+                updateFeaturedStatus(
+                  article.id,
+                  isFeatured: value,
+                );
+              },
+            ),
           ),
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(Text(
-          intl.DateFormat.yMd().format(
-            article.dateCreated,
+          _sizedDataCell(
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    Modular.to.pushNamed(
+                      '$updateArticleRoute?articleId=${article.id}',
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    deleteArticle(article.id);
+                  },
+                ),
+              ],
+            ),
           ),
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(
-          Switch(
-            value: article.isFeatured,
-            onChanged: (value) {
-              updateFeaturedStatus(
-                article.id,
-                isFeatured: value,
-              );
-            },
-          ),
-        ),
-        _sizedDataCell(
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {
-                  Modular.to.pushNamed(
-                    '$updateArticleRoute?articleId=${article.id}',
-                  );
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  deleteArticle(article.id);
-                },
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+        ],
+      );
+    } else {
+      return null;
+    }
   }
 
   @override
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _data.size;
+  int get rowCount => _data?.size ?? 0;
 
   @override
   int get selectedRowCount => 0;

@@ -68,7 +68,6 @@ class _EventManagerViewState extends State<EventManagerView> {
             child: CircularProgressIndicator(),
           );
         }
-        final events = snapshot.data!;
         return PaginatedDataTable(
           header: Text("Events", style: _defaultStyle),
           actions: [
@@ -100,7 +99,7 @@ class _EventManagerViewState extends State<EventManagerView> {
                 onSort: _sort),
             DataColumn(label: Text("Action", style: _defaultStyle)),
           ],
-          source: _DataSource(events),
+          source: _DataSource(snapshot.data),
         );
       },
     );
@@ -108,7 +107,7 @@ class _EventManagerViewState extends State<EventManagerView> {
 }
 
 class _DataSource extends DataTableSource {
-  final QuerySnapshot<EventModel> _data;
+  final QuerySnapshot<EventModel>? _data;
 
   _DataSource(this._data);
 
@@ -123,73 +122,77 @@ class _DataSource extends DataTableSource {
 
   @override
   DataRow? getRow(int index) {
-    final event = _data.docs[index].data();
-    return DataRow.byIndex(
-      index: index,
-      cells: [
-        _sizedDataCell(Text(
-          event.eventName,
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(Text(
-          event.eventOrganizerId,
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(Text(
-          event.city,
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(Text(
-          event.tags.join(', '),
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(Text(
-          intl.DateFormat.yMd().format(
-            event.startDate,
+    if (_data != null) {
+      final event = _data.docs[index].data();
+      return DataRow.byIndex(
+        index: index,
+        cells: [
+          _sizedDataCell(Text(
+            event.eventName,
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(Text(
+            event.eventOrganizerId,
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(Text(
+            event.city,
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(Text(
+            event.tags.join(', '),
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(Text(
+            intl.DateFormat.yMd().format(
+              event.startDate,
+            ),
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(Text(
+            intl.DateFormat.yMd().format(
+              event.dateCreated,
+            ),
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    Modular.to.pushNamed(
+                      '$updateEventRoute?eventId=${event.id}',
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    deleteEvent(event.id);
+                  },
+                ),
+              ],
+            ),
           ),
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(Text(
-          intl.DateFormat.yMd().format(
-            event.dateCreated,
-          ),
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {
-                  Modular.to.pushNamed(
-                    '$updateEventRoute?eventId=${event.id}',
-                  );
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  deleteEvent(event.id);
-                },
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+        ],
+      );
+    } else {
+      return null;
+    }
   }
 
   @override
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _data.size;
+  int get rowCount => _data?.size ?? 0;
 
   @override
   int get selectedRowCount => 0;

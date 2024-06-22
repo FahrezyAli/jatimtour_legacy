@@ -73,7 +73,7 @@ class _UserManagerViewState extends State<UserManagerView> {
                   onSort: _sort),
               DataColumn(label: const Text("Role"), onSort: _sort),
             ],
-            source: _DataSource(snapshot.data!, context),
+            source: _DataSource(snapshot.data, context),
           );
         }
       },
@@ -82,7 +82,7 @@ class _UserManagerViewState extends State<UserManagerView> {
 }
 
 class _DataSource extends DataTableSource {
-  final QuerySnapshot<UserModel> _data;
+  final QuerySnapshot<UserModel>? _data;
   final BuildContext _context;
 
   _DataSource(this._data, this._context);
@@ -166,63 +166,67 @@ class _DataSource extends DataTableSource {
 
   @override
   DataRow? getRow(int index) {
-    final user = _data.docs[index].data();
-    return DataRow.byIndex(
-      index: index,
-      cells: [
-        _sizedDataCell(Text(
-          user.email,
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(Text(
-          user.username,
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(Text(
-          user.fullName,
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(Text(
-          user.phoneNumber,
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(Text(
-          user.city,
-          style: _defaultStyle,
-          overflow: TextOverflow.ellipsis,
-        )),
-        _sizedDataCell(
-          Row(
-            children: [
-              Text(user.role.toString(), style: _defaultStyle),
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {
-                  if (user.id == currentUser!.id) {
-                    _showErrorSnackBar(
-                      "You cannot change your own role! Change it directly from Firebase Project or ask another admin",
-                    );
-                  } else {
-                    _updateRole(user.id, user.role);
-                  }
-                },
-              ),
-            ],
+    if (_data != null) {
+      final user = _data.docs[index].data();
+      return DataRow.byIndex(
+        index: index,
+        cells: [
+          _sizedDataCell(Text(
+            user.email,
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(Text(
+            user.username,
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(Text(
+            user.fullName,
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(Text(
+            user.phoneNumber,
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(Text(
+            user.city,
+            style: _defaultStyle,
+            overflow: TextOverflow.ellipsis,
+          )),
+          _sizedDataCell(
+            Row(
+              children: [
+                Text(user.role.toString(), style: _defaultStyle),
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    if (user.id == currentUser!.id) {
+                      _showErrorSnackBar(
+                        "You cannot change your own role! Change it directly from Firebase Project or ask another admin",
+                      );
+                    } else {
+                      _updateRole(user.id, user.role);
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    } else {
+      return null;
+    }
   }
 
   @override
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _data.size;
+  int get rowCount => _data?.size ?? 9;
 
   @override
   int get selectedRowCount => 0;
