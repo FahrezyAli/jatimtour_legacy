@@ -71,6 +71,7 @@ class _UpdateArticlePageWebState extends State<UpdateArticlePageWeb> {
       uiSettings: [
         WebUiSettings(
           context: context,
+          viewwMode: WebViewMode.mode_1,
           presentStyle: WebPresentStyle.dialog,
           size: const CropperSize(width: 350, height: 350),
         )

@@ -56,6 +56,7 @@ class _CreateEventPageWebState extends State<CreateEventPageWeb> {
       compressQuality: 1000,
       uiSettings: [
         WebUiSettings(
+          viewwMode: WebViewMode.mode_1,
           context: context,
           presentStyle: WebPresentStyle.dialog,
           size: const CropperSize(width: 350, height: 350),

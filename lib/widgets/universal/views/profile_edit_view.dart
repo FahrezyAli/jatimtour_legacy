@@ -53,6 +53,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
             toolbarColor: kPinkColor,
             cropStyle: CropStyle.circle),
         WebUiSettings(
+          viewwMode: WebViewMode.mode_1,
           context: context,
           presentStyle: WebPresentStyle.dialog,
           size: const CropperSize(width: 350, height: 350),
