@@ -5,6 +5,7 @@
 .idea
 **/node_modules/*
 **/.firebaserc
+lib/firebase_options.dart
 
 ### Firebase Patch ###
 .runtimeconfig.json
