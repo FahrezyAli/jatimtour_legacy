@@ -15,7 +15,7 @@ class RecommendationCarousel extends StatelessWidget {
       children: [
         CarouselSlider.builder(
           itemCount: 3,
-          carouselController: CarouselController(),
+          carouselController: CarouselSliderController(),
           itemBuilder: (BuildContext context, int index, int realIndex) =>
               RecommendationCard(
             index: index,

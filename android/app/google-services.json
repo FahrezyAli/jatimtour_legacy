@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:900388906458:android:a36a4916c036a1982b4ce3",
+        "mobilesdk_app_id": "1:900388906458:android:7d1418327841f2862b4ce3",
         "android_client_info": {
-          "package_name": "my.id.jatimtour_team.jatimtour"
+          "package_name": "com.rain.jatimtour"
         }
       },
       "oauth_client": [
